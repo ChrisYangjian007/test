@@ -1,0 +1,89 @@
+html{
+    height:100%;
+    overflow: auto;
+}
+p{
+    margin: 0;
+}
+.test{
+    padding-top: 42px;
+    height:100%;
+    overflow: auto;
+}
+.main{
+    width:70%;
+    margin:0 auto;
+    overflow: hidden;
+    padding:0 0 40px;
+}
+.main>.col-md-6,.main>.col-md-12{
+    margin:10px 0;
+}
+.main>.col-md-6>p{
+    width:40%;
+    float:left;
+    background:#ddd;
+    padding:5px;
+    text-align:center;
+    border:1px solid #ccc;
+    border-right:0;
+    font-size: 20px;
+}
+.main>.col-md-6>div{
+    display:inline-block;
+    float:right;
+    padding:5px 0 5px 20px;
+    border:1px solid #ccc;
+    width:60%;
+    font-size: 20px;
+}
+.main>.col-md-12>p{
+    margin:10px 0;
+    width:100%;
+    text-align:center;
+    vertical-align: middle;
+    font-size: 20px;
+}
+.col-md-12>div{
+    width:100%;
+    font-size: 20px;
+}
+.col-md-12>textarea{
+    width:100%;
+    font-size: 20px;
+}
+.col-md-12>div>.fileinputDiv{
+    width:19%;
+    margin:5px 0.5%;
+}
+.col-md-12>div>img{
+    width:19%;
+    margin:5px 0.5%;
+}
+.introduction{
+    height: 230px;
+    overflow: auto;
+    font-size: 18px;
+    text-indent:35px
+}
+.image{
+    font-size:0!important;
+}
+.line{
+    display:inline-block;
+    height:2px;
+    width:20px;
+    background:#000;
+    vertical-align: middle;
+}
+.main>.col-md-6>div>a{
+    font-size:20px;
+}
+.update-input{
+    display:inline-block;
+    float:right;
+    padding:5px 0 5px 20px;
+    border:1px solid #ccc;
+    width:60%;
+    font-size: 20px;
+}

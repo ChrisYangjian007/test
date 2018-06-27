@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ReturnGoodsMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.ReturnGoods">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="return_goods_detail_id" jdbcType="BIGINT" property="returnGoodsDetailId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="goods_type_id" jdbcType="TINYINT" property="goodsTypeId"/>
+        <result column="goods_type" jdbcType="VARCHAR" property="goodsType"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="take_date" jdbcType="TIMESTAMP" property="takeDate"/>
+        <result column="return_date" jdbcType="TIMESTAMP" property="returnDate"/>
+        <result column="card_number" jdbcType="VARCHAR" property="cardNumber"/>
+        <result column="customer_address" jdbcType="VARCHAR" property="customerAddress"/>
+        <result column="express_number" jdbcType="VARCHAR" property="expressNumber"/>
+        <result column="customer_name" jdbcType="VARCHAR" property="customerName"/>
+        <result column="unqualified_description" jdbcType="VARCHAR" property="unqualifiedDescription"/>
+        <result column="inspector_one" jdbcType="VARCHAR" property="inspectorOne"/>
+        <result column="check_date_one" jdbcType="TIMESTAMP" property="checkDateOne"/>
+        <result column="treatment_measures" jdbcType="VARCHAR" property="treatmentMeasures"/>
+        <result column="inspector_two" jdbcType="VARCHAR" property="inspectorTwo"/>
+        <result column="check_date_two" jdbcType="TIMESTAMP" property="checkDateTwo"/>
+        <result column="nonconformance" jdbcType="VARCHAR" property="nonconformance"/>
+        <result column="disposal_way" jdbcType="VARCHAR" property="disposalWay"/>
+        <result column="host" jdbcType="VARCHAR" property="host"/>
+        <result column="participants" jdbcType="VARCHAR" property="participants"/>
+        <result column="iamges" jdbcType="VARCHAR" property="iamges"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+    </resultMap>
+
+    <resultMap id="DataResultMap" type="com.dalian.sea.parameter.ReturnGoodsPara" extends="BaseResultMap">
+        <result column="isMaterial" jdbcType="BIGINT" property="isMaterial"/>
+        <result column="materialName" jdbcType="VARCHAR" property="materialName"/>
+    </resultMap>
+    <select id="getReturnGoodsDetails" parameterType="com.dalian.sea.parameter.ReturnGoodsPara"
+            resultMap="DataResultMap">
+      select * FROM return_goods
+        WHERE status=1
+        <if test="beginTime != null">
+            <![CDATA[ AND update_date>=#{beginTime} ]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ AND update_date<=#{endTime} ]]>
+        </if>
+        <if test="goodsTypeId!=null and goodsTypeId!=''">
+            AND goods_type_id=#{goodsTypeId}
+        </if>
+        <if test="productId!=null and productId!=''">
+            AND product_id=#{productId}
+        </if>
+        <if test="productSpecName!=null and productSpecName!=''">
+            AND product_spec_name=#{productSpecName}
+        </if>
+        <if test="operator!=null and operator!=''">
+            AND operator=#{operator}
+        </if>
+        ORDER BY update_date DESC
+    </select>
+    <select id="getIsMaterial" resultMap="DataResultMap">
+        SELECT goods_type_id AS isMaterial,goods_type AS materialName FROM return_goods
+        WHERE status=1
+        GROUP BY goods_type_id
+    </select>
+
+    <insert id="newReturnGoods">
+        INSERT INTO return_goods(
+        create_date,
+        update_date,
+        status,
+        create_user_id,
+        update_user_id,
+        <if test="re.remark!=null and re.remark!=''">
+            remark,
+        </if>
+        goods_type_id,
+        goods_type,
+        product_id,
+        product_name,
+        product_spec_name,
+        batch_no,
+        take_date,
+        return_date,
+        card_number,
+        customer_address,
+        express_number,
+        customer_name,
+        unqualified_description,
+        inspector_one,
+        check_date_one,
+        treatment_measures,
+        inspector_two,
+        check_date_two,
+        nonconformance,
+        disposal_way,
+        host,
+        participants,
+        iamges,
+        operator
+        )VALUES(
+        now(),
+        now(),
+        1,
+        #{userId},
+        #{userId},
+        <if test="re.remark!=null and re.remark!=''">
+            #{re.remark},
+        </if>
+        #{re.goodsTypeId},
+        #{re.goodsType},
+        #{re.productId},
+        #{re.productName},
+        #{re.productSpecName},
+        #{re.batchNo},
+        #{re.takeDate},
+        #{re.returnDate},
+        #{re.cardNumber},
+        #{re.customerAddress},
+        #{re.expressNumber},
+        #{re.customerName},
+        #{re.unqualifiedDescription},
+        #{re.inspectorOne},
+        #{re.checkDateOne},
+        #{re.treatmentMeasures},
+        #{re.inspectorTwo},
+        #{re.checkDateTwo},
+        #{re.nonconformance},
+        #{re.disposalWay},
+        #{re.host},
+        #{re.participants},
+        #{re.iamges},
+        #{re.operator}
+        );
+    </insert>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT * FROM return_goods
+        WHERE return_goods_detail_id=#{returnGoodsDetailId}
+    </select>
+    
+    <select id="getReturnGoodsProduct" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT product_id,product_name FROM return_goods
+        WHERE goods_type_id=#{isMaterial}
+        GROUP BY product_id
+    </select>
+
+    <select id="getProductSpec" parameterType="com.dalian.sea.parameter.ReturnGoodsPara" resultMap="BaseResultMap">
+      SELECT product_spec_name FROM return_goods
+      WHERE goods_type_id=#{isMaterial} AND product_id=#{productId}
+      GROUP BY product_spec_name
+    </select>
+</mapper>

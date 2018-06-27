@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SaLeaveStockMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.SaLeaveStock">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="leave_stock_id" jdbcType="BIGINT" property="leaveStockId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="leave_date" jdbcType="TIMESTAMP" property="leaveDate"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+        <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+        <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+        <result column="produce_task_tag" jdbcType="VARCHAR" property="produceTaskTag"/>
+        <result column="leave_no" jdbcType="VARCHAR" property="leaveNo"/>
+        <result column="leave_person" jdbcType="VARCHAR" property="leavePerson"/>
+        <result column="brokerage" jdbcType="VARCHAR" property="brokerage"/>
+        <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+        <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+    </resultMap>
+
+    <resultMap id="PSaLeaveStock" type="com.dalian.sea.parameter.PSaLeaveStock" extends="BaseResultMap">
+        <association property="saLeaveStockDetail" javaType="com.dalian.sea.model.SaLeaveStockDetail">
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+            <result column="remark" jdbcType="VARCHAR" property="remark"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+            <result column="out_weight" jdbcType="DECIMAL" property="outWeight"/>
+            <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+            <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+            <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+            <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>
+            <result column="product_id" jdbcType="BIGINT" property="productId"/>
+            <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="leave_id" jdbcType="BIGINT" property="leaveId"/>
+            <result column="is_material" jdbcType="TINYINT" property="isMaterial"/>
+            <result column="product_status" jdbcType="TINYINT" property="productStatus"/>
+            <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+            <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        </association>
+        <association property="warehouse" javaType="com.dalian.sea.model.ZsWarehouse">
+            <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        </association>
+    </resultMap>
+
+
+    <!--通过生产任务获取出库信息-->
+    <select id="getLeaveStockByProduceTask" parameterType="java.lang.Long" resultMap="PSaLeaveStock">
+    SELECT sls.*,slsd.*,zw.c_name FROM sa_leave_stock sls
+    LEFT JOIN sa_leave_stock_detail slsd ON slsd.leave_id=sls.leave_stock_id
+    LEFT JOIN zs_warehouse zw ON zw.warehouse_id=sls.warehouse_id
+    WHERE sls.status=1 and sls.produce_task_id=#{id}
+  </select>
+
+    <select id="getLeaveStockByLeaveNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT *
+    FROM sa_leave_stock WHERE status!=6 AND leave_no=#{leaveNo}
+    </select>
+
+    <insert id="InsertLeaveStock" useGeneratedKeys="true" keyProperty="yh.leaveStockId" keyColumn="leave_stock_id">
+        INSERT INTO sa_leave_stock(
+        status,
+        related_type,
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="yh.remark!=null and yh.remark!=''">
+                ,remark
+            </if>
+            <if test="yh.companyId!=null and yh.companyId!=''">
+                ,company_id
+            </if>
+            <if test="yh.leaveDate!=null">
+                ,leave_date
+            </if>
+            <if test="yh.warehouseId!=null and yh.warehouseId!=''">
+                ,warehouse_id
+            </if>
+            <if test="yh.produceTaskName!=null and yh.produceTaskName!=''">
+                ,produce_task_name
+            </if>
+            <if test="yh.produceTaskNo!=null and yh.produceTaskNo!=''">
+                ,produce_task_no
+            </if>
+            <if test="yh.produceTaskId!=null and yh.produceTaskId!=''">
+                ,produce_task_id
+            </if>
+            <if test="yh.produceTaskTag!=null and yh.produceTaskTag!=''">
+                ,produce_task_tag
+            </if>
+            <if test="yh.leaveNo!=null and yh.leaveNo!=''">
+                ,leave_no
+            </if>
+            <if test="yh.leavePerson!=null and yh.leavePerson!=''">
+                ,leave_person
+            </if>
+            <if test="yh.brokerage!=null and yh.brokerage!=''">
+                ,brokerage
+            </if>
+            <if test="yh.produceTaskId!=null and yh.produceTaskId!=''">
+                ,related_id
+            </if>
+        </trim>
+        )VALUES(
+        1,
+        5,
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="yh.remark!=null and yh.remark!=''">
+                ,#{yh.remark}
+            </if>
+            <if test="yh.companyId!=null and yh.companyId!=''">
+                ,#{yh.companyId}
+            </if>
+            <if test="yh.leaveDate!=null">
+                ,#{yh.leaveDate}
+            </if>
+            <if test="yh.warehouseId!=null and yh.warehouseId!=''">
+                ,#{yh.warehouseId}
+            </if>
+            <if test="yh.produceTaskName!=null and yh.produceTaskName!=''">
+                ,#{yh.produceTaskName}
+            </if>
+            <if test="yh.produceTaskNo!=null and yh.produceTaskNo!=''">
+                ,#{yh.produceTaskNo}
+            </if>
+            <if test="yh.produceTaskId!=null and yh.produceTaskId!=''">
+                ,#{yh.produceTaskId}
+            </if>
+            <if test="yh.produceTaskTag!=null and yh.produceTaskTag!=''">
+                ,#{yh.produceTaskTag}
+            </if>
+            <if test="yh.leaveNo!=null and yh.leaveNo!=''">
+                ,#{yh.leaveNo}
+            </if>
+            <if test="yh.leavePerson!=null and yh.leavePerson!=''">
+                ,#{yh.leavePerson}
+            </if>
+            <if test="yh.brokerage!=null and yh.brokerage!=''">
+                ,#{yh.brokerage}
+            </if>
+            <if test="yh.produceTaskId!=null and yh.produceTaskId!=''">
+                ,#{yh.produceTaskId}
+            </if>
+        </trim>
+        )
+    </insert>
+</mapper>

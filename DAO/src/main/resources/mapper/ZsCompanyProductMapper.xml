@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsCompanyProductMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsCompanyProduct">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_no" jdbcType="VARCHAR" property="productNo"/>
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="type" jdbcType="BIGINT" property="type"/>
+        <result column="product_type_id" jdbcType="BIGINT" property="productTypeId"/>
+        <result column="product_type_name" jdbcType="VARCHAR" property="productTypeName"/>
+        <result column="grade" jdbcType="TINYINT" property="grade"/>
+        <result column="product_specification" jdbcType="VARCHAR" property="productSpecification"/>
+        <result column="sys_unit_id" jdbcType="BIGINT" property="sysUnitId"/>
+        <result column="sys_unit_name" jdbcType="VARCHAR" property="sysUnitName"/>
+        <result column="net_weight" jdbcType="VARCHAR" property="netWeight"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="brand" jdbcType="VARCHAR" property="brand"/>
+        <result column="image_path" jdbcType="CHAR" property="imagePath"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="material_company_id" jdbcType="BIGINT" property="materialCompanyId"/>
+        <result column="material_c_name" jdbcType="VARCHAR" property="materialCName"/>
+        <result column="produce_term_date" jdbcType="TIMESTAMP" property="produceTermDate"/>
+        <result column="term_date" jdbcType="TIMESTAMP" property="termDate"/>
+        <result column="produce_code" jdbcType="VARCHAR" property="produceCode"/>
+        <result column="produce_license" jdbcType="VARCHAR" property="produceLicense"/>
+        <result column="register_term_date" jdbcType="TIMESTAMP" property="registerTermDate"/>
+        <result column="pesticide_license" jdbcType="VARCHAR" property="pesticideLicense"/>
+        <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="piece_spec_id" jdbcType="BIGINT" property="pieceSpecId"/>
+        <result column="piece_spec_name" jdbcType="VARCHAR" property="pieceSpecName"/>
+        <result column="dosage_type" jdbcType="BIGINT" property="dosageType"/>
+        <result column="dosage_type_name" jdbcType="VARCHAR" property="dosageTypeName"/>
+        <result column="measure" jdbcType="VARCHAR" property="measure"/>
+        <result column="is_valid" jdbcType="TINYINT" property="isValid"/>
+        <result column="supplier_price" jdbcType="DECIMAL" property="supplierPrice"/>
+        <result column="prod_life_cold" jdbcType="VARCHAR" property="prodLifeCold"/>
+        <result column="prod_life_freezing" jdbcType="VARCHAR" property="prodLifeFreezing"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+
+    <!--获取已有产品线-->
+    <select id="getProductLine" parameterType="com.dalian.sea.parameter.PZsCompanyProduct" resultMap="BaseResultMap">
+    select pl.product_type_id as productLineId, pl.c_name as productLine
+    from zs_company_product zcp
+    left join sys_product_type spt on spt.product_type_id=zcp.product_type_id
+    left join sys_product_type pc on pc.product_type_id=spt.parent_id
+    left join sys_product_type pl on pl.product_type_id=pc.parent_id
+    where zcp.status!=6
+    GROUP BY productLineId
+  </select>
+
+    <!--获取已有类别-->
+    <select id="getType" parameterType="com.dalian.sea.parameter.PZsCompanyProduct" resultMap="BaseResultMap">
+    select zcp.type, bddd.c_name as typeName
+    from zs_company_product zcp
+    left join ba_data_dictionary_details bddd on zcp.type=bddd.data_dictionary_details_id
+    where zcp.status!=6
+    GROUP BY bddd.c_name
+  </select>
+
+    <!--获取已有名称-->
+    <select id="getProductName" parameterType="com.dalian.sea.parameter.PZsCompanyProduct" resultMap="BaseResultMap">
+    select zcp.*
+    from zs_company_product zcp
+    where zcp.status!=6 group by zcp.c_name order by zcp.product_id
+  </select>
+
+    <!--获取已有规格-->
+    <select id="getSpecification" parameterType="com.dalian.sea.parameter.PZsCompanyProduct" resultMap="BaseResultMap">
+    select zcp.*
+    from zs_company_product zcp
+    where zcp.status!=6 group by zcp.product_specification order by zcp.product_id
+  </select>
+
+    <!--根据类型、名称和规格获取-->
+    <select id="getProductByTypeAndNameAndSpecification" parameterType="com.dalian.sea.parameter.PZsCompanyProduct"
+            resultMap="BaseResultMap">
+        select zcp.product_id
+        <choose>
+            <when test="type!=null">
+                ,zcp.product_type_name,zcp.product_type_id
+            </when>
+            <otherwise>
+                <if test="productTypeId!=null and productTypeId!=''">
+                    ,zcp.product_specification
+                </if>
+                <if test="productTypeName!=null and productTypeName!=''">
+                    ,zcp.product_specification
+                </if>
+            </otherwise>
+        </choose>
+        from zs_company_product zcp
+        where zcp.status!=6
+        <if test="type!=null">and type=#{type}</if>
+        <if test="productTypeName!=null and productTypeName!=''">and product_type_name=#{productTypeName}</if>
+        <if test="productTypeId!=null and productTypeId!=''">and product_type_id=#{productTypeId}</if>
+        <if test="productSpecification!=null and productSpecification!=''">and
+            product_specification=#{productSpecification}
+        </if>
+        <choose>
+            <when test="type != null">
+                group by zcp.product_type_name
+            </when>
+            <when test="productTypeName!=null">
+                group by zcp.product_specification
+            </when>
+            <otherwise>
+                <if test="productTypeId!=null">
+                    group by zcp.product_specification
+                </if>
+            </otherwise>
+        </choose>
+        order by zcp.product_id asc
+    </select>
+
+    <!--根据类型获取产品线-->
+    <select id="getProductLineByType" parameterType="com.dalian.sea.parameter.PZsCompanyProduct"
+            resultMap="BaseResultMap">
+        select spt.product_type_id as productLineId,spt.c_name as productLine
+        from zs_company_product zcp
+        left join sys_product_type spt on spt.status=1 and spt.product_type_id in (
+            select pt.parent_id from sys_product_type pt where pt.status=1 and pt.product_type_id in(
+                select sp.parent_id from sys_product_type sp where sp.status=1 and sp.product_type_id=zcp.product_type_id
+            )
+        )
+        where zcp.status=1 and zcp.type = #{type}
+        GROUP BY spt.product_type_id
+    </select>
+
+
+
+
+    <!--根据情况获取-->
+    <select id="getZsCompanyProductByProductType" parameterType="com.dalian.sea.parameter.PZsCompanyProduct"
+            resultMap="BaseResultMap">
+        select zcp.*
+        <choose>
+            <when test="productCategoryId != null">
+                ,spt.product_type_id as product_type_id,spt.c_name as product_type_name
+            </when>
+            <otherwise>
+                <if test="productLineId!=null">
+                    ,pc.product_type_id as productCategoryId, pc.c_name as productCategory
+                </if>
+            </otherwise>
+        </choose>
+        from zs_company_product zcp
+        <choose>
+            <when test="productCategoryId != null">
+                left join sys_product_type spt on spt.product_type_id=zcp.product_type_id
+            </when>
+            <otherwise>
+                <if test="productLineId!=null">
+                    left join sys_product_type spt on spt.product_type_id=zcp.product_type_id
+                    left join sys_product_type pc on pc.product_type_id=spt.parent_id
+                </if>
+            </otherwise>
+        </choose>
+        where zcp.status!=6
+        <choose>
+            <when test="productCategoryId != null">
+                and zcp.product_type_id in
+                (select spt.product_type_id from sys_product_type spt
+                where spt.status=1 and spt.parent_id=#{productCategoryId})
+                GROUP BY spt.product_type_id
+            </when>
+            <otherwise>
+                <if test="productLineId!=null">
+                    and zcp.product_type_id in (
+                    select spt.product_type_id from sys_product_type spt where spt.status=1 and spt.parent_id in
+                    (select pt.product_type_id from sys_product_type pt where pt.status=1 and
+                    pt.parent_id=#{productLineId})
+                    ) GROUP BY pc.product_type_id
+                </if>
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--根据情况获取-->
+    <select id="getZsCompanyProductBy" parameterType="com.dalian.sea.parameter.PZsCompanyProduct"
+            resultMap="BaseResultMap">
+        select zcp.*, bddd.c_name as typeName,pl.product_type_id as productLineId, pl.c_name as
+        productLine,pc.product_type_id as productCategoryId,pc.c_name as productCategory
+        from zs_company_product zcp
+        left join sys_product_type pc on pc.product_type_id=
+        (select pt.parent_id from sys_product_type pt where pt.product_type_id=zcp.product_type_id)
+        left join sys_product_type pl on pl.product_type_id=pc.parent_id
+        left join ba_data_dictionary_details bddd on zcp.type=bddd.data_dictionary_details_id
+        where zcp.status!=6
+        <if test="productNo!=null and productNo!=''">and zcp.product_no=#{productNo}</if>
+        <if test="type!=null">and zcp.type=#{type}</if>
+        <choose>
+            <when test="productTypeId != null">
+                and zcp.product_type_id=#{productTypeId}
+            </when>
+            <otherwise>
+                <choose>
+                    <when test="productCategoryId != null">
+                        and zcp.product_type_id in
+                        (select spt.product_type_id from sys_product_type spt
+                        where spt.status=1 and spt.parent_id=#{productCategoryId})
+                    </when>
+                    <otherwise>
+                        <if test="productLineId!=null">
+                            and zcp.product_type_id in (
+                            select spt.product_type_id from sys_product_type spt where spt.status=1 and spt.parent_id in
+                            (select pt.product_type_id from sys_product_type pt where pt.status=1 and
+                            pt.parent_id=#{productLineId})
+                            )
+                        </if>
+                    </otherwise>
+                </choose>
+            </otherwise>
+        </choose>
+        order by zcp.update_date desc
+    </select>
+
+    <!--根据编码、名称和规格获取-->
+    <select id="getZsCompanyProductByNoAndNameAndSpec" parameterType="com.dalian.sea.parameter.PZsCompanyProduct"
+            resultMap="BaseResultMap">
+        select * from zs_company_product zcp where status=1 and c_name=#{cName} and product_specification =
+        #{productSpecification}
+        <if test="productNo!=null and productNo!=''">and product_no=#{productNo}</if>
+        <if test="productId!=null and productId!=''">and product_id!=#{productId}</if>
+    </select>
+    <select id="getCompanyProductByNo" parameterType="com.dalian.sea.parameter.PZsCompanyProduct"
+            resultMap="BaseResultMap">
+        select * from zs_company_product zcp where status=1
+        <if test="productNo!=null and productNo!=''">and product_no=#{productNo}</if>
+    </select>
+    <!--根据ID获取-->
+    <select id="getZsCompanyProductById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select zcp.*,pl.product_type_id as productLineId,pl.c_name as productLine,
+    pc.product_type_id as productCategoryId, pc.c_name as productCategory
+    from zs_company_product zcp
+    left join sys_product_type spt on spt.product_type_id=zcp.product_type_id
+    left join sys_product_type pc on pc.product_type_id=spt.parent_id
+    left join sys_product_type pl on pl.product_type_id=pc.parent_id
+    where zcp.status=1 and zcp.product_id=#{id}
+  </select>
+
+    <!--添加-->
+    <insert id="addZsCompanyProduct" parameterType="com.dalian.sea.model.ZsCompanyProduct" keyProperty="productId"
+            useGeneratedKeys="true">
+        insert into zs_company_product (product_no,c_name,type,product_type_id,product_type_name,product_specification,
+        sys_unit_id,sys_unit_name,net_weight,create_user_id,create_date,update_date
+        <if test="grade!=null">,grade</if>
+        <if test="price!=null">,price</if>
+        <if test="listIndex!=null">,list_index</if>
+        <if test="companyId!=null">,company_id</if>
+        <if test="brand!=null">,brand</if>
+        <if test="imagePath!=null">,image_path</if>
+        <if test="remark!=null">,remark</if>
+        <if test="materialCompanyId!=null">,material_company_id</if>
+        <if test="materialCName!=null">,material_c_name</if>
+        <if test="produceTermDate!=null">,produce_term_date</if>
+        <if test="termDate!=null">,term_date</if>
+        <if test="produceCode!=null">,produce_code</if>
+        <if test="produceLicense!=null">,produce_license</if>
+        <if test="registerTermDate!=null">,register_term_date</if>
+        <if test="pesticideLicense!=null">,pesticide_license</if>
+        <if test="productSpecId!=null">,product_spec_id</if>
+        <if test="productSpecName!=null">,product_spec_name</if>
+        <if test="pieceSpecId!=null">,piece_spec_id</if>
+        <if test="pieceSpecName!=null">,piece_spec_name</if>
+        <if test="dosageType!=null">,dosage_type</if>
+        <if test="dosageTypeName!=null">,dosage_type_name</if>
+        <if test="measure!=null">,measure</if>
+        <if test="isValid!=null">,is_valid</if>
+        <if test="supplierPrice!=null">,supplier_price</if>
+        <if test="prodLifeCold!=null">,prod_life_cold</if>
+        <if test="prodLifeFreezing!=null">,prod_life_freezing</if>
+        ) values
+        (#{productNo},#{cName},#{type},#{productTypeId},#{productTypeName},#{productSpecification},#{sysUnitId},
+        #{sysUnitName},#{netWeight},#{createUserId},now(),now()
+        <if test="grade!=null">,#{grade}</if>
+        <if test="price!=null">,#{price}</if>
+        <if test="listIndex!=null">,#{listIndex}</if>
+        <if test="companyId!=null">,#{companyId}</if>
+        <if test="brand!=null">,#{brand}</if>
+        <if test="imagePath!=null">,#{imagePath}</if>
+        <if test="remark!=null">,#{remark}</if>
+        <if test="materialCompanyId!=null">,#{materialCompanyId}</if>
+        <if test="materialCName!=null">,#{materialCName}</if>
+        <if test="produceTermDate!=null">,#{produceTermDate}</if>
+        <if test="termDate!=null">,#{termDate}</if>
+        <if test="produceCode!=null">,#{produceCode}</if>
+        <if test="produceLicense!=null">,#{produceLicense}</if>
+        <if test="registerTermDate!=null">,#{registerTermDate}</if>
+        <if test="pesticideLicense!=null">,#{pesticideLicense}</if>
+        <if test="productSpecId!=null">,#{productSpecId}</if>
+        <if test="productSpecName!=null">,#{productSpecName}</if>
+        <if test="pieceSpecId!=null">,#{pieceSpecId}</if>
+        <if test="pieceSpecName!=null">,#{pieceSpecName}</if>
+        <if test="dosageType!=null">,#{dosageType}</if>
+        <if test="dosageTypeName!=null">,#{dosageTypeName}</if>
+        <if test="measure!=null">,#{measure}</if>
+        <if test="isValid!=null">,#{isValid}</if>
+        <if test="supplierPrice!=null">,#{supplierPrice}</if>
+        <if test="prodLifeCold!=null">,#{prodLifeCold}</if>
+        <if test="prodLifeFreezing!=null">,#{prodLifeFreezing}</if>
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="updateZsCompanyProduct" parameterType="com.dalian.sea.model.ZsCompanyProduct">
+        update zs_company_product
+        <trim prefix="set" suffixOverrides="," suffix=" where product_id=#{productId}">
+            <if test="productNo!=null">product_no=#{productNo},</if>
+            <if test="cName!=null">c_name=#{cName},</if>
+            <if test="type!=null">type=#{type},</if>
+            <if test="productTypeId!=null">product_type_id=#{productTypeId},</if>
+            <if test="productTypeName!=null">product_type_name=#{productTypeName},</if>
+            <if test="productSpecification!=null">product_specification=#{productSpecification},</if>
+            <if test="sysUnitId!=null">sys_unit_id=#{sysUnitId},</if>
+            <if test="sysUnitName!=null">sys_unit_name=#{sysUnitName},</if>
+            <if test="netWeight!=null">net_weight=#{netWeight},</if>
+            <if test="grade!=null">grade=#{grade},</if>
+            <if test="price!=null">price=#{price},</if>
+            <if test="listIndex!=null">list_index=#{listIndex},</if>
+            <if test="companyId!=null">company_id=#{companyId},</if>
+            <if test="brand!=null">brand=#{brand},</if>
+            <if test="imagePath!=null">image_path=#{imagePath},</if>
+            <if test="remark!=null">remark=#{remark},</if>
+            <if test="materialCompanyId!=null">material_company_id=#{materialCompanyId},</if>
+            <if test="materialCName!=null">material_c_name=#{materialCName},</if>
+            <if test="produceTermDate!=null">produce_term_date=#{produceTermDate},</if>
+            <if test="termDate!=null">term_date=#{termDate},</if>
+            <if test="produceCode!=null">produce_code=#{produceCode},</if>
+            <if test="produceLicense!=null">produce_license=#{produceLicense},</if>
+            <if test="registerTermDate!=null">register_term_date=#{registerTermDate},</if>
+            <if test="pesticideLicense!=null">pesticide_license=#{pesticideLicense},</if>
+            <if test="productSpecId!=null">product_spec_id=#{productSpecId},</if>
+            <if test="productSpecName!=null">product_spec_name=#{productSpecName},</if>
+            <if test="pieceSpecId!=null">piece_spec_id=#{pieceSpecId},</if>
+            <if test="pieceSpecName!=null">piece_spec_name=#{pieceSpecName},</if>
+            <if test="dosageType!=null">dosage_type=#{dosageType},</if>
+            <if test="dosageTypeName!=null">dosage_type_name=#{dosageTypeName},</if>
+            <if test="measure!=null">measure=#{measure},</if>
+            <if test="isValid!=null">is_valid=#{isValid},</if>
+            <if test="supplierPrice!=null">supplier_price=#{supplierPrice},</if>
+            <if test="prodLifeCold!=null">prod_life_cold=#{prodLifeCold},</if>
+            <if test="prodLifeFreezing!=null">prod_life_freezing=#{prodLifeFreezing},</if>
+            <if test="updateUserId!=null">update_user_id=#{updateUserId},</if>
+        </trim>
+    </update>
+
+    <!--修改-->
+    <update id="updateZsCompanyProductBy" parameterType="com.dalian.sea.model.ZsCompanyProduct">
+        update zs_company_product set
+        product_no=#{productNo},c_name=#{cName},type=#{type},product_type_id=#{productTypeId},
+        product_type_name=#{productTypeName},product_specification=#{productSpecification},sys_unit_id=#{sysUnitId},sys_unit_name=#{sysUnitName},
+        net_weight=#{netWeight}
+        <if test="updateUserId!=null">,update_user_id=#{updateUserId}</if>
+        where product_id=#{productId}
+    </update>
+
+    <!--修改-->
+    <update id="deleteZsCompanyProduct" parameterType="com.dalian.sea.model.ZsCompanyProduct">
+        update zs_company_product set status = 6
+        <if test="updateUserId!=null">,update_user_id=#{updateUserId}</if>
+        where product_id=#{productId}
+    </update>
+
+
+    <select id="getZsCompanyProductByProductTypeList" resultMap="BaseResultMap" parameterType="java.util.List">
+        SELECT * FROM zs_company_product WHERE status != 6 AND product_type_id in(
+        <foreach collection="productTypeList" index="index" item="item" separator=",">
+            #{item.productTypeId}
+        </foreach>
+        )
+    </select>
+
+
+    <select id="getByType" resultMap="BaseResultMap" parameterType="Long">
+    select product_id,c_name from zs_company_product where status=1 AND type=#{type}
+  </select>
+
+    <select id="getProductSpecName" resultType="String" parameterType="Long">
+    select zcp.product_spec_name
+    from zs_company_product zcp
+    where zcp.status!=6
+    AND zcp.type =#{type}
+    GROUP BY zcp.product_spec_name
+  </select>
+
+    <!--添加-->
+    <insert id="addZsCompanyProductList" parameterType="java.util.List">
+        insert into zs_company_product (product_no,c_name,type,product_type_id,product_type_name,product_specification,
+        sys_unit_id,sys_unit_name,net_weight,create_user_id,create_date,update_date
+        ) values
+        <foreach collection="companyProduct" index="index" item="item" separator=",">
+            (#{item.productNo},#{item.cName},#{item.type},#{item.productTypeId},#{item.productTypeName},#{item.productSpecification},
+            #{item.sysUnitId},#{item.sysUnitName},#{item.netWeight},#{item.createUserId},now(),now()
+            )
+        </foreach>
+    </insert>
+
+    <select id="getSpecByProductCategory" resultMap="BaseResultMap">
+      select zcp.product_specification
+        from zs_company_product zcp
+        where zcp.status=1
+        and zcp.type=#{goodsTypeId}
+        and zcp.product_type_id in (
+        select product_type_id from sys_product_type where status = 1 and parent_id=#{id}
+        )
+        group by zcp.product_specification
+    </select>
+
+    <select id="getUnitByProductCategory" resultMap="BaseResultMap">
+        select zcp.sys_unit_id, zcp.sys_unit_name
+        from zs_company_product zcp
+        where zcp.status=1
+        and zcp.type=#{goodsTypeId}
+        and zcp.sys_unit_id is not null
+        and zcp.product_type_id in (
+        select product_type_id from sys_product_type where status = 1 and parent_id=#{id}
+        )
+        group by zcp.sys_unit_id
+    </select>
+
+    <select id="getProductByProductCategory" resultMap="BaseResultMap">
+    select zcp.product_type_id, zcp.product_type_name
+    from zs_company_product zcp
+    where zcp.status=1
+    and zcp.type=#{goodsTypeId}
+    and zcp.product_type_id in (
+    select product_type_id from sys_product_type where status = 1 and parent_id=#{id}
+    )
+    group by zcp.product_type_id
+    </select>
+</mapper>

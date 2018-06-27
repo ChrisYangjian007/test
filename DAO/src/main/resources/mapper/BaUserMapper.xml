@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaUserMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PBaUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
+    <result column="auth_status" jdbcType="TINYINT" property="authStatus" />
+    <result column="user_authority_type" jdbcType="TINYINT" property="userAuthorityType" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="secretkey" jdbcType="VARCHAR" property="secretkey" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="spell" jdbcType="VARCHAR" property="spell" />
+    <result column="gender" jdbcType="TINYINT" property="gender" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="qicq" jdbcType="VARCHAR" property="qicq" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="change_password_date" jdbcType="TIMESTAMP" property="changePasswordDate" />
+    <result column="open_id" jdbcType="BIGINT" property="openId" />
+    <result column="log_on_count" jdbcType="INTEGER" property="logOnCount" />
+    <result column="previous_visit" jdbcType="TIMESTAMP" property="previousVisit" />
+    <result column="last_visit" jdbcType="TIMESTAMP" property="lastVisit" />
+    <result column="online" jdbcType="TINYINT" property="online" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="area_id" jdbcType="BIGINT" property="areaId" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="wei_xin" jdbcType="VARCHAR" property="weiXin" />
+    <result column="is_control" jdbcType="INTEGER" property="isControl" />
+    <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+    <result column="ckeck_status" jdbcType="INTEGER" property="ckeckStatus" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="address_id" jdbcType="BIGINT" property="addressId" />
+    <result column="address_details" jdbcType="VARCHAR" property="addressDetails" />
+    <result column="residence" jdbcType="VARCHAR" property="residence" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="user_type" jdbcType="TINYINT" property="userType" />
+  </resultMap>
+  
+  <resultMap id="PBaUserRoleList" type="com.dalian.sea.parameter.PBaUser" extends="BaseResultMap">
+
+  </resultMap>
+  
+  <resultMap id="PBauUserRoles" type="com.dalian.sea.parameter.PBaUser" extends="BaseResultMap">
+    <collection property="rolesList" javaType="java.util.List" ofType="com.dalian.sea.model.BaRoles" columnPrefix="br_">
+      <id column="role_id" jdbcType="BIGINT" property="roleId"/>
+      <result column="c_name" jdbcType="VARCHAR" property="cName" />
+      <result column="category" jdbcType="TINYINT" property="category" />
+    </collection>
+  </resultMap>
+
+  <!--获取用户根据用户类型-->
+  <select id="getBaUserByUserType" resultMap="BaseResultMap">
+    select * from ba_user
+    where status = 1 and user_type != #{userType}
+    <if test="companyId!=0">
+      and company_id != 0
+    </if>
+    <if test="userType==1">
+      and user_id in (select user_id from ba_user_role where role_id in
+      (select role_id from ba_role_resource where resource_id in
+      (select resource_id from ba_resource where code = '0202030000') group by role_id
+      )group by user_id
+      )
+    </if>
+    order by update_date desc
+  </select>
+
+  <!--获取用户-->
+  <select id="getBaUserBy" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaUser">
+    select * from ba_user where status != 6 and account = #{account}
+  </select>
+
+  <!--获取用户-->
+  <select id="login" resultMap="BaseResultMap">
+    select * from ba_user where status != 6 and account = #{account} and password = #{password}
+  </select>
+
+  <!--获取用户-->
+  <select id="getBaUserByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select u.*
+    from ba_user u where u.user_id=#{userId}
+  </select>
+
+  <!--根据角色ID获取用户-->
+  <select id="getBaUserByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_user where status != 6 and user_id in
+    (select user_id from ba_user_role where status=1 and role_id = #{roleId})
+  </select>
+
+  <!--根据获取用户-->
+  <select id="getBaUserByJqGrid" resultMap="PBaUserRoleList" parameterType="com.dalian.sea.parameter.PBaUser">
+    SELECT u.*,
+    buu.c_name as createUserName,
+    buuu.c_name as updateUserName
+    from ba_user u
+    LEFT JOIN ba_user buu ON buu.user_id=u.create_user_id
+    LEFT JOIN ba_user buuu ON buuu.user_id=u.update_user_id
+    where 1=1
+    <if test="companyId!=0">and u.company_id!=0</if>
+    <if test="code!=null and code!=''">and u.code=#{code}</if>
+    <if test="cName!=null and cName!=''">and u.c_name=#{cName}</if>
+    <if test="account!=null and account != ''">and u.account=#{account}</if>
+    <if test="departmentName!=null and departmentName !=''">and u.department_name=#{departmentName}</if>
+    <if test="roleId!=null and roleId !=''">and u.user_id in (select user_id from ba_user_role where status=1 and role_id=#{roleId})</if>
+    <choose>
+      <when test="status != null and status !=''">
+        and u.status= #{status}
+      </when>
+      <otherwise>
+        and u.status!='6'
+      </otherwise>
+    </choose>
+    group by u.user_id order by u.update_date desc
+  </select>
+
+  <!--添加用户-->
+  <insert id="addBaUser" parameterType="com.dalian.sea.model.BaUser" keyProperty="userId" useGeneratedKeys="true">
+    insert into ba_user (create_date,update_date
+    <if test="companyId != null">,company_id</if>
+    <if test="departmentId != null">,department_id</if>
+    <if test="departmentName != null">,department_name</if>
+    <if test="authStatus != null">,auth_status</if>
+    <if test="userAuthorityType != null">,user_authority_type</if>
+    <if test="code != null">,code</if>
+    <if test="account != null">,account</if>
+    <if test="password != null">,password</if>
+    <if test="secretkey != null">,secretkey</if>
+    <if test="cName != null">,c_name</if>
+    <if test="spell != null">,spell</if>
+    <if test="gender != null">,gender</if>
+    <if test="birthday != null">,birthday</if>
+    <if test="mobile != null">,mobile</if>
+    <if test="telephone != null">,telephone</if>
+    <if test="qicq != null">,qicq</if>
+    <if test="email != null">,email</if>
+    <if test="changePasswordDate != null">,change_password_date</if>
+    <if test="openId != null">,open_id</if>
+    <if test="logOnCount != null">,log_on_count</if>
+    <if test="previousVisit != null">,previous_visit</if>
+    <if test="lastVisit != null">,last_visit</if>
+    <if test="online != null">,online</if>
+    <if test="remark != null">,remark</if>
+    <if test="listIndex != null">,list_index</if>
+    <if test="areaId != null">,area_id</if>
+    <if test="parentId != null">,parent_id</if>
+    <if test="weiXin != null">,wei_xin</if>
+    <if test="isControl != null">,is_control</if>
+    <if test="headImage != null">,head_image</if>
+    <if test="ckeckStatus != null">,ckeck_status</if>
+    <if test="education != null">,education</if>
+    <if test="addressId != null">,address_id</if>
+    <if test="addressDetails != null">,address_details</if>
+    <if test="residence != null">,residence</if>
+    <if test="createUserId != null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    <if test="status != null">,status</if>
+    <if test="userType != null">,user_type</if>
+    ) values (now(),now()
+    <if test="companyId != null">,#{companyId}</if>
+    <if test="departmentId != null">,#{departmentId}</if>
+    <if test="departmentName != null">,#{departmentName}</if>
+    <if test="authStatus != null">,#{authStatus}</if>
+    <if test="userAuthorityType != null">,#{userAuthorityType}</if>
+    <if test="code != null">,#{code}</if>
+    <if test="account != null">,#{account}</if>
+    <if test="password != null">,#{password}</if>
+    <if test="secretkey != null">,#{secretkey}</if>
+    <if test="cName != null">,#{cName}</if>
+    <if test="spell != null">,#{spell}</if>
+    <if test="gender != null">,#{gender}</if>
+    <if test="birthday != null">,#{birthday}</if>
+    <if test="mobile != null">,#{mobile}</if>
+    <if test="telephone != null">,#{telephone}</if>
+    <if test="qicq != null">,#{qicq}</if>
+    <if test="email != null">,#{email}</if>
+    <if test="changePasswordDate != null">,#{changePasswordDate}</if>
+    <if test="openId != null">,#{openId}</if>
+    <if test="logOnCount != null">,#{logOnCount}</if>
+    <if test="previousVisit != null">,#{previousVisit}</if>
+    <if test="lastVisit != null">,#{lastVisit}</if>
+    <if test="online != null">,#{online}</if>
+    <if test="remark != null">,#{remark}</if>
+    <if test="listIndex != null">,#{listIndex}</if>
+    <if test="areaId != null">,#{areaId}</if>
+    <if test="parentId != null">,#{parentId}</if>
+    <if test="weiXin != null">,#{weiXin}</if>
+    <if test="isControl != null">,#{isControl}</if>
+    <if test="headImage != null">,#{headImage}</if>
+    <if test="ckeckStatus != null">,#{ckeckStatus}</if>
+    <if test="education != null">,#{education}</if>
+    <if test="addressId != null">,#{addressId}</if>
+    <if test="addressDetails != null">,#{addressDetails}</if>
+    <if test="residence != null">,#{residence}</if>
+    <if test="createUserId != null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    <if test="status != null">,#{status}</if>
+    <if test="userType != null">,#{userType}</if>
+    )
+  </insert>
+
+  <!--修改用户登陆次数和时间-->
+  <update id="updateUserLoginDate" parameterType="java.lang.Long">
+    update ba_user set log_on_count = (log_on_count+1), previous_visit=now(), last_visit=now() where user_id = #{userId}
+  </update>
+
+  <!--获取所有用户-->
+  <select id="getAllUser" resultMap="BaseResultMap">
+    SELECT * FROM ba_user WHERE status != 6
+  </select>
+
+  <!--获取日志所有用户-->
+  <select id="getAllUserBySysLog" resultMap="BaseResultMap">
+    SELECT * FROM ba_user WHERE user_id in (select created_user_id from sys_sys_log where status =1)
+    <if test="companyId!=0">
+      and company_id !=0
+    </if>
+  </select>
+
+  <!--修改全部用户信息-->
+  <update id="updateBaUser" parameterType="com.dalian.sea.model.BaUser">
+    UPDATE  ba_user
+    <trim prefix="set" suffixOverrides="," suffix="where user_id = #{userId}">
+      <if test="companyId != null">company_id=#{companyId},</if>
+      <if test="departmentId != null">department_id=#{departmentId},</if>
+      <if test="departmentName != null">department_name=#{departmentName},</if>
+      <if test="authStatus != null">auth_status=#{authStatus},</if>
+      <if test="userAuthorityType != null">user_authority_type=#{userAuthorityType},</if>
+      <if test="code != null">code=#{code},</if>
+      <if test="account != null">account=#{account},</if>
+      <if test="password != null">password=#{password},</if>
+      <if test="secretkey != null">secretkey=#{secretkey},</if>
+      <if test="cName != null">c_name=#{cName},</if>
+      <if test="spell != null">spell=#{spell},</if>
+      <if test="gender != null">gender=#{gender},</if>
+      <if test="birthday != null">birthday=#{birthday},</if>
+      <if test="mobile != null">mobile=#{mobile},</if>
+      <if test="telephone != null">telephone=#{telephone},</if>
+      <if test="qicq != null">qicq=#{qicq},</if>
+      <if test="email != null">email=#{email},</if>
+      <if test="changePasswordDate != null">change_password_date=#{changePasswordDate},</if>
+      <if test="openId != null">open_id=#{openId},</if>
+      <if test="logOnCount != null">log_on_count=#{logOnCount},</if>
+      <if test="previousVisit != null">previous_visit=#{previousVisit},</if>
+      <if test="lastVisit != null">last_visit=#{lastVisit},</if>
+      <if test="online != null">online=#{online},</if>
+      <if test="remark != null">remark=#{remark},</if>
+      <if test="listIndex != null">list_index=#{listIndex},</if>
+      <if test="areaId != null">area_id=#{areaId},</if>
+      <if test="parentId != null">parent_id=#{parentId},</if>
+      <if test="weiXin != null">wei_xin=#{weiXin},</if>
+      <if test="isControl != null">is_control=#{isControl},</if>
+      <if test="headImage != null">head_image=#{headImage},</if>
+      <if test="ckeckStatus != null">ckeck_status=#{ckeckStatus},</if>
+      <if test="education != null">education=#{education},</if>
+      <if test="addressId != null">address_id=#{addressId},</if>
+      <if test="addressDetails != null">address_details=#{addressDetails},</if>
+      <if test="residence != null">residence=#{residence},</if>
+      <if test="createUserId != null">create_user_id=#{createUserId},</if>
+      <if test="updateUserId != null">update_user_id=#{updateUserId},</if>
+      <if test="status != null">status=#{status},</if>
+    </trim>
+  </update>
+
+  <!--修改用户信息-->
+  <update id="updateUserById" parameterType="com.dalian.sea.model.BaUser">
+    UPDATE ba_user SET code=#{code},c_name=#{cName},department_name=#{departmentName},status=#{status},user_type=#{userType}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where user_id=#{userId}
+  </update>
+
+  <!--重置密码-->
+  <update id="resetPassword" parameterType="com.dalian.sea.model.BaUser">
+    UPDATE ba_user SET password=#{password}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where user_id=#{userId}
+  </update>
+
+  <!--获取最大顺序数-->
+  <select id="getMaxListIndex" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT max(list_index) as list_index FROM ba_user WHERE status != 6 limit 1
+  </select>
+
+  <!--通过登录名查找用户-->
+  <select id="getBaUserByAccount" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaUser">
+    SELECT * FROM ba_user where status != 6 and account=#{account}
+  </select>
+
+  <!--通过id获取用户信息-->
+  <select id="getPBaUserById" resultMap="PBauUserRoles" parameterType="java.lang.Long">
+  SELECT bu.*,
+  br.role_id as br_role_id,
+  br.c_name as br_c_name,
+  br.category as br_category
+  FROM ba_user bu
+  LEFT JOIN ba_user_role bur ON bur.user_id=bu.user_id
+  LEFT JOIN ba_roles br ON br.role_id=bur.role_id
+  where bu.user_id=#{id}
+</select>
+
+  <!--删除用户-->
+  <update id="deleteUserById" parameterType="com.dalian.sea.model.BaUser">
+    UPDATE ba_user SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where user_id=#{userId}
+  </update>
+</mapper>

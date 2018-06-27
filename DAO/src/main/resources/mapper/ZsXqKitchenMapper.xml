@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsXqKitchenMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PXqKitchen">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="kitchen_id" jdbcType="BIGINT" property="kitchenId" />
+    <result column="kitchen_name" jdbcType="VARCHAR" property="kitchenName" />
+    <result column="features" jdbcType="VARCHAR" property="features" />
+    <result column="Ingredients" jdbcType="VARCHAR" property="ingredients" />
+    <result column="production_method" jdbcType="VARCHAR" property="productionMethod" />
+    <result column="images" jdbcType="CHAR" property="images" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <!--查询所有-->
+  <select id="getXqKitchen"   resultMap="BaseResultMap">
+    SELECT * FROM zs_xq_kitchen
+    WHERE status!=6
+    order by update_date desc
+  </select>
+  <!--根据id查询-->
+  <select id="getXqKitchenById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_xq_kitchen
+    WHERE kitchen_id=#{kitchenId}
+  </select>
+  <!--新增-->
+  <insert id="addXqKitchen" parameterType="com.dalian.sea.parameter.PXqKitchen">
+    INSERT INTO zs_xq_kitchen (
+    <if test="kitchenName!=null and kitchenName!=''">kitchen_name</if>
+    <if test="features!=null and features!=''">,features</if>
+    <if test="ingredients!=null and ingredients!=''">,Ingredients</if>
+    <if test="productionMethod!=null and productionMethod!=''">,production_method</if>
+    <if test="images!=null and images!=''">,images</if>
+    <if test="createUserId!=null and createUserId!=''">,create_user_id</if>
+    <if test="createDate!=null"> ,create_date</if>,update_date
+    )VALUES (
+    <if test="kitchenName!=null and kitchenName!=''">#{kitchenName}</if>
+    <if test="features!=null and features!=''">,#{features}</if>
+    <if test="ingredients!=null and ingredients!=''">,#{ingredients}</if>
+    <if test="productionMethod!=null and productionMethod!=''">,#{productionMethod}</if>
+    <if test="images!=null and images!=''">,#{images}</if>
+    <if test="createUserId!=null and createUserId!=''">,#{createUserId}</if>
+    <if test="createDate!=null">,#{createDate}</if>,#{updateDate}
+    )
+  </insert>
+  <!--修改-->
+  <update id="updateXqKitchen" parameterType="com.dalian.sea.parameter.PXqKitchen">
+    UPDATE zs_xq_kitchen SET kitchen_name=#{kitchenName},features=#{features},Ingredients=#{ingredients},production_method=#{productionMethod},images=#{images}
+    <if test="updateUserId!=null and updateUserId!=''">,update_user_id=#{updateUserId}</if>
+    WHERE kitchen_id=#{kitchenId}
+  </update>
+  <!--删除-->
+  <update id="delectXqKitchen" parameterType="com.dalian.sea.parameter.PXqKitchen">
+    UPDATE zs_xq_kitchen SET status = 6
+    <if test="updateUserId !=null">,update_user_id=#{updateUserId}</if>
+    WHERE kitchen_id=#{kitchenId}
+  </update>
+</mapper>

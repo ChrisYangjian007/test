@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PuReceiveDetailMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.PuReceiveDetail">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="receive_detail_id" jdbcType="BIGINT" property="receiveDetailId"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="goods_type_id" jdbcType="BIGINT" property="goodsTypeId"/>
+        <result column="goods_type" jdbcType="TINYINT" property="goodsType"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <!--<result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>-->
+        <result column="product_status" jdbcType="TINYINT" property="productStatus"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="weight" jdbcType="DECIMAL" property="weight"/>
+        <result column="receipt_status" jdbcType="TINYINT" property="receiptStatus"/>
+        <result column="receive_id" jdbcType="BIGINT" property="receiveId"/>
+        <result column="test_result" jdbcType="TINYINT" property="testResult"/>
+        <result column="return_reason" jdbcType="VARCHAR" property="returnReason"/>
+        <result column="dispose_plan" jdbcType="VARCHAR" property="disposePlan"/>
+        <result column="handler" jdbcType="VARCHAR" property="handler"/>
+        <result column="return_date" jdbcType="TIMESTAMP" property="returnDate"/>
+        <result column="note" jdbcType="VARCHAR" property="note"/>
+        <result column="return_no" jdbcType="VARCHAR" property="returnNo"/>
+        <result column="original_id" jdbcType="BIGINT" property="originalId"/>
+        <result column="is_print" jdbcType="TINYINT" property="isPrint"/>
+        <result column="qrcode" jdbcType="VARCHAR" property="qrcode"/>
+    </resultMap>
+
+    <resultMap id="DatatableMap" extends="BaseResultMap" type="com.dalian.sea.parameter.PuReceiveDetaildPara">
+        <association property="puReceive" javaType="com.dalian.sea.model.PuReceive" columnPrefix="pr_">
+            <id column="id" property="receiveId" jdbcType="BIGINT"/>
+            <result column="enterprise_id" property="enterpriseId" jdbcType="BIGINT"/>
+            <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR"/>
+            <result column="deliver_name" property="deliverName" jdbcType="VARCHAR"/>
+            <result column="consignee" property="consignee" jdbcType="VARCHAR"/>
+            <result column="deliver_date" property="deliverDate" jdbcType="TIMESTAMP"/>
+            <result column="receive_no" property="receiveNo" jdbcType="VARCHAR"/>
+            <result column="remark" property="remark" jdbcType="VARCHAR"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </association>
+    </resultMap>
+
+    <update id="updateByReceiveDetailId">
+        UPDATE pu_receive_detail
+        <trim suffixOverrides="," prefix="set" suffix=" where receive_detail_id=#{receiveDetailId}">
+            <if test="batchNo!=null and batchNo!=''">batch_no=#{batchNo},</if>
+            <if test="updateDate!=null">update_date=#{updateDate},</if>
+            <if test="updateUserId!=null and updateUserId!=''">update_user_id=#{updateUserId},</if>
+            <if test="goodsTypeId!=null and goodsTypeId!=''">goods_type_id=#{goodsTypeId},</if>
+            <if test="goodsType!=null and goodsType!=''">goods_type=#{goodsType},</if>
+            <if test="productId!=null and productId!=''">product_id=#{productId},</if>
+            <if test="productName!=null and productName!=''">product_name=#{productName},</if>
+            <if test="productSpecName!=null and productSpecName!=''">product_spec_name=#{productSpecName},</if>
+            <if test="weight!=null and weight!=''">weight=#{weight},</if>
+            <if test="unitId!=null and unitId!=''">unit_id=#{unitId},</if>
+            <if test="unitName!=null and unitName!=''">unit_name=#{unitName},</if>
+        </trim>
+    </update>
+
+    <select id="getReceiveCarryOut" resultMap="DatatableMap"
+            parameterType="com.dalian.sea.parameter.PuReceiveDetaildPara">
+        SELECT prd.receive_detail_id,
+        prd.batch_no,
+        prd.goods_type,
+        prd.product_name,
+        prd.product_spec_name,
+        prd.weight,
+        prd.unit_name,
+        prd.test_result,
+        prd.receipt_status,
+        prd.receive_id,
+        prd.return_no,
+        prd.return_reason,
+        prd.dispose_plan,
+        prd.handler,
+        prd.return_date,
+        prd.remark,
+        prd.note,
+        prd.original_id,
+        prd.return_date,
+        prd.qrcode,
+        pr.receive_id as pr_id,
+        pr.enterprise_name as pr_enterprise_name,
+        pr.deliver_name as pr_deliver_name,
+        pr.consignee as pr_consignee,
+        pr.deliver_date as pr_deliver_date,
+        pr.receive_no as pr_receive_no,
+        pr.remark as pr_remark
+        FROM pu_receive_detail prd LEFT JOIN pu_receive as pr ON prd.receive_id=pr.receive_id
+        WHERE
+        prd.status in (1,5)
+        AND pr.status = 1
+        <choose>
+            <when test="method==1">
+                and prd.receipt_status IN (1,4)
+                <if test="beginTime != null">
+                    <![CDATA[ AND pr.deliver_date>=#{beginTime} ]]>
+                    <![CDATA[ and pr.deliver_date<=#{endTime} ]]>
+                </if>
+                <if test="endTime != null">
+                </if>
+            </when>
+            <when test="method==2">
+                and prd.receipt_status IN (2,3)
+                <if test="beginTime != null">
+                    <![CDATA[ AND prd.return_date>=#{beginTime} ]]>
+                </if>
+                <if test="endTime != null">
+                    <![CDATA[ and prd.return_date<=#{endTime} ]]>
+                </if>
+            </when>
+        </choose>
+        <if test="receiptStatus!=null and receiptStatus!=''">
+            and prd.receipt_status=#{receiptStatus}
+        </if>
+        <if test="testResult!=null and testResult!=''">
+            and prd.test_result=#{testResult}
+        </if>
+        <if test="enterpriseId!=null and enterpriseId!=''">
+            and pr.enterprise_id=#{enterpriseId}
+        </if>
+        <if test="productSpecName!=null and productSpecName!=''">
+            and prd.product_spec_name=#{productSpecName}
+        </if>
+        <if test="goodsTypeId!=null and goodsTypeId!=''">
+            and prd.goods_type_id=#{goodsTypeId}
+        </if>
+        <if test="batchNo!=null and batchNo!=''">
+            and prd.batch_no=#{batchNo}
+        </if>
+        <if test="productName!=null and productName!=''">
+            and prd.product_name=#{productName}
+        </if>
+        order by prd.update_date desc,prd.receive_detail_id desc
+    </select>
+
+    <!--根据receiveId查找收货单、明细-->
+    <select id="getReceiveByReceiveId" resultMap="DatatableMap">
+        SELECT
+        prd.*,
+        pr.receive_id as pr_receive_id,
+        pr.update_date as pr_update_date,
+        pr.update_user_id as pr_update_user_id,
+        pr.status as pr_status,
+        pr.enterprise_id as pr_enterprise_id,
+        pr.enterprise_name as pr_enterprise_name,
+        pr.deliver_name as pr_deliver_name,
+        pr.consignee as pr_consignee,
+        pr.deliver_date as pr_deliver_date
+        FROM pu_receive_detail as prd LEFT JOIN pu_receive as pr ON prd.receive_id=pr.receive_id
+        WHERE pr.receive_id in
+        <foreach item="id" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getReceiveDetailById" parameterType="Long" resultMap="BaseResultMap">
+        select * from pu_receive_detail WHERE receive_detail_id=#{receiveDetailId}
+    </select>
+
+    <!--根据receiveDetailId查找收货单、明细-->
+    <select id="getReceiveByReceiveDetailId" resultMap="DatatableMap">
+        SELECT
+        prd.*,
+        pr.receive_id as pr_receive_id,
+        pr.update_date as pr_update_date,
+        pr.update_user_id as pr_update_user_id,
+        pr.status as pr_status,
+        pr.remark as pr_remark,
+        pr.enterprise_id as pr_enterprise_id,
+        pr.enterprise_name as pr_enterprise_name,
+        pr.deliver_name as pr_deliver_name,
+        pr.consignee as pr_consignee,
+        pr.receive_no as pr_receive_no,
+        pr.deliver_date as pr_deliver_date
+        FROM pu_receive_detail as prd LEFT JOIN pu_receive as pr ON prd.receive_id=pr.receive_id
+        WHERE prd.receive_detail_id in
+        <foreach item="id" index="index" collection="list"
+                 open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!--根据receiveDetailId删除收货单明细-->
+    <update id="deleteReceiveDetailById">
+        update pu_receive_detail set
+        status=6,
+        update_date=#{date},
+        update_user_id=#{userId}
+        where
+        receive_detail_id=#{pu.receiveDetailId}
+    </update>
+
+
+    <!--查询一个收货单的明细数量-->
+    <select id="countReceiveDetails" parameterType="java.lang.Long" resultType="java.lang.Integer">
+      select count(*) from pu_receive_detail
+      where status!=6 and receive_id=#{receiveId}
+    </select>
+
+    <!--报送检验,修改test_result-->
+    <update id="updateTestResult">
+        update pu_receive_detail
+        set test_result=1
+        where
+        receive_detail_id=#{item.receiveDetailId}
+    </update>
+
+    <insert id="insertReceiveDetail" useGeneratedKeys="true" keyColumn="receive_detail_id">
+        INSERT INTO pu_receive_detail (batch_no
+        ,create_date
+        ,create_user_id
+        ,update_date
+        ,receive_id
+        ,goods_type_id
+        ,goods_type
+        ,product_spec_name
+        ,product_name
+        ,product_id
+        ,unit_id
+        ,unit_name
+        ,weight
+        ,qrcode
+        )VALUES
+        (
+        #{pu.batchNo},
+        now(),
+        #{userId},
+        now(),
+        #{receiveId},
+        #{pu.goodsTypeId},
+        #{pu.goodsType},
+        #{pu.productSpecName},
+        #{pu.productName},
+        #{pu.productId},
+        #{pu.unitId},
+        #{pu.unitName},
+        #{pu.weight},
+        #{pu.qrcode}
+        )
+    </insert>
+
+    <select id="getDetailForInsertReceive" parameterType="Long" resultMap="BaseResultMap">
+        SELECT receive_detail_id FROM pu_receive_detail WHERE receive_id=#{receiveId}
+    </select>
+
+    <!--修改-->
+    <update id="updateReceiveDetail">
+        update pu_receive_detail
+        <trim prefix="set" suffixOverrides="," suffix=" where receive_detail_id=#{pu.receiveDetailId}">
+            <if test="pu.goodsTypeId!=null">goods_type_id=#{pu.goodsTypeId},</if>
+            <if test="pu.goodsType!=null">goods_type=#{pu.goodsType},</if>
+            <if test="pu.productId!=null">product_id=#{pu.productId},</if>
+            <if test="pu.productName!=null">product_name=#{pu.productName},</if>
+            <if test="pu.productSpecName!=null">product_spec_name=#{pu.productSpecName},</if>
+            <if test="pu.unitId!=null">unit_id=#{pu.unitId},</if>
+            <if test="pu.unitName!=null">unit_name=#{pu.unitName},</if>
+            <if test="date!=null">update_date=#{date},</if>
+            <if test="userId!=null">update_user_id=#{userId},</if>
+            <if test="pu.receiptStatus!=null">receipt_status=#{pu.receiptStatus},</if>
+            <if test="pu.returnReason!=null">return_reason=#{pu.returnReason},</if>
+            <if test="pu.disposePlan!=null">dispose_plan=#{pu.disposePlan},</if>
+            <if test="pu.handler!=null">handler=#{pu.handler},</if>
+            <if test="pu.returnDate!=null">return_date=#{pu.returnDate},</if>
+            <if test="pu.returnNo!=null">return_no=#{pu.returnNo},</if>
+            <if test="pu.originalId!=null">original_id=#{pu.originalId},</if>
+            <if test="pu.batchNo!=null">batch_no=#{pu.batchNo},</if>
+            <if test="pu.weight!=null">weight=#{pu.weight},</if>
+            <if test="pu.remark!=null and pu.remark!=''">remark=#{pu.remark},</if>
+            <if test="pu.note!=null and pu.note!=''">note=#{pu.note}</if>
+        </trim>
+    </update>
+
+    <update id="updateResult">
+        update pu_receive_detail
+        set test_result=#{pt.testResult}
+        where receive_detail_id=#{pt.receiveDetailId}
+    </update>
+
+    <update id="updateWeight">
+        update pu_receive_detail
+        set weight=#{pr.weight}-#{pr.count},
+        update_user_id=#{userId},
+        update_date=#{date}
+        where receive_detail_id=#{pr.receiveDetailId}
+    </update>
+
+    <update id="returnDetail">
+        update pu_receive_detail
+        set
+        weight=#{pr.count},
+        return_reason=#{pr.returnReason},
+        dispose_plan=#{pr.disposePlan},
+        handler=#{pr.handler},
+        return_date=#{pr.returnDate}
+        <if test="note!=null and note!=''">
+            ,note=#{pr.note}
+        </if>
+        where receive_detail_id=#{key}
+    </update>
+
+    <select id="queryOne" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select * from pu_receive_detail
+        where receive_detail_id=#{receiveDetailId}
+    </select>
+
+    <insert id="newOne" useGeneratedKeys="true" keyProperty="pu.receiveDetailId">
+        insert into pu_receive_detail(
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,update_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                , update_user_id
+            </if>
+            <if test="pu.batchNo!=null and pu.batchNo!=''">
+                ,batch_no
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,remark
+            </if>
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                , create_user_id
+            </if>
+            <if test="pu.productId!=null and pu.productId!=''">
+                ,product_id
+            </if>
+            <if test="pu.productName!=null and pu.productName!=''">
+                ,product_name
+            </if>
+            <if test="pu.goodsTypeId!=null and pu.goodsTypeId!=''">
+                ,goods_type_id
+            </if>
+            <if test="pu.goodsType!=null and pu.goodsType!=''">
+                ,goods_type
+            </if>
+            <if test="pu.productSpecName!=null and pu.productSpecName!=''">
+                ,product_spec_name
+            </if>
+            <if test="pu.unitId!=null and pu.unitId!=''">
+                ,unit_id
+            </if>
+            <if test="pu.unitName!=null and pu.unitName!=''">
+                ,unit_name
+            </if>
+            <if test="pu.count!=null and pu.count!=''">
+                ,weight
+            </if>
+            <if test="pu.receiptStatus!=null and pu.receiptStatus!=''">
+                ,receipt_status
+            </if>
+            <if test="pu.receiveId!=null and pu.receiveId!=''">
+                ,receive_id
+            </if>
+            <if test="pu.testResult!=null and pu.testResult!=''">
+                ,test_result
+            </if>
+            <if test="pu.returnReason!=null and pu.returnReason!=''">
+                ,return_reason
+            </if>
+            <if test="pu.disposePlan!=null and pu.disposePlan!=''">
+                ,dispose_plan
+            </if>
+            <if test="pu.handler!=null and pu.handler!=''">
+                ,handler
+            </if>
+            <if test="pu.returnDate!=null">
+                ,return_date
+            </if>
+            <if test="pu.note!=null and pu.note!=''">
+                ,note
+            </if>
+            <if test="pu.returnNo!=null and pu.returnNo!=''">
+                ,return_no
+            </if>
+            <if test="pu.originalId!=null and pu.originalId!=''">
+                ,original_id
+            </if>
+        </trim>
+        )values(
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="pu.batchNo!=null and pu.batchNo!=''">
+                ,#{pu.batchNo}
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,#{pu.remark}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                , #{userId}
+            </if>
+            <if test="pu.productId!=null and pu.productId!=''">
+                ,#{pu.productId}
+            </if>
+            <if test="pu.productName!=null and pu.productName!=''">
+                ,#{pu.productName}
+            </if>
+            <if test="pu.goodsTypeId!=null and pu.goodsTypeId!=''">
+                ,#{pu.goodsTypeId}
+            </if>
+            <if test="pu.goodsType!=null and pu.goodsType!=''">
+                ,#{pu.goodsType}
+            </if>
+            <if test="pu.productSpecName!=null and pu.productSpecName!=''">
+                ,#{pu.productSpecName}
+            </if>
+            <if test="pu.unitId!=null and pu.unitId!=''">
+                ,#{pu.unitId}
+            </if>
+            <if test="pu.unitName!=null and pu.unitName!=''">
+                ,#{pu.unitName}
+            </if>
+            <if test="pu.count!=null and pu.count!=''">
+                ,#{pu.count}
+            </if>
+            <if test="pu.receiptStatus!=null and pu.receiptStatus!=''">
+                ,#{pu.receiptStatus}
+            </if>
+            <if test="pu.receiveId!=null and pu.receiveId!=''">
+                ,#{pu.receiveId}
+            </if>
+            <if test="pu.testResult!=null and pu.testResult!=''">
+                ,#{pu.testResult}
+            </if>
+            <if test="pu.returnReason!=null and pu.returnReason!=''">
+                ,#{pu.returnReason}
+            </if>
+            <if test="pu.disposePlan!=null and pu.disposePlan!=''">
+                ,#{pu.disposePlan}
+            </if>
+            <if test="pu.handler!=null and pu.handler!=''">
+                ,#{pu.handler}
+            </if>
+            <if test="pu.returnDate!=null">
+                ,#{pu.returnDate}
+            </if>
+            <if test="pu.note!=null and pu.note!=''">
+                ,#{pu.note}
+            </if>
+            <if test="pu.returnNo!=null and pu.returnNo!=''">
+                ,#{pu.returnNo}
+            </if>
+            <if test="pu.originalId!=null and pu.originalId!=''">
+                ,#{pu.originalId}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="getDetailByReceiveId" parameterType="List" resultMap="BaseResultMap">
+        select * from pu_receive_detail WHERE receive_id=#{receiveId}
+    </select>
+
+    <select id="getReceiveDetailByReceiveNo" parameterType="java.lang.String" resultMap="DatatableMap">
+        SELECT pr.*,prd.*
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id=prd.receive_id
+        WHERE pr.receive_no=#{receiveNo} and prd.status !=6 and prd.receipt_status !=2
+    </select>
+
+    <select id="getReceiveDetailByBatchNo" parameterType="java.lang.String" resultMap="DatatableMap">
+        SELECT pr.*,prd.*
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id=prd.receive_id
+        WHERE prd.batch_no=#{batchNo} AND prd.status=1
+    </select>
+    <select id="getGoodsTypeByReceiveBatchNo" resultMap="BaseResultMap">
+        select prd.*,bddd.data_dictionary_details_id as goodsTypeId, bddd.c_name as goodsType
+        from pu_receive_detail prd
+        left join ba_data_dictionary_details bddd on prd.goods_type_id=bddd.data_dictionary_details_id
+        where prd.status!=6 AND receipt_status!=2 AND prd.batch_no =#{batchNo}
+    </select>
+
+    <update id="updateIsPrint" parameterType="List">
+        UPDATE pu_receive_detail SET receipt_status=1 WHERE receive_detail_id in
+        <foreach collection="receiveDetailId" open="(" close=")" item="item" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <update id="updateReceiptStatus">
+        UPDATE pu_receive_detail SET receipt_status=3 WHERE receive_detail_id in
+        <foreach collection="receiveIdList" open="(" close=")" item="item" separator=",">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getHsWeightByDate" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE product_name = '海参'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m-%d')=#{date}
+    </select>
+
+    <select id="getByWeightByDate" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE product_name = '鲍鱼'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m-%d')=#{date}
+    </select>
+
+    <select id="getXrWeightByDate" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE product_name = '虾仁'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m-%d')=#{date}
+    </select>
+
+    <select id="getBcWeightByDate" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE goods_type = '包材'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m-%d')=#{date}
+    </select>
+
+    <select id="getHsWeightByMonth" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE product_name = '海参'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m')=#{date}
+    </select>
+
+    <select id="getByWeightByMonth" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE product_name = '鲍鱼'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m')=#{date}
+    </select>
+
+    <select id="getXrWeightByMonth" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE product_name = '虾仁'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m')=#{date}
+    </select>
+
+    <select id="getBcWeightByMonth" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+        SELECT SUM(prd.weight)
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id = prd.receive_id
+        WHERE goods_type = '包材'
+        AND prd.status != 6
+        AND DATE_FORMAT(deliver_date,'%Y-%m')=#{date}
+    </select>
+    <select id="getAllReceiveByReceiveNo" resultMap="BaseResultMap">
+        SELECT pr.*,prd.*
+        FROM pu_receive_detail prd LEFT JOIN pu_receive pr ON pr.receive_id=prd.receive_id
+        WHERE pr.receive_no=#{receiveNo} and prd.status !=6
+    </select>
+
+</mapper>

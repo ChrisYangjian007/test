@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaUserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BaUserRole">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="user_role_id" jdbcType="BIGINT" property="userRoleId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  
+  <resultMap id="PBaUserRole" type="com.dalian.sea.parameter.PBaUserRole" extends="BaseResultMap">
+    <association property="baRoles" javaType="com.dalian.sea.model.BaRoles">
+      <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+    </association>
+  </resultMap>
+
+  <!--获取用户所有身份-->
+  <select id="getAllBaUserRoleByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_user_role where status=1 and user_id = #{userId} order by update_date desc
+  </select>
+
+  <!--获取用户身份-->
+  <select id="getBaUserRoleBy" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaUserRole">
+    select * from ba_user_role where status=1
+    <if test="userId!=null"> and user_id = #{userId}</if>
+    <if test="roleId!=null"> and role_id = #{roleId}</if>
+  </select>
+
+  <!--添加用户身份-->
+  <insert id="addBaUserRole" parameterType="com.dalian.sea.model.BaUserRole" keyProperty="userRoleId" useGeneratedKeys="true">
+    insert into ba_user_role (user_id,role_id,create_user_id,create_date,update_date)
+    values (#{userId},#{roleId},#{createUserId},now(),now())
+  </insert>
+
+  <!--修改用户身份-->
+  <update id="updateBaUserRole" parameterType="com.dalian.sea.model.BaUserRole">
+    update ba_user_role
+    <trim prefix="set" suffixOverrides="," suffix=" where user_role_id=#{userRoleId}">
+      <if test="userId!=null">user_id = #{userId},</if>
+      <if test="roleId!=null">role_id = #{roleId},</if>
+      <if test="updateUserId!=null">update_user_id = #{updateUserId},</if>
+    </trim>
+  </update>
+
+  <!--删除用户身份-->
+  <update id="deleteBaUserRole" parameterType="com.dalian.sea.model.BaUserRole">
+    update ba_user_role set status=6
+    <if test="updateUserId!=null">,update_user_id = #{updateUserId}</if>
+    where user_role_id=#{userRoleId}
+  </update>
+
+  <!--通过用户id删除用户身份-->
+  <update id="deleteBaUserRoleByUserId" parameterType="com.dalian.sea.model.BaUserRole">
+    UPDATE ba_user_role SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where user_id=#{userId}
+  </update>
+
+  <!--通过用户集合获取角色名称-->
+  <select id="getPUserRoleByUserList" parameterType="java.util.List" resultMap="PBaUserRole">
+    SELECT bur.*,br.c_name FROM (SELECT ur.* FROM ba_user_role ur WHERE ur.status=1) as bur
+    LEFT JOIN ba_roles br ON br.role_id=bur.role_id
+    WHERE bur.user_id IN (
+    <foreach collection="baUserList" index="index" item="item" separator=",">
+      #{item.userId}
+    </foreach>
+    )
+  </select>
+
+  <!--通过用户id获取角色信息-->
+  <select id="getUserRoleByUserId" parameterType="java.lang.Long" resultMap="PBaUserRole">
+    SELECT bur.*,br.c_name FROM (SELECT ur.* FROM ba_user_role ur WHERE ur.status=1) as bur
+    LEFT JOIN ba_roles br ON br.role_id=bur.role_id
+    WHERE bur.user_id =#{userId}
+  </select>
+
+  <select id="getUserRoleByRoleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM ba_user_role WHERE status!=6 AND role_id=#{roleId}
+  </select>
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaFormAttributeMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PBaFormAttribute">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="form_attribute_id" jdbcType="BIGINT" property="formAttributeId" />
+    <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+    <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+    <result column="control_name" jdbcType="VARCHAR" property="controlName" />
+    <result column="control_type" jdbcType="TINYINT" property="controlType" />
+    <result column="restrictive_conditions" jdbcType="INTEGER" property="restrictiveConditions" />
+    <result column="control_style" jdbcType="VARCHAR" property="controlStyle" />
+    <result column="control_validator" jdbcType="VARCHAR" property="controlValidator" />
+    <result column="import_length" jdbcType="INTEGER" property="importLength" />
+    <result column="default_value" jdbcType="VARCHAR" property="defaultValue" />
+    <result column="attributes_property" jdbcType="VARCHAR" property="attributesProperty" />
+    <result column="data_source_type" jdbcType="TINYINT" property="dataSourceType" />
+    <result column="data_source_code" jdbcType="VARCHAR" property="dataSourceCode" />
+    <result column="data_source" jdbcType="VARCHAR" property="dataSource" />
+    <result column="control_colspan" jdbcType="VARCHAR" property="controlColspan" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+    <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="workProcessName" jdbcType="VARCHAR" property="workProcessName"/>
+  </resultMap>
+
+  <resultMap id="PBaFormAttributeUserAndDataDictionaryDetail" type="com.dalian.sea.parameter.PBaFormAttribute" extends="BaseResultMap">
+    <collection property="dictionaryDetails" javaType="java.util.List" ofType="com.dalian.sea.parameter.PBaDataDictionaryDetails" columnPrefix="dd_">
+      <id column="data_dictionary_details_id" jdbcType="BIGINT" property="dataDictionaryDetailsId" />
+      <result column="data_dictionary_id" jdbcType="BIGINT" property="dataDictionaryId" />
+      <result column="code" jdbcType="VARCHAR" property="code" />
+      <result column="c_name" jdbcType="VARCHAR" property="cName" />
+      <result column="remark" jdbcType="VARCHAR" property="remark" />
+      <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+      <result column="flage" jdbcType="VARCHAR" property="flage" />
+      <result column="flage_name" jdbcType="VARCHAR" property="flageName" />
+      <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+      <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+      <result column="first_id" jdbcType="BIGINT" property="firstId" />
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+      <result column="status" jdbcType="TINYINT" property="status" />
+    </collection>
+  </resultMap>
+  
+  <!--添加List-->
+  <insert id="addBaFormAttributeList">
+    insert into ba_form_attribute (property_name ,control_type ,restrictive_conditions ,data_source_type ,
+    data_source_code ,data_source ,list_index,
+    handle_type ,create_date ,update_date ,create_user_id ,work_process_id
+    ) values
+    <foreach collection="formAttributeList" item="item" index="index" separator="," >
+      (#{item.propertyName},#{item.controlType},#{item.restrictiveConditions},#{item.dataSourceType},
+      #{item.dataSourceCode},#{item.dataSource},#{item.listIndex},
+      #{item.handleType},now(),now(),#{userId},#{workProcessId}
+      )
+    </foreach>
+  </insert>
+
+  <!--修改List-->
+  <update id="updateBaFormAttributeList">
+    update ba_form_attribute
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="property_name =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.propertyName}
+        </foreach>
+      </trim>
+      <trim prefix="control_type =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.controlType}
+        </foreach>
+      </trim>
+      <trim prefix="restrictive_conditions =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.restrictiveConditions}
+        </foreach>
+      </trim>
+      <trim prefix="data_source_type =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.dataSourceType}
+        </foreach>
+      </trim>
+      <trim prefix="data_source_code =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.dataSourceCode}
+        </foreach>
+      </trim>
+      <trim prefix="data_source =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.dataSource}
+        </foreach>
+      </trim>
+      <trim prefix="list_index =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.listIndex}
+        </foreach>
+      </trim>
+      <trim prefix="handle_type =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{item.handleType}
+        </foreach>
+      </trim>
+      <trim prefix="update_user_id =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{userId}
+        </foreach>
+      </trim>
+    </trim>
+    where form_attribute_id in
+    <foreach collection="formAttributeList" index="index" item="item" separator="," open="(" close=")">
+      #{item.formAttributeId}
+    </foreach>
+  </update>
+
+  <update id="deleteBaFormAttributeList" >
+    update ba_form_attribute
+    <trim prefix="set" suffixOverrides=",">
+      status = 6,
+      <trim prefix="update_user_id =case" suffix="end,">
+        <foreach collection="formAttributeList" item="item" index="index">
+          when form_attribute_id=#{item.formAttributeId} then #{userId}
+        </foreach>
+      </trim>
+    </trim>
+    where work_process_id=#{workProcessId} and form_attribute_id not in
+    <foreach collection="formAttributeList" index="index" item="item" separator="," open="(" close=")">
+      #{item.formAttributeId}
+    </foreach>
+  </update>
+
+
+
+<!--根据工艺详情ID和类别获取-->
+  <select id="getBaFormAttributeListByWorkProcessIdAndHandleType" resultMap="BaseResultMap">
+    select bfa.*,zwp.c_name as workProcessName
+    from ba_form_attribute bfa
+    LEFT JOIN zs_work_process zwp ON zwp.work_process_id =bfa.work_process_id
+    where bfa.work_process_id=#{workProcessId}
+    and bfa.handle_type=#{handleType} and bfa.status = 1
+    order by list_index asc
+  </select>
+
+  <!--根据工艺id获取-->
+  <select id="getBaFormAttributeListByWorkProcessId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM ba_form_attribute WHERE work_process_id=#{workProcessId}
+  </select>
+
+  <!--通过workProcessId删除-->
+  <update id="deleteFormAttributeByWorkProcessId" parameterType="com.dalian.sea.model.ZsWorkProcess">
+    UPDATE ba_form_attribute SET status=6
+    <if test="updateUserId != ''">
+      ,update_user_id=#{updateUserId}
+    </if>
+    WHERE work_process_id=#{workProcessId}
+  </update>
+
+  <!--获取生产任务下所有工艺的所有字段-->
+  <select id="getFormAttributeByProduceTaskId" parameterType="java.lang.Long" resultMap="PBaFormAttributeUserAndDataDictionaryDetail">
+    SELECT bfa.*,
+    bddd.data_dictionary_details_id as dd_data_dictionary_details_id,
+    bddd.c_name as dd_c_name
+    FROM ba_form_attribute bfa
+    LEFT JOIN ba_data_dictionary bdd ON bdd.code=bfa.data_source_code
+    LEFT JOIN ba_data_dictionary_details bddd ON bddd.data_dictionary_id=bdd.data_dictionary_id and bddd.status=1
+    WHERE bfa.work_process_id in(
+    SELECT zwp.work_process_id FROM zs_work_process zwp WHERE zwp.work_flow_id=(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}))
+  </select>
+
+  <select id="getDefaultFormAttributeByWorkProcessIdAndName" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM ba_form_attribute WHERE status=1 AND work_process_id=#{workProcessId} AND restrictive_conditions=5
+  </select>
+</mapper>

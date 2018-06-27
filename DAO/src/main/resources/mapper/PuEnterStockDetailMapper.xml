@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PuEnterStockDetailMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PuEnterStockDetailPara">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="enter_stock_detail_id" jdbcType="BIGINT" property="enterStockDetailId"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="in_weight" jdbcType="DECIMAL" property="inWeight"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="enter_stock_id" jdbcType="BIGINT" property="enterStockId"/>
+        <result column="is_material" jdbcType="BIGINT" property="isMaterial"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="product_status" jdbcType="BIGINT" property="productStatus"/>
+        <result column="rest_status" jdbcType="TINYINT" property="restStatus"/>
+        <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+        <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="enter_no" jdbcType="VARCHAR" property="enterNo"/>
+        <result column="goods_batch_no" jdbcType="VARCHAR" property="goodsBatchNo"/>
+        <result column="enter_product_spec_name" jdbcType="VARCHAR" property="enterProductSpecName"/>
+        <result column="material_weight" jdbcType="DECIMAL" property="materialWeight"/>
+        <result column="enter_unit_id" jdbcType="BIGINT" property="enterUnitId"/>
+        <result column="enter_unit_name" jdbcType="VARCHAR" property="enterUnitName"/>
+        <result column="is_sea_cucumber" jdbcType="TINYINT" property="isSeaCucumber"/>
+        <result column="materialWeightSum" jdbcType="DECIMAL" property="materialWeightSum"/>
+        <result column="inWeightSum" jdbcType="DECIMAL" property="inWeightSum"/>
+        <result column="materialName" jdbcType="VARCHAR" property="materialName"/>
+        <result column="productTypeId" jdbcType="BIGINT" property="productTypeId"/>
+        <result column="productTypeName" jdbcType="BIGINT" property="productTypeName"/>
+        <result column="box_code" jdbcType="VARCHAR" property="boxCode"/>
+    </resultMap>
+
+    <resultMap id="DataTableMap" extends="BaseResultMap" type="com.dalian.sea.parameter.PuEnterStockDetailPara">
+        <association property="puEnterStock" javaType="com.dalian.sea.model.PuEnterStock" columnPrefix="pe_">
+            <id column="id" property="enterStockId" jdbcType="BIGINT"/>
+            <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+            <result column="create_user_id" property="createUserId" jdbcType="BIGINT"/>
+            <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+            <result column="update_user_id" property="updateUserId" jdbcType="BIGINT"/>
+            <result column="status" property="status" jdbcType="TINYINT"/>
+            <result column="remark" property="remark" jdbcType="VARCHAR"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="enter_date" jdbcType="TIMESTAMP" property="enterDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="enter_no" jdbcType="VARCHAR" property="enterNo"/>
+            <result column="enter_person" jdbcType="VARCHAR" property="enterPerson"/>
+            <result column="brokerage" jdbcType="VARCHAR" property="brokerage"/>
+            <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+            <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+            <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="time_warn" jdbcType="INTEGER" property="timeWarn"/>
+            <result column="stock_warn" jdbcType="INTEGER" property="stockWarn"/>
+            <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+            <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        </association>
+        <association property="baDataDictionaryDetails" javaType="com.dalian.sea.model.BaDataDictionaryDetails"
+                     columnPrefix="bd_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+        <association property="baDataDictionaryDetailsTwo" javaType="com.dalian.sea.model.BaDataDictionaryDetails"
+                     columnPrefix="bd2_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+        <association property="zsWarehouse" javaType="com.dalian.sea.model.ZsWarehouse" columnPrefix="zw_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="PDataTableMap" extends="BaseResultMap" type="com.dalian.sea.parameter.PuEnterStockDetailPara">
+        <result column="materialName" jdbcType="VARCHAR" property="materialName"/>
+        <result column="productStatusName" jdbcType="VARCHAR" property="productStatusName"></result>
+        <association property="puEnterStock" javaType="com.dalian.sea.model.PuEnterStock" columnPrefix="pe_">
+            <id column="id" property="enterStockId" jdbcType="BIGINT"/>
+            <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+            <result column="create_user_id" property="createUserId" jdbcType="BIGINT"/>
+            <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+            <result column="update_user_id" property="updateUserId" jdbcType="BIGINT"/>
+            <result column="status" property="status" jdbcType="TINYINT"/>
+            <result column="remark" property="remark" jdbcType="VARCHAR"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="enter_date" jdbcType="TIMESTAMP" property="enterDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="enter_no" jdbcType="VARCHAR" property="enterNo"/>
+            <result column="enter_person" jdbcType="VARCHAR" property="enterPerson"/>
+            <result column="brokerage" jdbcType="VARCHAR" property="brokerage"/>
+            <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+            <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+            <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="time_warn" jdbcType="INTEGER" property="timeWarn"/>
+            <result column="stock_warn" jdbcType="INTEGER" property="stockWarn"/>
+            <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+            <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        </association>
+        <association property="baDataDictionaryDetails" javaType="com.dalian.sea.model.BaDataDictionaryDetails"
+                     columnPrefix="bd_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+        <association property="baDataDictionaryDetailsTwo" javaType="com.dalian.sea.model.BaDataDictionaryDetails"
+                     columnPrefix="bd2_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+        <association property="zsWarehouse" javaType="com.dalian.sea.model.ZsWarehouse" columnPrefix="zw_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+    </resultMap>
+    <insert id="insertPuEnterStockDetail" parameterType="com.dalian.sea.model.PuEnterStockDetail"
+            keyProperty="enterStockDetailId" useGeneratedKeys="true">
+        INSERT INTO pu_enter_stock_detail(
+        <trim prefixOverrides=",">
+            <if test="companyId !=null">
+                ,company_id
+            </if>
+            <if test="listIndex !=null">
+                ,list_index
+            </if>
+            <if test="inWeight !=null">
+                ,in_weight
+            </if>
+            <if test="unitId !=null">
+                ,unit_id
+            </if>
+            <if test="unitName !=null and unitName !=''">
+                ,unit_name
+            </if>
+            <if test="productSpecName !=null and productSpecName !=''">
+                ,product_spec_name
+            </if>
+            <if test="productSpecId !=null">
+                ,product_spec_id
+            </if>
+            <if test="productId !=null">
+                ,product_id
+            </if>
+            <if test="productName !=null and productName!=''">
+                ,product_name
+            </if>
+            <if test="warehouseId !=null">
+                ,warehouse_id
+            </if>
+            <if test="enterStockId !=null">
+                ,enter_stock_id
+            </if>
+            <if test="isMaterial !=null">
+                ,is_material
+            </if>
+            <if test="batchNo !=null and batchNo !=''">
+                ,batch_no
+            </if>
+            <if test="productStatus !=null">
+                ,product_status
+            </if>
+            <if test="restStatus !=null">
+                ,rest_status
+            </if>
+            <if test="relatedId !=null">
+                ,related_id
+            </if>
+            <if test="relatedType !=null">
+                ,related_type
+            </if>
+            <if test="remark !=null">
+                ,remark
+            </if>
+            <if test="createUserId !=null">
+                ,create_user_id
+            </if>
+            <if test="createDate !=null">
+                ,create_date
+            </if>
+            <if test="status !=null">
+                ,status
+            </if>
+            <if test="enterNo !=null and enterNo !=''">
+                ,enter_no
+            </if>
+            <if test="goodsBatchNo !=null and goodsBatchNo !=''">
+                ,goods_batch_no
+            </if>
+            <if test="enterProductSpecName !=null and enterProductSpecName !=''">
+                ,enter_product_spec_name
+            </if>
+            <if test="materialWeight !=null">
+                ,material_weight
+            </if>
+            <if test="enterUnitId !=null">
+                ,enter_unit_id
+            </if>
+            <if test="enterUnitName !=null and enterUnitName !=''">
+                ,enter_unit_name
+            </if>
+            <if test="isSeaCucumber !=null">
+                ,is_sea_cucumber
+            </if>
+            <if test="boxCode !=null and boxCode !=''">
+                ,box_code
+            </if>
+        </trim>
+        )VALUES (
+        <trim prefixOverrides=",">
+            <if test="companyId !=null">
+                ,#{companyId}
+            </if>
+            <if test="listIndex !=null">
+                ,#{listIndex}
+            </if>
+            <if test="inWeight !=null">
+                ,#{inWeight}
+            </if>
+            <if test="unitId !=null">
+                ,#{unitId}
+            </if>
+            <if test="unitName !=null and unitName !=''">
+                ,#{unitName}
+            </if>
+            <if test="productSpecName !=null and productSpecName !=''">
+                ,#{productSpecName}
+            </if>
+            <if test="productSpecId !=null">
+                ,#{productSpecId}
+            </if>
+            <if test="productId !=null">
+                ,#{productId}
+            </if>
+            <if test="productName !=null and productName!=''">
+                ,#{productName}
+            </if>
+            <if test="warehouseId !=null">
+                ,#{warehouseId}
+            </if>
+            <if test="enterStockId !=null">
+                ,#{enterStockId}
+            </if>
+            <if test="isMaterial !=null">
+                ,#{isMaterial}
+            </if>
+            <if test="batchNo !=null and batchNo !=''">
+                ,#{batchNo}
+            </if>
+            <if test="productStatus !=null">
+                ,#{productStatus}
+            </if>
+            <if test="restStatus !=null">
+                ,#{restStatus}
+            </if>
+            <if test="relatedId !=null">
+                ,#{relatedId}
+            </if>
+            <if test="relatedType !=null">
+                ,#{relatedType}
+            </if>
+            <if test="remark !=null">
+                ,#{remark}
+            </if>
+            <if test="createUserId !=null">
+                ,#{createUserId}
+            </if>
+            <if test="createDate !=null">
+                ,#{createDate}
+            </if>
+            <if test="status !=null">
+                ,#{status}
+            </if>
+            <if test="enterNo !=null and enterNo !=''">
+                ,#{enterNo}
+            </if>
+            <if test="goodsBatchNo !=null and goodsBatchNo !=''">
+                ,#{goodsBatchNo}
+            </if>
+            <if test="enterProductSpecName !=null and enterProductSpecName !=''">
+                ,#{enterProductSpecName}
+            </if>
+            <if test="materialWeight !=null">
+                ,#{materialWeight}
+            </if>
+            <if test="enterUnitId !=null">
+                ,#{enterUnitId}
+            </if>
+            <if test="enterUnitName !=null and enterUnitName !=''">
+                ,#{enterUnitName}
+            </if>
+            <if test="isSeaCucumber !=null">
+                ,#{isSeaCucumber}
+            </if>
+            <if test="boxCode !=null and boxCode !=''">
+                ,#{boxCode}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="getAllEnterStockDetail" resultMap="DataTableMap">
+        SELECT ped.*,
+        pe.enter_stock_id AS pe_id,
+        pe.create_date AS pe_create_id,
+        pe.create_user_id AS pe_create_user_id,
+        pe.update_date AS pe_update_date,
+        pe.update_user_id AS pe_update_user_id,
+        pe.remark AS pe_remark,
+        pe.company_id AS pe_company_id,
+        pe.enter_date AS pe_enter_date,
+        pe.warehouse_id AS pe_warehouse_id,
+        pe.enter_no AS pe_enter_no,
+        pe.enter_person AS pe_enter_person,
+        pe.brokerage AS pe_brokerage,
+        pe.produce_task_name AS pe_produce_task_name,
+        pe.produce_task_no AS pe_produce_task_no,
+        pe.produce_task_id AS pe_produce_task_id,
+        pe.time_warn AS pe_time_warn,
+        pe.stock_warn AS pe_stock_warn,
+        pe.related_id AS pe_related_id,
+        pe.related_type AS pe_related_type,
+        bddd.c_name AS bd_c_name,
+        bddd2.c_name AS bd2_c_name,
+        zw.c_name AS zw_c_name
+        FROM pu_enter_stock_detail ped LEFT JOIN pu_enter_stock pe ON ped.enter_stock_id=pe.enter_stock_id
+        LEFT JOIN ba_data_dictionary_details bddd ON ped.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details bddd2 ON ped.product_status =bddd2.data_dictionary_details_id
+        LEFT JOIN zs_warehouse zw ON ped.warehouse_id=zw.warehouse_id
+        WHERE pe.status=1 AND ped.status=1
+        <if test="pu!=null">
+            <if test="pu.beginTime != null">
+                <![CDATA[ AND pe.enter_date>=#{pu.beginTime} ]]>
+            </if>
+            <if test="pu.endTime != null">
+                <![CDATA[ AND pe.enter_date<=#{pu.endTime} ]]>
+            </if>
+            <if test="pu.warehouseId!=null and pu.warehouseId!=''">
+                AND ped.warehouse_id=#{pu.warehouseId}
+            </if>
+            <if test="pu.batchNo!=null and pu.batchNo!=''">
+                AND ped.batch_no=#{pu.batchNo}
+            </if>
+            <if test="pu.isMaterial!=null and pu.isMaterial!=''">
+                AND ped.is_material=#{pu.isMaterial}
+            </if>
+            <if test="pu.productStatus!=null and pu.productStatus!=''">
+                AND ped.product_status=#{pu.productStatus}
+            </if>
+            <if test="pu.productId!=null and pu.productId!=''">
+                AND ped.product_id=#{pu.productId}
+            </if>
+            <if test="pu.enterPerson!=null and pu.enterPerson!=''">
+                AND pe.enter_person=#{pu.enterPerson}
+            </if>
+            <if test="pu.brokerage!=null and pu.brokerage!=''">
+                AND pe.brokerage=#{pu.brokerage}
+            </if>
+            <if test="pu.enterStockDetailId!=null and pu.enterStockDetailId!=''">
+                AND ped.enter_stock_detail_id=#{pu.enterStockDetailId}
+            </if>
+        </if>
+        <if test="ids!=null">
+            AND ped.warehouse_id IN
+            <foreach item="item" index="index" collection="ids"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY create_date DESC
+    </select>
+
+    <select id="getStockIsMaterial" resultType="com.dalian.sea.parameter.PuEnterStockDetailPara">
+        select bddd.data_dictionary_details_id as isMaterial, bddd.c_name as materialName
+        from pu_enter_stock_detail pesd
+        left join ba_data_dictionary_details bddd on pesd.is_material=bddd.data_dictionary_details_id
+        where pesd.status!=6
+        AND pesd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY bddd.c_name
+    </select>
+
+    <select id="getStockProductStatus" resultType="com.dalian.sea.parameter.PuEnterStockDetailPara">
+        select bddd.data_dictionary_details_id as productStatus, bddd.c_name as productStatusName
+        from pu_enter_stock_detail pesd
+        left join ba_data_dictionary_details bddd on pesd.product_status=bddd.data_dictionary_details_id
+        where pesd.status!=6
+        AND pesd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY bddd.c_name
+    </select>
+
+    <!--通过produceTaskId获取入库详情信息-->
+    <select id="getEnterStockDetailByProduceTaskId" parameterType="java.lang.Long" resultMap="PDataTableMap">
+      SELECT pesd.*,
+      zw.c_name as zw_c_name,
+      bddd.c_name as materialName,
+      pes.enter_person as pe_enter_person,
+      pes.brokerage as pe_brokerage,
+      pes.enter_date as pe_enter_date,
+      bddds.c_name as productStatusName
+      FROM pu_enter_stock_detail pesd
+      LEFT JOIN zs_warehouse zw ON zw.warehouse_id=pesd.warehouse_id
+      LEFT JOIN ba_data_dictionary_details bddd ON bddd.data_dictionary_details_id=pesd.is_material
+      LEFT JOIN pu_enter_stock pes ON pes.enter_no=pesd.enter_no
+      LEFT JOIN ba_data_dictionary_details bddds ON bddds.data_dictionary_details_id=pesd.product_status
+      WHERE pesd.status=1 AND pesd.related_type=5 AND pesd.related_id=#{produceTaskId}
+    </select>
+
+    <select id="getProductByIsMaterial" parameterType="java.lang.Long" resultMap="DataTableMap">
+        SELECT product_id,product_name FROM pu_enter_stock_detail
+        WHERE is_material=#{isMaterial}
+        GROUP BY product_id
+    </select>
+
+    <select id="getSpec" parameterType="com.dalian.sea.parameter.PuEnterStockDetailPara" resultMap="DataTableMap">
+        select product_spec_name FROM pu_enter_stock_detail
+        WHERE is_material=#{isMaterial} AND product_id=#{productId}
+        GROUP BY product_spec_name
+    </select>
+
+    <select id="getReportCountList" resultMap="BaseResultMap">
+        SELECT
+        pesd.is_material,
+        bddd.c_name AS materialName,
+        spt2.product_type_id AS productTypeId,
+        spt2.c_name AS productTypeName,
+        pesd.product_id,
+        pesd.product_name,
+        pesd.product_spec_name,
+        SUM(pesd.material_weight) AS materialWeightSum,
+        SUM(pesd.in_weight) AS inWeightSum,
+        pesd.unit_id,
+        pesd.unit_name
+        FROM pu_enter_stock_detail pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        LEFT JOIN ba_data_dictionary_details bddd ON pesd.is_material= bddd.data_dictionary_details_id
+        WHERE pesd.status !=6
+        <if test="materialArray !=null and materialArray.length!=0">
+            AND pesd.is_material IN
+            <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+                #{item1}
+            </foreach>
+        </if>
+        <if test="productTypeArray !=null and productTypeArray.length!=0">
+            AND spt2.product_type_id IN
+            <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+                #{item2}
+            </foreach>
+        </if>
+        <if test="productIdArray !=null and productIdArray.length!=0">
+            AND spt1.product_type_id IN
+            <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+                #{item3}
+            </foreach>
+        </if>
+        <if test="productSpecArray !=null and productSpecArray.length!=0">
+            AND pesd.product_spec_name IN
+            <foreach item="item4" index="index" collection="productSpecArray" separator="," open="(" close=")">
+                #{item4}
+            </foreach>
+        </if>
+        GROUP BY ${remark}
+    </select>
+    <select id="getProductTypeListByEnterDetail" resultMap="BaseResultMap">
+        SELECT
+        spt2.product_type_id AS productTypeId,
+        spt2.c_name AS productTypeName
+        FROM pu_enter_stock_detail pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND
+        pesd.is_material in
+        <foreach item="array" index="index" collection="array" separator="," open="(" close=")">
+            #{array}
+        </foreach>
+        GROUP BY spt2.product_type_id
+    </select>
+
+    <select id="getProductIdListByEnterDetail" resultMap="BaseResultMap">
+        SELECT
+        spt1.product_type_id AS productId,
+        spt1.c_name AS productName
+        FROM pu_enter_stock_detail pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND
+        pesd.is_material in
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        AND
+        spt2.product_type_id in
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+        GROUP BY spt1.product_type_id
+    </select>
+    <select id="getProductSpecNameByEnterDetail" resultMap="BaseResultMap">
+        SELECT
+        pesd.product_spec_name
+        FROM pu_enter_stock_detail pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND pesd.is_material IN
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        AND spt2.product_type_id IN
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+        AND spt1.product_type_id IN
+        <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+            #{item3}
+        </foreach>
+        GROUP BY pesd.product_spec_name
+    </select>
+    <select id="getUnitIdByEnterDetail" resultMap="BaseResultMap">
+        SELECT
+        pesd.unit_id,
+        pesd.unit_name
+        FROM pu_enter_stock_detail pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND pesd.is_material IN
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        AND spt2.product_type_id IN
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+        AND spt1.product_type_id IN
+        <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+            #{item3}
+        </foreach>
+        AND pesd.product_spec_name IN
+        <foreach item="item4" index="index" collection="productSpecArray" separator="," open="(" close=")">
+            #{item4}
+        </foreach>
+        GROUP BY pesd.unit_id
+    </select>
+
+    <select id="accomplishment" resultType="java.math.BigDecimal">
+    SELECT SUM(in_weight) FROM pu_enter_stock_detail pesd WHERE
+    status!=6
+    AND is_material=21
+    AND product_id in (select zcp.product_type_id
+    from zs_company_product zcp
+    where zcp.status=1
+    and zcp.type=21
+    and zcp.product_type_id in (
+    select product_type_id from sys_product_type where status = 1 and parent_id=#{id}
+    )
+    group by zcp.product_type_id
+    )
+    AND pesd.unit_name=#{unitName}
+    AND DATE_FORMAT(pesd.create_date,'%Y-%m') =DATE_FORMAT(#{date},'%Y-%m')
+    </select>
+
+    <select id="getInWeightSumForStock" resultMap="BaseResultMap">
+        SELECT pesd.*,
+        SUM(pesd.in_weight) as inWeightSum,
+        spt2.product_type_id AS productTypeId,
+        spt2.c_name AS productTypeName
+        FROM pu_enter_stock_detail pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status =1
+        AND pesd.is_material IN
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        <if test="productTypeArray !=null and productTypeArray.length!=0">
+            AND spt2.product_type_id IN
+            <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+                #{item2}
+            </foreach>
+        </if>
+        <if test="productIdArray !=null and productIdArray.length!=0">
+            AND spt1.product_type_id IN
+            <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+                #{item3}
+            </foreach>
+        </if>
+        <if test="productSpecArray !=null and productSpecArray.length!=0">
+            AND pesd.product_spec_name IN
+            <foreach item="item4" index="index" collection="productSpecArray" separator="," open="(" close=")">
+                #{item4}
+            </foreach>
+        </if>
+        <![CDATA[
+        AND DATE_SUB(CURDATE(), INTERVAL 1 MONTH) <= DATE(pesd.create_date)
+        ]]>
+        GROUP BY ${remark}
+    </select>
+</mapper>

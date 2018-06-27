@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ReceiveTestDetailedMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ReceiveTestDetailed">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="receive_test_detailed_id" jdbcType="BIGINT" property="receiveTestDetailedId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="goods_type_id" jdbcType="BIGINT" property="goodsTypeId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="receive_detail_id" jdbcType="BIGINT" property="receiveDetailId" />
+    <result column="goods_type" jdbcType="VARCHAR" property="goodsType" />
+    <result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName" />
+    <result column="weight" jdbcType="DECIMAL" property="weight" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="receive_id" jdbcType="BIGINT" property="receiveId" />
+  </resultMap>
+  <insert id="addreceiveTestDetailed">
+    INSERT INTO receive_test_detailed(
+    create_date,create_user_id,update_date,goods_type_id,product_id,receive_detail_id,goods_type,
+    batch_no,product_name,product_spec_name,weight,unit_name,receive_id
+    )VALUES (
+    #{createDate},#{createUserId},#{updateDate},#{goodsTypeId},#{productId},#{receiveDetailId},#{goodsType},
+    #{batchNo},#{productName},#{productSpecName},#{weight},#{unitName},#{receiveId}
+    )
+  </insert>
+</mapper>

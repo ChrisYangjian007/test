@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsWorkProcessMapper" >
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsWorkProcess">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+    <result column="work_flow_id" jdbcType="BIGINT" property="workFlowId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="name_id" jdbcType="BIGINT" property="nameId" />
+    <result column="is_workshop_record" jdbcType="TINYINT" property="isWorkshopRecord" />
+    <result column="check_state" jdbcType="INTEGER" property="checkState" />
+    <result column="is_before_record" jdbcType="TINYINT" property="isBeforeRecord" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <resultMap id="PWorkProcessAndFormAttribute" type="com.dalian.sea.parameter.PZsWorkProcess" extends="BaseResultMap">
+    <collection property="formAttributeList" javaType="java.util.List" ofType="com.dalian.sea.parameter.PBaFormAttribute">
+      <id column="form_attribute_id" jdbcType="BIGINT" property="formAttributeId" />
+      <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+    </collection>
+    <collection property="formAttributeValueList" javaType="java.util.List" ofType="com.dalian.sea.model.BaFormAttributeValue">
+      <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson" />
+      <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+    </collection>
+  </resultMap>
+  
+  <resultMap id="PWorkProcessAndValue" type="com.dalian.sea.parameter.PZsWorkProcess" extends="BaseResultMap">
+    <association property="baFormAttributeValue" javaType="com.dalian.sea.model.BaFormAttributeValue" columnPrefix="fav_">
+      <id column="form_attribute_value_id" jdbcType="BIGINT" property="formAttributeValueId" />
+      <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId" />
+      <id column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+      <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson" />
+      <result column="logger_json" jdbcType="CHAR" property="loggerJson" />
+      <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+    </association>
+  </resultMap>
+
+  <resultMap id="PWorkProcessPDA" type="com.dalian.sea.parameter.PWorkProcessPDA" >
+    <id column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+    <result column="work_flow_id" jdbcType="BIGINT" property="workFlowId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="name_id" jdbcType="BIGINT" property="nameId" />
+    <result column="is_workshop_record" jdbcType="TINYINT" property="isWorkshopRecord" />
+    <result column="check_state" jdbcType="INTEGER" property="checkState" />
+    <result column="is_before_record" jdbcType="TINYINT" property="isBeforeRecord" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <collection column="work_process_id" property="operation" ofType="com.dalian.sea.parameter.PBaFormAttribute"
+                javaType="java.util.ArrayList" select="selectOperation">
+    </collection>
+    <collection column="work_process_id" property="auditor" ofType="com.dalian.sea.parameter.PBaFormAttribute"
+                javaType="java.util.ArrayList" select="selectAuditor">
+    </collection>
+    <collection column="work_process_id" property="inspection" ofType="com.dalian.sea.parameter.PBaFormAttribute"
+                javaType="java.util.ArrayList" select="selectInspection">
+    </collection>
+  </resultMap>
+
+  <resultMap id="Attribute" type="com.dalian.sea.parameter.PBaFormAttribute">
+    <id column="form_attribute_id" jdbcType="BIGINT" property="formAttributeId" />
+    <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+    <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+    <result column="control_name" jdbcType="VARCHAR" property="controlName" />
+    <result column="control_type" jdbcType="TINYINT" property="controlType" />
+    <result column="restrictive_conditions" jdbcType="INTEGER" property="restrictiveConditions" />
+    <result column="control_style" jdbcType="VARCHAR" property="controlStyle" />
+    <result column="control_validator" jdbcType="VARCHAR" property="controlValidator" />
+    <result column="import_length" jdbcType="INTEGER" property="importLength" />
+    <result column="default_value" jdbcType="VARCHAR" property="defaultValue" />
+    <result column="attributes_property" jdbcType="VARCHAR" property="attributesProperty" />
+    <result column="data_source_type" jdbcType="TINYINT" property="dataSourceType" />
+    <result column="data_source_code" jdbcType="VARCHAR" property="dataSourceCode" />
+    <result column="data_source" jdbcType="VARCHAR" property="dataSource" />
+    <result column="control_colspan" jdbcType="VARCHAR" property="controlColspan" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+    <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <resultMap id="DataDictionary" type="com.dalian.sea.parameter.PBaDataDictionaryDetails">
+    <id column="data_dictionary_details_id" jdbcType="BIGINT" property="dataDictionaryDetailsId" />
+    <result column="data_dictionary_id" jdbcType="BIGINT" property="dataDictionaryId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="flage" jdbcType="VARCHAR" property="flage" />
+    <result column="flage_name" jdbcType="VARCHAR" property="flageName" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <resultMap id="BaUser" type="com.dalian.sea.parameter.PBaUser">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
+    <result column="auth_status" jdbcType="TINYINT" property="authStatus" />
+    <result column="user_authority_type" jdbcType="TINYINT" property="userAuthorityType" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="secretkey" jdbcType="VARCHAR" property="secretkey" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="spell" jdbcType="VARCHAR" property="spell" />
+    <result column="gender" jdbcType="TINYINT" property="gender" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="qicq" jdbcType="VARCHAR" property="qicq" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="change_password_date" jdbcType="TIMESTAMP" property="changePasswordDate" />
+    <result column="open_id" jdbcType="BIGINT" property="openId" />
+    <result column="log_on_count" jdbcType="INTEGER" property="logOnCount" />
+    <result column="previous_visit" jdbcType="TIMESTAMP" property="previousVisit" />
+    <result column="last_visit" jdbcType="TIMESTAMP" property="lastVisit" />
+    <result column="online" jdbcType="TINYINT" property="online" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="area_id" jdbcType="BIGINT" property="areaId" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="wei_xin" jdbcType="VARCHAR" property="weiXin" />
+    <result column="is_control" jdbcType="INTEGER" property="isControl" />
+    <result column="head_image" jdbcType="VARCHAR" property="headImage" />
+    <result column="ckeck_status" jdbcType="INTEGER" property="ckeckStatus" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="address_id" jdbcType="BIGINT" property="addressId" />
+    <result column="address_details" jdbcType="VARCHAR" property="addressDetails" />
+    <result column="residence" jdbcType="VARCHAR" property="residence" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="user_type" jdbcType="TINYINT" property="userType" />
+  </resultMap>
+
+  <resultMap id="PWorkProcessAndPFormAttribute" type="com.dalian.sea.parameter.PZsWorkProcess" extends="BaseResultMap">
+    <collection property="formAttributeList" javaType="java.util.List" ofType="com.dalian.sea.parameter.PBaFormAttribute">
+      <id column="form_attribute_id" jdbcType="BIGINT" property="formAttributeId" />
+      <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+      <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+      <result column="control_name" jdbcType="VARCHAR" property="controlName" />
+      <result column="control_type" jdbcType="TINYINT" property="controlType" />
+      <result column="restrictive_conditions" jdbcType="INTEGER" property="restrictiveConditions" />
+      <result column="control_style" jdbcType="VARCHAR" property="controlStyle" />
+      <result column="control_validator" jdbcType="VARCHAR" property="controlValidator" />
+      <result column="import_length" jdbcType="INTEGER" property="importLength" />
+      <result column="default_value" jdbcType="VARCHAR" property="defaultValue" />
+      <result column="attributes_property" jdbcType="VARCHAR" property="attributesProperty" />
+      <result column="data_source_type" jdbcType="TINYINT" property="dataSourceType" />
+      <result column="data_source_code" jdbcType="VARCHAR" property="dataSourceCode" />
+      <result column="data_source" jdbcType="VARCHAR" property="dataSource" />
+      <result column="control_colspan" jdbcType="VARCHAR" property="controlColspan" />
+      <result column="remark" jdbcType="VARCHAR" property="remark" />
+      <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+      <result column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+      <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+      <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+      <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <result column="status" jdbcType="TINYINT" property="status" />
+    </collection>
+  </resultMap>
+  
+  <resultMap id="PWorkProcessAndPFormAttributeValue" type="com.dalian.sea.parameter.PZsWorkProcess" extends="BaseResultMap">
+    <collection property="pBaFormAttributeValueList" javaType="java.util.List" ofType="com.dalian.sea.parameter.PBaFormAttributeValue">
+      <id column="form_attribute_value_id" jdbcType="BIGINT" property="formAttributeValueId" />
+      <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson" />
+      <result column="logger_json" jdbcType="CHAR" property="loggerJson" />
+      <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+      <result column="type_index" jdbcType="TINYINT" property="typeIndex" />
+    </collection>
+  </resultMap>
+
+  <select id="selectOperation" resultMap="Attribute">
+    select * from ba_form_attribute where status=1 and work_process_id=#{work_process_id} and handle_type = 1
+  </select>
+  <select id="selectAuditor" resultMap="Attribute">
+    select * from ba_form_attribute where status=1 and work_process_id=#{work_process_id} and handle_type = 2
+  </select>
+  <select id="selectInspection" resultMap="Attribute">
+    select * from ba_form_attribute where status=1 and work_process_id=#{work_process_id} and handle_type = 3
+  </select>
+
+
+  <!--根据ID获取-->
+  <select id="getWorkProcessById" parameterType="java.lang.Long" resultMap="PWorkProcessPDA">
+    select * from zs_work_process where work_process_id=#{workProcessId}
+  </select>
+
+  <!--根据ID获取-->
+  <select id="getWorkProcessByWorkFlowIdAndName" parameterType="com.dalian.sea.parameter.PZsWorkProcess" resultMap="BaseResultMap">
+    select * from zs_work_process where status = 1 and work_flow_id=#{workFlowId} and c_name=#{cName}
+    <if test="workProcessId!=null and workProcessId!=''">and work_process_id!=#{workProcessId}</if>
+    LIMIT 1
+  </select>
+
+  <!--根据ID获取-->
+  <select id="getZsWorkProcessByWorkProcessId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select * from zs_work_process where work_process_id=#{workProcessId}
+  </select>
+  
+  <!--根据工艺ID获取-->
+  <select id="getZsWorkProcessByWorkFlowId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select zwp.*,bu1.c_name as createUserName,bu2.c_name as updateUserName
+    from zs_work_process zwp
+    left join ba_user bu1 on bu1.user_id = zwp.create_user_id
+    left join ba_user bu2 on bu2.user_id = zwp.update_user_id
+    where zwp.work_flow_id = #{workFlowId} and zwp.status = 1
+    order by update_date desc
+  </select>
+
+  <!--根据工艺ID获取-->
+  <select id="getZsWorkProcessByWorkFlowIdForPDA" parameterType="java.lang.Long" resultMap="PWorkProcessPDA">
+    select zwp.*,bu1.c_name as createUserName,bu2.c_name as updateUserName
+    from zs_work_process zwp
+    left join ba_user bu1 on bu1.user_id = zwp.create_user_id
+    left join ba_user bu2 on bu2.user_id = zwp.update_user_id
+    where zwp.work_flow_id = #{workFlowId} and zwp.status = 1 and zwp.is_workshop_record = 1
+    order by update_date desc
+  </select>
+
+  <!--根据生产任务获取工序-->
+  <select id="getWorkProcessByProduceTask" parameterType="java.lang.Long" resultMap="PWorkProcessAndFormAttribute">
+    SELECT zwp.* FROM zs_work_process zwp WHERE zwp.work_process_id in(
+    SELECT ztdv.work_process_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{id}
+    )
+  </select>
+
+  <!--获取生产任务的工序及工序详情-->
+  <select id="getWorkProcessFromAttributeValueAndByProduceTask" parameterType="java.lang.Long" resultMap="PWorkProcessAndPFormAttributeValue">
+    SELECT zwp.*,bfav.*
+    FROM zs_work_process zwp
+    LEFT JOIN ba_form_attribute_value bfav ON bfav.work_process_id=zwp.work_process_id AND bfav.produce_task_id=#{produceTaskId}
+    WHERE zwp.work_flow_id =(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}
+    ) AND zwp.is_workshop_record=1
+  </select>
+
+  <!--添加-->
+  <insert id="addWorkProcess" parameterType="com.dalian.sea.parameter.PZsWorkProcess" keyProperty="workProcessId" useGeneratedKeys="true" >
+    insert into zs_work_process (work_flow_id,c_name,name_id,is_workshop_record,create_date,update_date,create_user_id
+    <if test="checkState!=null">,check_state</if>
+    <if test="isBeforeRecord!=null">,is_before_record</if>
+    ) values (#{workFlowId},#{cName},#{nameId},#{isWorkshopRecord},now(),now(),#{createUserId}
+    <if test="checkState!=null">,#{checkState}</if>
+    <if test="isBeforeRecord!=null">,#{isBeforeRecord}</if>
+    )
+  </insert>
+
+  <!--修改-->
+  <update id="updateWorkProcess" parameterType="com.dalian.sea.parameter.PZsWorkProcess" >
+    update zs_work_process
+    <trim prefix="set" suffix=" where work_process_id=#{workProcessId}">
+      c_name=#{cName},name_id=#{nameId},is_workshop_record=#{isWorkshopRecord},update_user_id=#{updateUserId}
+      <if test="checkState!=null">,check_state=#{checkState}</if>
+      <if test="isBeforeRecord!=null">,is_before_record=#{isBeforeRecord}</if>
+    </trim>
+  </update>
+
+  <select id="getZsWorkProcessAll" resultMap="BaseResultMap">
+    select * from zs_work_process WHERE status=1
+  </select>
+
+  <!--通过id删除工序-->
+  <update id="deleteWorkProcessById" parameterType="com.dalian.sea.model.ZsWorkProcess">
+    UPDATE zs_work_process SET status=6
+    <if test="updateUserId != null and updateUserId != ''">
+      ,update_user_id=#{updateUserId}
+    </if>
+    WHERE work_process_id=#{workProcessId}
+  </update>
+
+  <!--通过workFlowId获取工序-->
+  <select id="getWorkProcessByWorkFlowId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_work_process WHERE work_flow_id=#{workFlowId} and status =1
+  </select>
+
+  <!--通过workFlowId获取工艺和value-->
+  <select id="getZsWorkProcessAndValueByWorkFlowId" parameterType="java.lang.Long" resultMap="PWorkProcessAndValue">
+    SELECT zwp.*,fav.*
+    FROM zs_work_process zwp
+    LEFT JOIN (SELECT bfav.* FROM ba_form_attribute_value bfav
+	WHERE bfav.handle_type = (
+	SELECT max(handle_type)
+	FROM ba_form_attribute_value
+	WHERE bfav.work_process_id = work_process_id group by work_process_id)) as fav ON fav.work_process_id=zwp.work_process_id
+    WHERE zwp.work_flow_id=#{workFlowId} and zwp.status=1
+  </select>
+
+  <!--通过produceTaskId获取工序和工序字段-->
+  <select id="getWorkProcessAndAllPFormAttributeByProduceTaskId" parameterType="java.lang.Long" resultMap="PWorkProcessAndPFormAttribute">
+    SELECT zwp.*,
+    bfa.*
+    FROM zs_work_process zwp
+    LEFT JOIN ba_form_attribute bfa ON bfa.work_process_id=zwp.work_process_id
+    WHERE zwp.work_flow_id =(
+    SELECT work_flow_id FROM zs_task_detail_value WHERE produce_task_id=#{produceTaskId}
+    )
+  </select>
+
+  <!--通过produceTaskId获取工序和工序字段对应值-->
+  <select id="getPWorkProcessAndPFromAttributeValueAndByProduceTask" parameterType="java.lang.Long" resultMap="PWorkProcessAndPFormAttributeValue">
+    SELECT zwp.*,bfav.*
+    FROM zs_work_process zwp
+    LEFT JOIN ba_form_attribute_value bfav ON bfav.work_process_id=zwp.work_process_id AND bfav.produce_task_id=#{produceTaskId}
+    WHERE zwp.work_flow_id =(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}
+    ) AND zwp.is_workshop_record=1 and zwp.status=1
+  </select>
+  <!--通过produceTaskId获取所有工序和工序字段对应值-->
+  <select id="getAllPWorkProcessAndPFromAttributeValueAndByProduceTask" parameterType="java.lang.Long" resultMap="PWorkProcessAndPFormAttributeValue">
+    SELECT zwp.*,bfav.*
+    FROM zs_work_process zwp
+    LEFT JOIN ba_form_attribute_value bfav ON bfav.work_process_id=zwp.work_process_id AND bfav.produce_task_id=#{produceTaskId}
+    WHERE zwp.work_flow_id =(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}
+    ) AND zwp.is_workshop_record=1
+  </select>
+
+  <select id="getAllWorkProcessByFormAttribute" resultMap="BaseResultMap">
+    SELECT zwp.* FROM zs_work_process zwp,ba_form_attribute bfa
+    WHERE zwp.status=1 AND bfa.work_process_id =zwp.work_process_id
+    GROUP BY zwp.work_process_id
+  </select>
+
+  <select id="getZsWorkProcessAndMaxHandleTypeValueByProduceTaskId" parameterType="java.lang.Long" resultMap="PWorkProcessAndValue">
+    SELECT zwp.*,fav.handle_type as fav_handle_type
+    FROM zs_work_process zwp
+    LEFT JOIN (SELECT bfav.* FROM ba_form_attribute_value bfav
+	WHERE bfav.handle_type = (
+	SELECT max(handle_type)
+	FROM  ba_form_attribute_value bafav
+	WHERE bfav.work_process_id=work_process_id AND bafav.produce_task_id=#{produceTaskId}
+	)) as fav ON fav.work_process_id=zwp.work_process_id AND fav.produce_task_id=#{produceTaskId}
+    WHERE zwp.status=1 AND zwp.work_flow_id=(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId})
+    GROUP BY zwp.work_process_id
+  </select>
+
+  <!--通过生产任务编号获取未删除并且有字段的工序-->
+  <select id="getNotDeleteAndHaveFieldsWorkProcessByProduceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT zwp.* FROM zs_work_process zwp
+    WHERE zwp.work_flow_id=(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}
+    ) AND zwp.status=1 AND zwp.is_workshop_record=1
+  </select>
+  <!--通过workFlowId获取工序-->
+  <select id="getWorkProcessByWorkFlowIdForStock" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_work_process WHERE work_flow_id=#{workFlowId} and status =1 and is_workshop_record !=0
+  </select>
+
+  <select id="getAllAndHaveFieldsWorkProcessByProduceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT zwp.* FROM zs_work_process zwp
+    WHERE zwp.work_flow_id=(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}
+    ) AND zwp.is_workshop_record=1
+  </select>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsProductionInformationMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsProductionInformation">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="production_information_id" jdbcType="BIGINT" property="productionInformationId" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="production_information_name" jdbcType="VARCHAR" property="productionInformationName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="images" jdbcType="CHAR" property="images" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <!--查询所有生产控制点-->
+  <select id="getProductionInformation" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_information
+    WHERE status!=6
+    order by id ASC
+  </select>
+  <!--新增-->
+  <insert id="addProductionInformation" parameterType="com.dalian.sea.model.ZsTestingEquipment">
+    insert INTO zs_production_information (
+    <if test="id!=null and id!=''">id</if>
+    <if test="productionInformationName!=null and productionInformationName!=''">,production_information_name</if>
+    <if test="remark!=null and remark!=''">,remark</if>
+    <if test="images!=null and images!=''">,images</if>
+    <if test="createUserId!=null and createUserId!=''">,create_user_id</if>
+    <if test="createDate!=null">,create_date</if>,update_date)
+    VALUES
+    (
+    <if test="id!=null and id!=''">#{id}</if>
+    <if test="productionInformationName!=null and productionInformationName!=''">,#{productionInformationName}</if>
+    <if test="remark!=null and remark!=''">,#{remark}</if>
+    <if test="images!=null and images!=''">,#{images}</if>
+    <if test="createUserId!=null and createUserId!=''">,#{createUserId}</if>
+    <if test="createDate!=null">,#{createDate}</if>,#{updateDate}
+    )
+  </insert>
+  <!--根据id查询信息-->
+  <select id="getProductionInformationById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_information
+    WHERE production_information_id = #{productionInformationId}
+  </select>
+  <!--修改信息-->
+  <update id="updateProductionInformation" parameterType="com.dalian.sea.model.ZsTestingEquipment">
+    UPDATE zs_production_information SET id=#{id},production_information_name = #{productionInformationName},remark=#{remark},images=#{images}
+      <if test="updateUserId!=null and updateUserId!=''">,update_user_id=#{updateUserId}</if>
+    WHERE production_information_id = #{productionInformationId}
+  </update>
+  <!--删除-->
+  <update id="delectProductionInformation" parameterType="com.dalian.sea.model.ZsTestingEquipment">
+    UPDATE zs_production_information SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE production_information_id = #{productionInformationId}
+  </update>
+
+  <!--通过productionInformationId获取-->
+  <select id="getProductionInformationByProductionInformationId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_information WHERE status=1 AND production_information_id=#{productionInformationId}
+  </select>
+</mapper>

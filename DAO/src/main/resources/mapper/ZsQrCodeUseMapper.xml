@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsQrCodeUseMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsQrCodeUse">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="qr_code_use_id" jdbcType="BIGINT" property="qrCodeUseId" />
+    <result column="qr_code_id" jdbcType="BIGINT" property="qrCodeId" />
+    <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId" />
+    <result column="produce_task_code" jdbcType="VARCHAR" property="produceTaskCode" />
+    <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName" />
+    <result column="bind_date" jdbcType="TIMESTAMP" property="bindDate" />
+    <result column="bind_user_id" jdbcType="BIGINT" property="bindUserId" />
+    <result column="bind_user_name" jdbcType="VARCHAR" property="bindUserName" />
+    <result column="un_bind_date" jdbcType="TIMESTAMP" property="unBindDate" />
+    <result column="un_bind_user_id" jdbcType="BIGINT" property="unBindUserId" />
+    <result column="un_bind_user_name" jdbcType="VARCHAR" property="unBindUserName" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--根据二维码ID获取使用情况-->
+  <select id="getQrCodeUseByQrCodeId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select zqcu.*,zqc.qr_Code as qrCode
+    from zs_qr_code_use zqcu
+    left join zs_qr_code zqc on zqc.qr_code_id = #{qrCodeId}
+    where zqcu.status = 1 and zqcu.qr_code_id = #{qrCodeId}
+    order by zqcu.update_date desc
+  </select>
+
+  <insert id="addQrCodeUse" parameterType="com.dalian.sea.model.ZsQrCodeUse" keyProperty="qrCodeUseId" useGeneratedKeys="true">
+    insert into zs_qr_code_use (qr_code_id,produce_task_id,produce_task_code,produce_task_name,bind_date,
+    bind_user_id,bind_user_name,create_date,update_date,create_user_id
+    ) values (#{qrCodeId},#{produceTaskId},#{produceTaskCode},#{produceTaskName},#{bindDate},#{bindUserId},
+    #{bindUserName},now(),now(),#{createUserId})
+  </insert>
+  
+  <update id="updateQrCodeUse" parameterType="com.dalian.sea.model.ZsQrCodeUse">
+    update zs_qr_code_use
+    set un_bind_date=#{unBindDate},un_bind_user_id=#{unBindUserId},un_bind_user_name=#{unBindUserName},
+    update_user_id = #{updateUserId}
+    where qr_code_use_id = #{qrCodeUseId}
+  </update>
+
+  <update id="unBindCode">
+    update zs_qr_code_use
+    set un_bind_date=now(),un_bind_user_id=#{userId},un_bind_user_name=#{userName},
+    update_user_id = #{userId}
+    where produce_task_id = #{produceTaskId}
+  </update>
+
+  <!--根据生产任务id获取-->
+  <select id="getQrCodeUseByProDuceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_qr_code_use WHERE status=1 AND produce_task_id=#{produceTaskId}
+  </select>
+</mapper>

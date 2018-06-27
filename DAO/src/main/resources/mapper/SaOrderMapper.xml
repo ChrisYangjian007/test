@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SaOrderMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PSaOrder">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="order_status" jdbcType="TINYINT" property="orderStatus"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="order_name" jdbcType="VARCHAR" property="orderName"/>
+        <result column="order_ownerid" jdbcType="VARCHAR" property="orderOwnerid"/>
+        <result column="order_dhrq" jdbcType="TIMESTAMP" property="orderDhrq"/>
+        <result column="order_shr" jdbcType="VARCHAR" property="orderShr"/>
+        <result column="order_shdz" jdbcType="VARCHAR" property="orderShdz"/>
+        <result column="order_lxdh" jdbcType="VARCHAR" property="orderLxdh"/>
+        <result column="order_spzt" jdbcType="VARCHAR" property="orderSpzt"/>
+        <result column="order_ssmd" jdbcType="VARCHAR" property="orderSsmd"/>
+        <result column="order_isjxs" jdbcType="TINYINT" property="orderIsjxs"/>
+        <result column="order_jxs" jdbcType="VARCHAR" property="orderJxs"/>
+        <result column="order_ispack" jdbcType="TINYINT" property="orderIspack"/>
+        <result column="order_pack_count" jdbcType="INTEGER" property="orderPackCount"/>
+    </resultMap>
+    <select id="selectListOrderByOrder" resultMap="BaseResultMap">
+        SELECT * FROM sa_order
+        <trim prefix="where" suffixOverrides="and">
+
+            <if test="orderDate !=null and orderDate !=''">
+                order_dhrq =#{orderDate} and
+            </if>
+            <if test="orderName !=null and orderName!=''">
+                order_name =#{orderName} and
+            </if>
+            <if test="orderIspack!=null">
+                order_ispack =#{orderIspack} and
+            </if>
+            <if test="startDate !=null and  endDate!=null">
+                order_dhrq BETWEEN #{startDate} and #{endDate} and
+            </if>
+            <if test="orderSpzt !=null and orderSpzt!=''">
+                order_spzt =#{orderSpzt} and
+            </if>
+        </trim>
+        order by order_dhrq desc
+    </select>
+    <select id="getOrderByOrderName" resultMap="BaseResultMap">
+        SELECT * FROM sa_order where status=1
+        <if test="orderName!=null and orderName!=''">and order_name=#{orderName}</if>
+    </select>
+    <insert id="insertOrderSelective" parameterType="com.dalian.sea.model.SaOrder">
+        insert into sa_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="listIndex != null">
+                list_index,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="updateUserId != null">
+                update_user_id,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="orderStatus != null">
+                order_status,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="orderName != null">
+                order_name,
+            </if>
+            <if test="orderOwnerid != null">
+                order_ownerid,
+            </if>
+            <if test="orderDhrq != null">
+                order_dhrq,
+            </if>
+            <if test="orderShr != null">
+                order_shr,
+            </if>
+            <if test="orderShdz != null">
+                order_shdz,
+            </if>
+            <if test="orderLxdh != null">
+                order_lxdh,
+            </if>
+            <if test="orderSpzt != null">
+                order_spzt,
+            </if>
+            <if test="orderSsmd != null">
+                order_ssmd,
+            </if>
+            <if test="orderIsjxs != null">
+                order_isjxs,
+            </if>
+            <if test="orderJxs != null">
+                order_jxs,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">
+                #{orderId,jdbcType=BIGINT},
+            </if>
+            <if test="listIndex != null">
+                #{listIndex,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderStatus != null">
+                #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="orderName != null">
+                #{orderName,jdbcType=VARCHAR},
+            </if>
+            <if test="orderOwnerid != null">
+                #{orderOwnerid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderDhrq != null">
+                #{orderDhrq,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderShr != null">
+                #{orderShr,jdbcType=VARCHAR},
+            </if>
+            <if test="orderShdz != null">
+                #{orderShdz,jdbcType=VARCHAR},
+            </if>
+            <if test="orderLxdh != null">
+                #{orderLxdh,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSpzt != null">
+                #{orderSpzt,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSsmd != null">
+                #{orderSsmd,jdbcType=VARCHAR},
+            </if>
+            <if test="orderIsjxs != null">
+                #{orderIsjxs,jdbcType=TINYINT},
+            </if>
+            <if test="orderJxs != null">
+                #{orderJxs,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByOrderSelective" parameterType="com.dalian.sea.model.SaOrder">
+        update sa_order
+        <set>
+            <if test="listIndex != null">
+                list_index = #{listIndex,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updateUserId != null">
+                update_user_id = #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="orderName != null">
+                order_name = #{orderName,jdbcType=VARCHAR},
+            </if>
+            <if test="orderOwnerid != null">
+                order_ownerid = #{orderOwnerid,jdbcType=VARCHAR},
+            </if>
+            <if test="orderDhrq != null">
+                order_dhrq = #{orderDhrq,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderShr != null">
+                order_shr = #{orderShr,jdbcType=VARCHAR},
+            </if>
+            <if test="orderShdz != null">
+                order_shdz = #{orderShdz,jdbcType=VARCHAR},
+            </if>
+            <if test="orderLxdh != null">
+                order_lxdh = #{orderLxdh,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSpzt != null">
+                order_spzt = #{orderSpzt,jdbcType=VARCHAR},
+            </if>
+            <if test="orderSsmd != null">
+                order_ssmd = #{orderSsmd,jdbcType=VARCHAR},
+            </if>
+            <if test="orderIsjxs != null">
+                order_isjxs = #{orderIsjxs,jdbcType=TINYINT},
+            </if>
+            <if test="orderJxs != null">
+                order_jxs = #{orderJxs,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where order_id = #{orderId,jdbcType=BIGINT}
+    </update>
+    <update id="updateOrderByList" parameterType="java.util.List">
+        UPDATE sa_order
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix=" order_pack_count = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.orderPackCount!=null">
+                        when order_name = #{i.orderName, jdbcType = VARCHAR} then
+                        #{i.orderPackCount, jdbcType = VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix=" order_ispack = case" suffix="end,">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.orderIspack!=null">
+                        when order_name = #{i.orderName, jdbcType = VARCHAR} then
+                        #{i.orderIspack, jdbcType = VARCHAR}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        WHERE
+        <foreach collection="list" separator="or" item="i" index="index">
+            order_name = #{i.orderName, jdbcType = VARCHAR}
+        </foreach>
+    </update>
+
+    <select id="getTodayOrder" resultMap="BaseResultMap">
+        select * from sa_order
+        where to_days(order_dhrq) = to_days(now())
+        ORDER BY  order_dhrq DESC
+        LIMIT 5;
+    </select>
+
+    <select id="todayOrderCount" resultType="java.lang.Integer">
+      select count(*) from sa_order
+      where to_days(order_dhrq) = to_days(now())
+    </select>
+
+    <select id="todayFinishedCount" resultType="java.lang.Integer">
+        select count(*) from sa_order
+      where to_days(order_dhrq) = to_days(now()) AND order_ispack=1
+    </select>
+</mapper>

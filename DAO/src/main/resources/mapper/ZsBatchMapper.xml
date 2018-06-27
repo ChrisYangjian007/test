@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsBatchMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsBatch">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="batch_id" jdbcType="BIGINT" property="batchId"/>
+        <result column="task_code" jdbcType="VARCHAR" property="taskCode"/>
+        <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="product_code" jdbcType="VARCHAR" property="productCode"/>
+        <result column="product_category" jdbcType="VARCHAR" property="productCategory"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_format" jdbcType="VARCHAR" property="productFormat"/>
+        <result column="product_unit" jdbcType="VARCHAR" property="productUnit"/>
+        <result column="product_weight" jdbcType="VARCHAR" property="productWeight"/>
+        <result column="product_line" jdbcType="VARCHAR" property="productLine"/>
+        <result column="product_big_type" jdbcType="VARCHAR" property="productBigType"/>
+        <result column="product_small_type" jdbcType="VARCHAR" property="productSmallType"/>
+        <result column="batch_code" jdbcType="VARCHAR" property="batchCode"/>
+        <result column="batch_name" jdbcType="VARCHAR" property="batchName"/>
+        <result column="batch_date" jdbcType="VARCHAR" property="batchDate"/>
+        <result column="batch_pack" jdbcType="VARCHAR" property="batchPack"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="label_number" jdbcType="INTEGER" property="labelNumber"/>
+        <result column="box_number" jdbcType="INTEGER" property="boxNumber"/>
+        <result column="scan_number" jdbcType="INTEGER" property="scanNumber"/>
+        <result column="batch_unique" jdbcType="VARCHAR" property="batchUnique"/>
+    </resultMap>
+    <insert id="insertBatchSelective" parameterType="com.dalian.sea.model.ZsBatch" keyProperty="batchId"
+            useGeneratedKeys="true">
+        insert into zs_batch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="batchId != null">
+                batch_id,
+            </if>
+            <if test="taskCode != null">
+                task_code,
+            </if>
+            <if test="taskName != null">
+                task_name,
+            </if>
+            <if test="productCode != null">
+                product_code,
+            </if>
+            <if test="productCategory != null">
+                product_category,
+            </if>
+            <if test="productName != null">
+                product_name,
+            </if>
+            <if test="productFormat != null">
+                product_format,
+            </if>
+            <if test="productUnit != null">
+                product_unit,
+            </if>
+            <if test="productWeight != null">
+                product_weight,
+            </if>
+            <if test="productLine != null">
+                product_line,
+            </if>
+            <if test="productBigType != null">
+                product_big_type,
+            </if>
+            <if test="productSmallType != null">
+                product_small_type,
+            </if>
+            <if test="batchCode != null">
+                batch_code,
+            </if>
+            <if test="batchName != null">
+                batch_name,
+            </if>
+            <if test="batchDate != null">
+                batch_date,
+            </if>
+            <if test="batchPack != null">
+                batch_pack,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="labelNumber != null">
+                label_number,
+            </if>
+            <if test="boxNumber != null">
+                box_number,
+            </if>
+            <if test="batchUnique != null">
+                batch_unique,
+            </if>
+            <if test="scanNumber != null">
+                scan_number,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="batchId != null">
+                #{batchId,jdbcType=BIGINT},
+            </if>
+            <if test="taskCode != null">
+                #{taskCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null">
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="productCode != null">
+                #{productCode,jdbcType=VARCHAR},
+            </if>
+            <if test="productCategory != null">
+                #{productCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="productName != null">
+                #{productName,jdbcType=VARCHAR},
+            </if>
+            <if test="productFormat != null">
+                #{productFormat,jdbcType=VARCHAR},
+            </if>
+            <if test="productUnit != null">
+                #{productUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="productWeight != null">
+                #{productWeight,jdbcType=VARCHAR},
+            </if>
+            <if test="productLine != null">
+                #{productLine,jdbcType=VARCHAR},
+            </if>
+            <if test="productBigType != null">
+                #{productBigType,jdbcType=VARCHAR},
+            </if>
+            <if test="productSmallType != null">
+                #{productSmallType,jdbcType=VARCHAR},
+            </if>
+            <if test="batchCode != null">
+                #{batchCode,jdbcType=VARCHAR},
+            </if>
+            <if test="batchName != null">
+                #{batchName,jdbcType=VARCHAR},
+            </if>
+            <if test="batchDate != null">
+                #{batchDate,jdbcType=VARCHAR},
+            </if>
+            <if test="batchPack != null">
+                #{batchPack,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="labelNumber != null">
+                #{labelNumber,jdbcType=INTEGER},
+            </if>
+            <if test="boxNumber != null">
+                #{boxNumber,jdbcType=INTEGER},
+            </if>
+            <if test="batchUnique != null">
+                #{batchUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="scanNumber != null">
+                #{scanNumber,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectBatchByBatchUnique" resultMap="BaseResultMap">
+        SELECT * FROM zs_batch
+        <trim prefix="where" suffixOverrides="and">
+            <if test="batchId !=null">
+                batch_id =#{batchId} and
+            </if>
+            <if test="batchUnique!=null">
+                batch_unique =#{batchUnique} and
+            </if>
+        </trim>
+    </select>
+    <select id="selectListBatchByBatch" resultMap="BaseResultMap">
+        SELECT b.*,l.leave_person as leavePerson,l.leave_date as leaveDate FROM zs_batch b LEFT JOIN sa_leave_stock l on
+        b.task_code=l.produce_task_no
+        <trim prefix="where" suffixOverrides="and">
+            <if test="productName !=null and productName !=''">
+                b.product_name =#{productName} and
+            </if>
+            <if test="productLine !=null and productLine !=''">
+                b.product_line =#{productLine} and
+            </if>
+            <if test="productBigType !=null and productBigType !=''">
+                b. product_big_type =#{productBigType} and
+            </if>
+            <if test="productSmallType !=null and productSmallType !=''">
+                b.product_small_type =#{productSmallType} and
+            </if>
+            <if test="batchCode !=null and batchCode !=''">
+                b.batch_code =#{batchCode} and
+            </if>
+            <if test="taskCode !=null and taskCode !=''">
+                b.task_code =#{taskCode} and
+            </if>
+        </trim>
+        GROUP BY l.leave_person ,b.task_code,b.task_name
+        order by create_date desc
+    </select>
+    <select id="getBatchListByBatch" resultMap="BaseResultMap">
+        SELECT b.* FROM zs_batch b
+        <trim prefix="where" suffixOverrides="and">
+            <if test="productName !=null and productName !=''">
+                b.product_name =#{productName} and
+            </if>
+            <if test="productLine !=null and productLine !=''">
+                b.product_line =#{productLine} and
+            </if>
+            <if test="productBigType !=null and productBigType !=''">
+                b. product_big_type =#{productBigType} and
+            </if>
+            <if test="productSmallType !=null and productSmallType !=''">
+                b.product_small_type =#{productSmallType} and
+            </if>
+            <if test="batchCode !=null and batchCode !=''">
+                b.batch_code =#{batchCode} and
+            </if>
+            <if test="taskCode !=null and taskCode !=''">
+                b.task_code =#{taskCode} and
+            </if>
+            <if test="productFormat !=null and productFormat !=''">
+                b.product_format =#{productFormat} and
+            </if>
+        </trim>
+        order by create_date desc
+    </select>
+    <select id="monthLabelNumber" resultType="java.lang.Integer">
+        SELECT SUM(label_number) FROM zs_batch
+        WHERE DATE_FORMAT(create_date,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m')
+        AND status!=6
+    </select>
+
+    <select id="totalLabelNumber" resultType="java.lang.Integer">
+        SELECT SUM(label_number) FROM zs_batch WHERE status!=6
+    </select>
+
+    <select id="getBindCount" resultType="java.lang.Integer">
+        SELECT SUM(label_number) FROM zs_batch
+        WHERE DATE_FORMAT(create_date,'%Y-%m-%d')=#{date}
+        AND status!=6
+    </select>
+
+    <select id="getBindByYearMonth" resultType="java.lang.Integer">
+        SELECT SUM(label_number) FROM zs_batch
+        WHERE DATE_FORMAT(create_date,'%Y-%m')=#{date}
+        AND status!=6
+    </select>
+
+    <!--根据id获取-->
+    <select id="getPBatchById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      SELECT * FROM zs_batch WHERE batch_id=#{batchId}
+    </select>
+
+    <select id="selectZsBatchByBatchIsPack" resultType="com.dalian.sea.parameter.PZsBatch">
+SELECT
+        b.batch_id as batchId,
+	b.batch_code as batchCode ,
+	b.batch_name as batchName ,
+	b.product_code as productCode,
+	b.product_big_type as productBigType,
+	b.product_small_type as productSmallType,
+   b.product_name as productName,
+b.product_format as productFormat,
+b.label_number as labelNumber,
+count(o.batch_id) as packNumber,
+b.label_number-count(o.batch_id) as notPackNumber,
+MAX(o.create_date) as lastPackTime
+FROM
+	zs_batch b
+INNER JOIN zs_batch_order o ON b.batch_id = o.batch_id
+        <trim prefix="where" suffixOverrides="and">
+            <if test="productName !=null and productName !=''">
+                b.product_name =#{productName} and
+            </if>
+            <if test="productLine !=null and productLine !=''">
+                b.product_line =#{productLine} and
+            </if>
+            <if test="productBigType !=null and productBigType !=''">
+                b. product_big_type =#{productBigType} and
+            </if>
+            <if test="productSmallType !=null and productSmallType !=''">
+                b.product_small_type =#{productSmallType} and
+            </if>
+            <if test="batchCode !=null and batchCode !=''">
+                b.batch_code =#{batchCode} and
+            </if>
+            <if test="taskCode !=null and taskCode !=''">
+                b.task_code =#{taskCode} and
+            </if>
+            <if test="productFormat !=null and productFormat !=''">
+                b.product_format =#{productFormat} and
+            </if>
+        </trim>
+        GROUP BY b.batch_id
+    </select>
+</mapper>

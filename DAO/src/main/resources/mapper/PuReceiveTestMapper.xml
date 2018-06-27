@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PuReceiveTestMapper">
+    <resultMap id="PPuReceiveTestMapper" type="com.dalian.sea.parameter.PPuReceiveTestMapper" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="receive_detail_id" jdbcType="BIGINT" property="receiveDetailId" />
+    <result column="inspectors" jdbcType="VARCHAR" property="inspectors" />
+    <result column="inspection_method" jdbcType="VARCHAR" property="inspectionMethod" />
+    <result column="inspec_data_dic_id" jdbcType="BIGINT" property="inspecDataDicId" />
+    <result column="inspection_date" jdbcType="TIMESTAMP" property="inspectionDate" />
+    <result column="test_result" jdbcType="TINYINT" property="testResult" />
+    <result column="iamges" jdbcType="VARBINARY" property="iamges" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+
+  </resultMap>
+
+  <!--加载列表-->
+  <select id="puReceiveTestList" parameterType="com.dalian.sea.parameter.PPuReceiveTestMapper" resultMap="PPuReceiveTestMapper">
+      select a.* ,b.goods_type_id as goodsTypeId,b.product_id as productId,b.receive_detail_id as receiveDetailId,b.goods_type as goodsType,b.batch_no as batchNo,b.product_name as productName
+      ,b.product_spec_name as productSpecName,c.enterprise_name as enterpriseName,b.weight as weight,b.unit_name as unitName,
+      c.deliver_name as deliverName,c.deliver_date as deliverDate,d.c_name as testCName
+      FROM receive_test_detailed b
+      LEFT JOIN pu_receive_test a  ON a.receive_detail_id=b.receive_detail_id
+      LEFT JOIN pu_receive c ON b.receive_id = c.receive_id
+      LEFT JOIN ba_data_dictionary_details d ON  d.data_dictionary_details_id = a.inspection_method
+      WHERE a.test_result!=0
+      <if test="batchNo !=null and batchNo !=''">and b.batch_no=#{batchNo}</if>
+      <if test="goodsTypeId !=null and goodsTypeId !=''"> and b.goods_type_id=#{goodsTypeId}</if>
+      <if test="productName !=null and productName !=''"> and b.product_name=#{productName}</if>
+      <if test="StartTime != null"><![CDATA[ and c.deliver_date >= #{StartTime}]]></if>
+      <if test="TerminalTime !=null"><![CDATA[ and c.deliver_date<=#{TerminalTime} ]]></if>
+      order by update_date desc
+  </select>
+  <!--根据id查询货品-->
+  <select id="uploadingReports" parameterType="java.lang.Long" resultMap="PPuReceiveTestMapper">
+     select a.* ,b.receive_detail_id as receiveDetailId,b.goods_type as goodsType,b.batch_no as batchNo,b.product_name as productName
+	,b.product_spec_name as productSpecName,c.enterprise_name as enterpriseName,b.weight as weight,b.unit_name as unitName,
+	c.deliver_name as deliverName,c.deliver_date as deliverDate
+	FROM pu_receive_detail b
+	LEFT JOIN pu_receive_test a  ON a.receive_detail_id=b.receive_detail_id
+	LEFT JOIN pu_receive c ON b.receive_id = c.receive_id
+	WHERE b.receive_detail_id=#{id}
+  </select>
+  <!--检验方式-->
+    <select id="dataDictionary" resultMap="PPuReceiveTestMapper">
+    SELECT a.c_name as dataDictionaryDetailscName,data_dictionary_details_id AS dataDictionaryDetailsId FROM ba_data_dictionary_details a
+    LEFT JOIN ba_data_dictionary b ON  a.data_dictionary_id=b.data_dictionary_id
+    WHERE a.data_dictionary_id=9
+    </select>
+    <!--货物类型-->
+    <select id="TypeOfGoods" resultMap="PPuReceiveTestMapper">
+    SELECT b.c_name AS goodsType FROM ba_data_dictionary a
+    LEFT JOIN ba_data_dictionary_details b ON b.data_dictionary_id = a.data_dictionary_id
+    WHERE a.data_dictionary_id = 8
+    </select>
+    <!--检验信息-->
+    <update id="addPuReceiveTest" parameterType="com.dalian.sea.model.PuReceiveTest">
+    update pu_receive_test SET
+    <if test="inspectionMethod !=null and inspectionMethod !=''">inspection_method=#{inspectionMethod}</if>
+    <if test="testResult !=null and testResult !=''">,test_result=#{testResult}</if>
+    <if test="inspectors !=null and inspectors !=''">,inspectors=#{inspectors}</if>
+    <if test="inspectionDate !=null">,inspection_date=#{inspectionDate}</if>
+    <if test="remarks !=null and remarks !=''">,remarks=#{remarks}</if>
+    ,iamges=#{iamges}
+     ,update_user_id=#{updateUserId}
+    where receive_detail_id =#{receiveDetailId}
+    </update>
+    <!--数据导出-->
+    <select id="getPuReceiveTest" parameterType="com.dalian.sea.parameter.PPuReceiveTestMapper" resultMap="PPuReceiveTestMapper">
+      select a.* ,b.goods_type as goodsType,b.batch_no as batchNo,b.product_name as productName
+      ,b.product_spec_name as productSpecName,c.enterprise_name as enterpriseName,b.weight as weight,b.unit_name as unitName,
+      c.deliver_name as deliverName,c.deliver_date as deliverDate,d.c_name as testCName
+      FROM pu_receive_detail b
+      LEFT JOIN pu_receive_test a  ON a.receive_detail_id=b.receive_detail_id
+      LEFT JOIN pu_receive c ON b.receive_id = c.receive_id
+      LEFT JOIN ba_data_dictionary_details d ON  d.data_dictionary_details_id = a.inspection_method
+	  WHERE a.test_result!=0
+    </select>
+    <!--添加收货单ID-->
+    <insert id="addReceiveDetailId" parameterType="java.lang.Long">
+      INSERT INTO  pu_receive_test(receive_detail_id,test_result,update_date) VALUES
+      (#{receiveDetailId},1,now())
+    </insert>
+
+    <!--根据receiveDetailId查记录数-->
+    <select id="selectCountById" resultType="java.lang.Integer">
+        select count(*) from pu_receive_test
+        where receive_detail_id=#{receiveDetailId}
+    </select>
+    <!--根据receiveDetailId删除-->
+    <delete id="deleteByReceiveDetailId" parameterType="java.lang.Long">
+        delete from pu_receive_test
+        where
+        receive_detail_id=#{receiveDetailId}
+    </delete>
+
+    <select id="getImageById" parameterType="java.lang.Long" resultType="java.lang.String">
+        select  iamges from pu_receive_test where receive_detail_id=#{receiveDetailId}
+    </select>
+</mapper>

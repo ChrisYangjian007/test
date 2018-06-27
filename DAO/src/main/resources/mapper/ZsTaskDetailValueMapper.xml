@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsTaskDetailValueMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsTaskDetailValue">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="task_detail_value_id" jdbcType="BIGINT" property="taskDetailValueId"/>
+        <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+        <result column="produce_task_detail_id" jdbcType="BIGINT" property="produceTaskDetailId"/>
+        <result column="work_flow_id" jdbcType="INTEGER" property="workFlowId"/>
+        <result column="work_process_id" jdbcType="INTEGER" property="workProcessId"/>
+        <result column="work_process_name" jdbcType="VARCHAR" property="workProcessName"/>
+        <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+
+    <!--通过produce_task_id获取-->
+    <select id="getTaskDetailValueByProduceTask" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_task_detail_value WHERE produce_task_id=#{produceTaskId}
+  </select>
+
+    <!--通过produce_task_id删除-->
+    <update id="deleteTaskDetailValueByProduceTaskId" parameterType="java.lang.Long">
+    UPDATE zs_task_detail_value SET status=6 WHERE produce_task_id=#{produceTaskId}
+  </update>
+
+    <insert id="newTaskDetailValue" useGeneratedKeys="true"
+            keyColumn="task_detail_value_id">
+        INSERT INTO zs_task_detail_value(
+        <trim prefixOverrides=",">
+            <if test="produceTaskId!=null and produceTaskId!=''">
+                ,produce_task_id
+            </if>
+            <if test="yh.workFlowId!=null and yh.workFlowId!=''">
+                ,work_flow_id
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,create_date
+            </if>
+        </trim>
+        )VALUES(
+        <trim prefixOverrides=",">
+            <if test="produceTaskId!=null and produceTaskId!=''">
+                ,#{produceTaskId}
+            </if>
+            <if test="yh.workFlowId!=null and yh.workFlowId!=''">
+                ,#{yh.workFlowId}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="getWorkFlowId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT work_flow_id
+        FROM zs_task_detail_value
+        WHERE produce_task_id=#{produceTaskId}
+    </select>
+</mapper>

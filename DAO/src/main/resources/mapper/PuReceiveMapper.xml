@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PuReceiveMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PuReceivePara">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="receive_id" jdbcType="BIGINT" property="receiveId"/>
+        <result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId"/>
+        <result column="enterprise_name" jdbcType="VARCHAR" property="enterpriseName"/>
+        <result column="is_storage" jdbcType="TINYINT" property="isStorage"/>
+        <result column="receive_no" jdbcType="VARCHAR" property="receiveNo"/>
+        <result column="deliver_name" jdbcType="VARCHAR" property="deliverName"/>
+        <result column="consignee" jdbcType="VARCHAR" property="consignee"/>
+        <result column="deliver_date" jdbcType="TIMESTAMP" property="deliverDate"/>
+        <result column="total_weight" jdbcType="DECIMAL" property="totalWeight"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+    <resultMap id="PuReceiveApi" type="com.dalian.sea.parameter.PuReceiveApi" extends="BaseResultMap">
+        <collection property="receiveDetails" columnPrefix="prd_" javaType="java.util.List" ofType="com.dalian.sea.model.PuReceiveDetail">
+            <id property="receiveDetailId" column="receive_detail_id" jdbcType="BIGINT"/>
+            <result property="batchNo" column="batch_no" jdbcType="VARCHAR"/>
+            <result property="productId" column="product_id" jdbcType="BIGINT"/>
+            <result property="productName" column="product_name" jdbcType="VARCHAR"/>
+            <result property="goodsTypeId" column="goods_type_id" jdbcType="BIGINT"/>
+            <result property="goodsType" column="goods_type" jdbcType="VARCHAR"/>
+            <result property="productSpecName" column="product_spec_name" jdbcType="VARCHAR"/>
+            <result property="unitId" column="unit_id" jdbcType="BIGINT"/>
+            <result property="unitName" column="unit_name" jdbcType="VARCHAR"/>
+            <result property="weight" column="weight" jdbcType="DECIMAL"/>
+            <result property="receiveId" column="receive_id" jdbcType="BIGINT"/>
+            <result property="receiptStatus" column="receipt_status" jdbcType="TINYINT" />
+        </collection>
+    </resultMap>
+    <select id="getReceiveByReceiveNoForApi" resultMap="PuReceiveApi" parameterType="java.lang.String">
+        SELECT
+        pr.*,
+        prd.receive_detail_id as prd_receive_detail_id,
+        prd.batch_no as prd_batch_no,
+        prd.product_id as prd_product_id,
+        prd.product_name as prd_product_name,
+        prd.goods_type_id as prd_goods_type_id,
+        prd.goods_type as prd_goods_type,
+        prd.product_spec_name as prd_product_spec_name,
+        prd.unit_id as prd_unit_id,
+        prd.unit_name as prd_unit_name,
+        prd.weight as prd_weight,
+        prd.receive_id as prd_receive_id,
+        prd.receipt_status as prd_receipt_status
+        FROM pu_receive pr LEFT JOIN pu_receive_detail prd ON pr.receive_id=prd.receive_id WHERE pr.status =1
+        and prd.status=1
+        AND pr.receive_no =#{receiveNo}
+    </select>
+
+    <select id="getReceiveByReceiveNoForIsPrint" resultMap="PuReceiveApi" parameterType="java.lang.String">
+        SELECT
+        pr.*,
+        prd.receive_detail_id as prd_receive_detail_id,
+        prd.batch_no as prd_batch_no,
+        prd.product_id as prd_product_id,
+        prd.product_name as prd_product_name,
+        prd.goods_type_id as prd_goods_type_id,
+        prd.goods_type as prd_goods_type,
+        prd.product_spec_name as prd_product_spec_name,
+        prd.unit_id as prd_unit_id,
+        prd.unit_name as prd_unit_name,
+        prd.weight as prd_weight,
+        prd.receive_id as prd_receive_id,
+        prd.receipt_status as prd_receipt_status
+        FROM pu_receive pr LEFT JOIN pu_receive_detail prd ON pr.receive_id=prd.receive_id WHERE pr.status =1
+        and prd.status=1
+        AND pr.receive_no =#{receiveNo}
+        <if test="isPrint==0">
+            and prd.receipt_status in (1,2,3)
+        </if>
+        <if test="isPrint==1">
+            and prd.receipt_status = 4
+        </if>
+    </select>
+
+    <select id="getReceiveCarryOut" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.PuReceive">
+    SELECT * FROM pu_receive WHERE 1=1
+    </select>
+
+    <!--根据receive id删除收货单-->
+    <update id="deleteReceiveById">
+        update pu_receive set
+        status=6,
+        update_date=#{date},
+        update_user_id=#{userId}
+        where receive_id=#{receiveId}
+    </update>
+
+    <insert id="insertReceive" useGeneratedKeys="true" keyProperty="pu.receiveId">
+        INSERT INTO pu_receive (
+        <trim prefixOverrides=",">
+            <if test="pu.receiveId!=null and pu.receiveId!=''">
+                ,receive_id
+            </if>
+            <if test="pu.enterpriseId!=null and pu.enterpriseId!=''">
+                ,enterprise_id
+            </if>
+            <if test="pu.enterpriseName!=null and pu.enterpriseName!=''">
+                ,enterprise_name
+            </if>
+            <if test="pu.receiveNo!=null and pu.receiveNo!=''">
+                ,receive_no
+            </if>
+            <if test="pu.deliverName!=null and pu.deliverName!=''">
+                ,deliver_name
+            </if>
+            <if test="pu.consignee!=null and pu.consignee!=''">
+                ,consignee
+            </if>
+            <if test="pu.deliverDate!=null">
+                ,deliver_date
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,remark
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="date!=null">
+                ,update_date
+            </if>
+        </trim>
+        )VALUES (
+        <trim prefixOverrides=",">
+            <if test="pu.receiveId!=null and pu.receiveId!=''">
+                ,#{pu.receiveId}
+            </if>
+            <if test="pu.enterpriseId!=null and pu.enterpriseId!=''">
+                ,#{pu.enterpriseId}
+            </if>
+            <if test="pu.enterpriseName!=null and pu.enterpriseName!=''">
+                ,#{pu.enterpriseName}
+            </if>
+            <if test="pu.receiveNo!=null and pu.receiveNo!=''">
+                ,#{pu.receiveNo}
+            </if>
+            <if test="pu.deliverName!=null and pu.deliverName!=''">
+                ,#{pu.deliverName}
+            </if>
+            <if test="pu.consignee!=null and pu.consignee!=''">
+                ,#{pu.consignee}
+            </if>
+            <if test="pu.deliverDate!=null">
+                ,#{pu.deliverDate}
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,#{pu.remark}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <insert id="insertReceiveApi" useGeneratedKeys="true" keyProperty="pu.receiveId">
+        INSERT INTO pu_receive (
+        <trim prefixOverrides=",">
+            <if test="pu.receiveId!=null and pu.receiveId!=''">
+                ,receive_id
+            </if>
+            <if test="pu.enterpriseId!=null and pu.enterpriseId!=''">
+                ,enterprise_id
+            </if>
+            <if test="pu.enterpriseName!=null and pu.enterpriseName!=''">
+                ,enterprise_name
+            </if>
+            <if test="pu.receiveNo!=null and pu.receiveNo!=''">
+                ,receive_no
+            </if>
+            <if test="pu.deliverName!=null and pu.deliverName!=''">
+                ,deliver_name
+            </if>
+            <if test="pu.consignee!=null and pu.consignee!=''">
+                ,consignee
+            </if>
+            <if test="pu.deliverDate!=null">
+                ,deliver_date
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,remark
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="date!=null">
+                ,update_date
+            </if>
+        </trim>
+        )VALUES (
+        <trim prefixOverrides=",">
+            <if test="pu.receiveId!=null and pu.receiveId!=''">
+                ,#{pu.receiveId}
+            </if>
+            <if test="pu.enterpriseId!=null and pu.enterpriseId!=''">
+                ,#{pu.enterpriseId}
+            </if>
+            <if test="pu.enterpriseName!=null and pu.enterpriseName!=''">
+                ,#{pu.enterpriseName}
+            </if>
+            <if test="pu.receiveNo!=null and pu.receiveNo!=''">
+                ,#{pu.receiveNo}
+            </if>
+            <if test="pu.deliverName!=null and pu.deliverName!=''">
+                ,#{pu.deliverName}
+            </if>
+            <if test="pu.consignee!=null and pu.consignee!=''">
+                ,#{pu.consignee}
+            </if>
+            <if test="pu.deliverDate!=null">
+                ,#{pu.deliverDate}
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,#{pu.remark}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <!--修改receive-->
+    <update id="updateReceive">
+        update pu_receive
+        <trim prefix="set" suffixOverrides="," suffix=" where receive_id=#{pu.receiveId}">
+            <if test="pu.enterpriseId!=null">enterprise_id=#{pu.enterpriseId},</if>
+            <if test="pu.enterpriseName!=null">enterprise_name=#{pu.enterpriseName},</if>
+            <if test="pu.deliverDate!=null">deliver_date=#{pu.deliverDate},</if>
+            <if test="pu.deliverName!=null">deliver_name=#{pu.deliverName},</if>
+            <if test="pu.consignee!=null">consignee=#{pu.consignee},</if>
+            <if test="date!=null">update_date=#{date},</if>
+            <if test="userId!=null">update_user_id=#{userId},</if>
+            <if test="pu.remark!=null">remark=#{pu.remark}</if>
+        </trim>
+    </update>
+
+    <!--修改receive-->
+    <update id="updateReceiveById">
+        update pu_receive
+        <trim prefix="set" suffixOverrides="," suffix=" where receive_id=#{receiveId}">
+            <if test="enterpriseId!=null and enterpriseId!=''">enterprise_id=#{enterpriseId},</if>
+            <if test="enterpriseName!=null and enterpriseName!=''">enterprise_name=#{enterpriseName},</if>
+            <if test="deliverDate!=null">deliver_date=#{deliverDate},</if>
+            <if test="updateDate!=null">update_date=#{updateDate},</if>
+            <if test="updateUserId!=null and updateUserId!=''">update_user_id=#{updateUserId},</if>
+            <if test="deliverName!=null and deliverName!=''">deliver_name=#{deliverName},</if>
+            <if test="consignee!=null and consignee!=''">consignee=#{consignee},</if>
+            <if test="remark!=null and remark!=''">remark=#{remark},</if>
+        </trim>
+    </update>
+
+    <select id="getReceiveByReceiveNo" resultMap="BaseResultMap">
+        SELECT * FROM pu_receive WHERE status =1 AND receive_no =#{receiveNo}
+    </select>
+
+    <select id="getReceiveByReceiveId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT * FROM pu_receive WHERE status =1 AND receive_id =#{receiveId}
+    </select>
+
+    <!--根据receiveId查找receive-->
+    <select id="queryReceive" resultMap="BaseResultMap">
+        select * from pu_receive
+        where receive_id=#{pu.receiveId}
+    </select>
+
+    <insert id="copyOne" parameterType="com.dalian.sea.model.PuReceive" useGeneratedKeys="true" keyProperty="pu.receiveId">
+        INSERT INTO pu_receive (
+        <trim prefixOverrides=",">
+            <if test="pu.enterpriseId!=null and pu.enterpriseId!=''">
+                ,enterprise_id
+            </if>
+            <if test="pu.enterpriseName!=null and pu.enterpriseName!=''">
+                ,enterprise_name
+            </if>
+            <if test="pu.receiveNo!=null and pu.receiveNo!=''">
+                ,receive_no
+            </if>
+            <if test="pu.deliverName!=null and pu.deliverName!=''">
+                ,deliver_name
+            </if>
+            <if test="pu.consignee!=null and pu.consignee!=''">
+                ,consignee
+            </if>
+            <if test="pu.deliverDate!=null">
+                ,deliver_date
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,remark
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="pu.updateDate!=null">
+                ,update_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,update_user_id
+            </if>
+        </trim>
+        )VALUES (
+        <trim prefixOverrides=",">
+            <if test="pu.enterpriseId!=null and pu.enterpriseId!=''">
+                ,#{pu.enterpriseId}
+            </if>
+            <if test="pu.enterpriseName!=null and pu.enterpriseName!=''">
+                ,#{pu.enterpriseName}
+            </if>
+            <if test="pu.receiveNo!=null and pu.receiveNo!=''">
+                ,#{pu.receiveNo}
+            </if>
+            <if test="pu.deliverName!=null and pu.deliverName!=''">
+                ,#{pu.deliverName}
+            </if>
+            <if test="pu.consignee!=null and pu.consignee!=''">
+                ,#{pu.consignee}
+            </if>
+            <if test="pu.deliverDate!=null">
+                ,#{pu.deliverDate}
+            </if>
+            <if test="pu.remark!=null and pu.remark!=''">
+                ,#{pu.remark}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="pu.updateDate!=null">
+                ,#{pu.updateDate}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="getIsPrintReceiveList" resultMap="BaseResultMap" parameterType="java.lang.Byte">
+        select receive.* from pu_receive receive LEFT JOIN pu_receive_detail prd ON receive.receive_id=prd.receive_id WHERE receive.status=1
+        <choose>
+            <when test="isPrint==1">
+                and prd.receipt_status=4
+            </when>
+            <otherwise>
+                AND prd.receipt_status=1
+            </otherwise>
+        </choose>
+        group by receive.receive_id
+    </select>
+
+</mapper>

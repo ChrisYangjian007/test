@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsQrCodeMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsQrCode">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="qr_code_id" jdbcType="BIGINT" property="qrCodeId" />
+    <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+    <result column="use_number" jdbcType="INTEGER" property="useNumber" />
+    <result column="use_status" jdbcType="TINYINT" property="useStatus" />
+    <result column="current_produce_task_id" jdbcType="BIGINT" property="currentProduceTaskId" />
+    <result column="current_produce_task_code" jdbcType="VARCHAR" property="currentProduceTaskCode" />
+    <result column="current_produce_task_name" jdbcType="VARCHAR" property="currentProduceTaskName" />
+    <result column="bind_date" jdbcType="TIMESTAMP" property="bindDate" />
+    <result column="bind_user_id" jdbcType="BIGINT" property="bindUserId" />
+    <result column="bind_user_name" jdbcType="VARCHAR" property="bindUserName" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--通过二维码编号获取二维码数据-->
+  <select id="getQrCodeByQrCode" resultMap="BaseResultMap">
+    select * from zs_qr_code WHERE qr_code=#{qrCode} and status=1
+  </select>
+
+  <!--通过produceTaskId获取二维码-->
+  <select id="getQrCodeByProduceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_qr_code WHERE status=1 AND current_produce_task_id=#{produceTaskId}
+    order by update_date desc
+  </select>
+
+  <!--通过produceTaskId获取二维码-->
+  <select id="getQrCodeByIntervalId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_qr_code zpc
+    left join zs_qr_code_interval zqci on zqci.interval_id=#{intervalId}
+    WHERE zpc.status=1
+    and INET_ATON(zpc.qr_code) between zqci.start_code and zqci.end_code
+    order by zpc.update_date desc
+  </select>
+
+  <!--添加多个编码-->
+  <insert id="addQrCodeByStartCodeAndEndCode">
+    insert into zs_qr_code (qr_code,create_date,update_date,create_user_id)
+    values
+    <foreach collection="zsQrCodeList" index="index" item="item" separator=",">
+      (#{item.qrCode},now(),now(),#{item.createUserId})
+    </foreach>
+  </insert>
+
+<!--修改-->
+  <update id="updateZsQrCode" parameterType="com.dalian.sea.model.ZsQrCode">
+    update zs_qr_code
+    <trim prefix="set" suffixOverrides="," suffix="where qr_code_id=#{qrCodeId}">
+      <if test="useNumber!=null">use_number = #{useNumber},</if>
+      <if test="useStatus!=null">use_status = #{useStatus},</if>
+      <if test="currentProduceTaskId!=null">current_produce_task_id = #{currentProduceTaskId},</if>
+      <if test="currentProduceTaskCode!=null">current_produce_task_code = #{currentProduceTaskCode},</if>
+      <if test="currentProduceTaskName!=null">current_produce_task_name = #{currentProduceTaskName},</if>
+      <if test="bindDate!=null">bind_date = #{bindDate},</if>
+      <if test="bindUserId!=null">bind_user_id = #{bindUserId},</if>
+      <if test="bindUserName!=null">bind_user_name = #{bindUserName},</if>
+      <if test="updateUserId!=null">update_user_id = #{updateUserId},</if>
+    </trim>
+  </update>
+
+<!--解绑-->
+  <update id="unBindCode" >
+    update zs_qr_code set use_status = 1,current_produce_task_id=NULL ,
+    current_produce_task_code=NULL ,current_produce_task_name=NULL ,
+    bind_date=NULL ,bind_user_id=NULL ,bind_user_name=NULL ,update_user_id=#{userId}
+    where current_produce_task_id=#{produceTaskId}
+  </update>
+  
+
+</mapper>

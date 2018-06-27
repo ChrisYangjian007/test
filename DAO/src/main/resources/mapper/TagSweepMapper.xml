@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.TagSweepMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.TagSweep">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="sweep_id" jdbcType="BIGINT" property="sweepId"/>
+        <result column="order_detail_code" jdbcType="VARCHAR" property="orderDetailCode"/>
+        <result column="order_code" jdbcType="VARCHAR" property="orderCode"/>
+        <result column="organic_code" jdbcType="VARCHAR" property="organicCode"/>
+        <result column="create_ip" jdbcType="VARCHAR" property="createIp"/>
+        <result column="update_ip" jdbcType="VARCHAR" property="updateIp"/>
+        <result column="rule_name" jdbcType="VARCHAR" property="ruleName"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="clear_code" jdbcType="INTEGER" property="clearCode"/>
+        <result column="qr_code" jdbcType="VARCHAR" property="qrCode"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="box_code" jdbcType="VARCHAR" property="boxCode"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="update_area" jdbcType="VARCHAR" property="updateArea"/>
+    </resultMap>
+    <resultMap id="DataResultMap" type="com.dalian.sea.parameter.TagSweepPara" extends="BaseResultMap">
+        <result column="sweepCount" jdbcType="INTEGER" property="sweepCount"/>
+        <result column="latestTime" jdbcType="TIMESTAMP" property="latestTime"/>
+    </resultMap>
+    <select id="selectTagSweepListByTagSweep" resultMap="BaseResultMap">
+        SELECT * ,COUNT (qr_code) as batchCount FROM tag_sweep
+        <trim prefix="where" suffixOverrides="and">
+
+            <if test="startCode !=null and endCode !=null">
+                clear_code BETWEEN #{startCode} and #{endCode} and
+            </if>
+            <if test="ruleName !=null">
+                rule_name =#{ruleName}
+            </if>
+        </trim>
+        GROUP BY qr_code ORDER BY create_date desc
+    </select>
+
+    <select id="getSweepTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep WHERE status!=6
+    </select>
+
+    <select id="getMonthSweep" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep WHERE YEAR(create_date)=YEAR(NOW()) AND MONTH(create_date)=MONTH(NOW()) AND status!=6
+    </select>
+
+    <select id="sweepExceptionTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep WHERE status=3
+    </select>
+
+    <select id="todaySweepException" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep
+        WHERE status=3
+        AND YEAR(create_date)=YEAR(NOW())
+        AND MONTH(create_date)=MONTH(NOW())
+        AND DAY(create_date)=DAY(NOW())
+    </select>
+
+    <select id="getUpdateArea" resultType="java.lang.String">
+        SELECT update_area FROM tag_sweep
+        WHERE status!=6
+        GROUP BY update_area
+    </select>
+
+    <select id="getAllSweep" resultMap="BaseResultMap">
+        SELECT * FROM tag_sweep WHERE status!=6
+    </select>
+
+    <select id="countByArea" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep WHERE update_area=#{updateArea} AND status!=6
+    </select>
+
+    <select id="getCountByDate" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep WHERE DATE_FORMAT(create_date,'%Y-%m-%d')=#{date} AND status!=6
+    </select>
+
+    <select id="getCountByYearMonth" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tag_sweep WHERE DATE_FORMAT(create_date,'%Y-%m')=#{date} AND status!=6
+    </select>
+
+    <select id="getGridTable" resultMap="DataResultMap">
+        SELECT ts.update_area,ts.qr_code,ts.batch_no,ts.product_name,ts.product_spec_name,ts.create_ip,ts.create_date as latestTime from tag_sweep ts
+        WHERE ts.create_date=(SELECT max(create_date) FROM tag_sweep where ts.qr_code=qr_code GROUP by qr_code)
+        ORDER BY qr_code
+    </select>
+    
+    <select id="getCountBycode" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(sweep_id) FROM tag_sweep WHERE qr_code=#{qrCode}
+    </select>
+
+    <!--根据batchNo获取次数-->
+    <select id="getSweepCountByBatchNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(sweep_id) FROM tag_sweep WHERE batch_no=#{batchNo}
+    </select>
+    
+    <insert id="addSweep" parameterType="com.dalian.sea.model.TagSweep">
+        INSERT INTO tag_sweep(create_date,update_date
+        <if test="orderDetailCode !=null">,order_detail_code</if>
+        <if test="orderCode != null">,order_code</if>
+        <if test="organicCode != null">,organic_code</if>
+        <if test="createIp != null">,create_ip</if>
+        <if test="updateIp != null">,update_ip</if>
+        <if test="ruleName != null">,rule_name</if>
+        <if test="remark != null">,remark</if>
+        <if test="clearCode != null">,clear_code</if>
+        <if test="qrCode != null">,qr_code</if>
+        <if test="batchNo != null">,batch_no</if>
+        <if test="productName != null">,product_name</if>
+        <if test="productSpecName != null">,product_spec_name</if>
+        <if test="boxCode != null">,box_code</if>
+        <if test="listIndex != null">,list_index</if>
+        <if test="createUserId != null">,create_user_id</if>
+        <if test="updateUserId != null">,update_user_id</if>
+        <if test="updateArea != null">,update_area</if>
+        )VALUE (now(),now()
+        <if test="orderDetailCode !=null">,#{orderDetailCode}</if>
+        <if test="orderCode != null">,#{orderCode}</if>
+        <if test="organicCode != null">,#{organicCode}</if>
+        <if test="createIp != null">,#{createIp}</if>
+        <if test="updateIp != null">,#{updateIp}</if>
+        <if test="ruleName != null">,#{ruleName}</if>
+        <if test="remark != null">,#{remark}</if>
+        <if test="clearCode != null">,#{clearCode}</if>
+        <if test="qrCode != null">,#{qrCode}</if>
+        <if test="batchNo != null">,#{batchNo}</if>
+        <if test="productName != null">,#{productName}</if>
+        <if test="productSpecName != null">,#{productSpecName}</if>
+        <if test="boxCode != null">,#{boxCode}</if>
+        <if test="listIndex != null">,#{listIndex}</if>
+        <if test="createUserId != null">,#{createUserId}</if>
+        <if test="updateUserId != null">,#{updateUserId}</if>
+        <if test="updateArea != null">,#{updateArea}</if>
+        )
+    </insert>
+</mapper>

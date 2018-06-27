@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsStockDetailMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsStockDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="stock_detail_id" jdbcType="BIGINT" property="stockDetailId" />
+    <result column="stock_id" jdbcType="BIGINT" property="stockId" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="is_expend" jdbcType="TINYINT" property="isExpend" />
+    <result column="in_weight" jdbcType="DECIMAL" property="inWeight" />
+    <result column="out_weight" jdbcType="DECIMAL" property="outWeight" />
+    <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="related_id" jdbcType="BIGINT" property="relatedId" />
+    <result column="related_type" jdbcType="TINYINT" property="relatedType" />
+    <result column="is_material" jdbcType="TINYINT" property="isMaterial" />
+    <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+    <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName" />
+    <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId" />
+    <result column="product_status" jdbcType="TINYINT" property="productStatus" />
+    <result column="rest_status" jdbcType="TINYINT" property="restStatus" />
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+</mapper>

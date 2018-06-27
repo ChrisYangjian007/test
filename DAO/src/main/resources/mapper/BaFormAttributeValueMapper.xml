@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaFormAttributeValueMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PBaFormAttributeValue">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="form_attribute_value_id" jdbcType="BIGINT" property="formAttributeValueId" />
+    <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId" />
+    <id column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+    <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson" />
+    <result column="logger_json" jdbcType="CHAR" property="loggerJson" />
+    <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+    <result column="type_index" jdbcType="TINYINT" property="typeIndex" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <resultMap id="PBaFormAttributeValue" type="com.dalian.sea.parameter.PBaFormAttributeValue">
+    <id column="form_attribute_value_id" jdbcType="BIGINT" property="formAttributeValueId" />
+    <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId" />
+    <id column="work_process_id" jdbcType="BIGINT" property="workProcessId" />
+    <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson" />
+    <result column="logger_json" jdbcType="CHAR" property="loggerJson" />
+    <result column="handle_type" jdbcType="TINYINT" property="handleType" />
+    <result column="type_index" jdbcType="TINYINT" property="typeIndex" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="workProcessName" jdbcType="VARCHAR" property="workProcessName"/>
+  </resultMap>
+
+  <!--通过生产任务id获取所有审核数据-->
+  <select id="getBaFormAttributeValueByWorkProcessIdForPDA" resultMap="PBaFormAttributeValue">
+    select fav.*,wp.c_name as workProcessName FROM ba_form_attribute_value fav
+    left join zs_work_process wp on fav.work_process_id = wp.work_process_id
+    WHERE fav.produce_task_id=#{produceTaskId} and fav.handle_type=#{handleType}
+  </select>
+
+  <!--通过工序id获取-->
+  <select id="getBaFormAttributeValueByWorkProcessId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM ba_form_attribute_value WHERE status=1 AND work_process_id=#{workProcessId}
+  </select>
+
+  <!--获取根据生产任务、工序和类型-->
+  <select id="getBaFormAttributeValueByTaskAndProcessAndType" resultMap="BaseResultMap">
+    SELECT * FROM ba_form_attribute_value WHERE status=1 AND work_process_id=#{workProcessId} AND produce_task_id=#{produceTaskId} AND handle_type=#{handleType}
+    order by type_index desc LIMIT 1
+  </select>
+
+  <!--获取根据生产任务、工序和类型-->
+  <select id="getBaFormAttributeValueByTaskAndProcessAndTypeAndIndex" parameterType="com.dalian.sea.parameter.PBaFormAttributeValue" resultMap="BaseResultMap">
+    SELECT * FROM ba_form_attribute_value WHERE status=1 AND work_process_id=#{workProcessId} AND produce_task_id=#{produceTaskId} AND handle_type=#{handleType}
+    AND type_index=#{typeIndex} LIMIT 1
+  </select>
+
+  <!--添加-->
+  <insert id="addBaFormAttributeValue" parameterType="com.dalian.sea.parameter.PBaFormAttributeValue" keyProperty="formAttributeValueId" useGeneratedKeys="true">
+    insert into ba_form_attribute_value (produce_task_id,work_process_id,object_parameter_json,logger_json,handle_type,
+    type_index,create_date,update_date,create_user_id
+    ) values (#{produceTaskId},#{workProcessId},#{objectParameterJson},#{loggerJson},#{handleType},#{typeIndex},now(),now(),#{createUserId})
+  </insert>
+
+  <!--修改-->
+  <update id="updateBaFormAttributeValue" parameterType="com.dalian.sea.parameter.PBaFormAttributeValue">
+    update ba_form_attribute_value set object_parameter_json = #{objectParameterJson},logger_json = #{loggerJson},update_user_id=#{updateUserId}
+    where form_attribute_value_id = #{formAttributeValueId}
+  </update>
+
+
+  <!--通过produceTaskId获取value-->
+  <select id="getFormAttributeValueByProduceTaskId" parameterType="java.lang.Long" resultMap="PBaFormAttributeValue">
+    SELECT * FROM ba_form_attribute_value WHERE status=1 AND produce_task_id=#{produceTaskId}
+  </select>
+
+
+  <!--通过produceTaskId、Type获取value-->
+  <select id="getBaFormAttributeValueByTaskAndType" resultMap="PBaFormAttributeValue">
+    SELECT * FROM ba_form_attribute_value WHERE handle_type=#{handleType} AND produce_task_id=#{produceTaskId}
+  </select>
+
+  <!--批量修改value-->
+  <update id="updateFormAttributeValue" parameterType="java.util.List">
+      UPDATE ba_form_attribute_value
+      <trim prefix="set" suffixOverrides=",">
+        <trim prefix="object_parameter_json=case" suffix="end,">
+          <foreach collection="formAttributeValueList" item="item" index="index">
+            <if test="true">
+              when form_attribute_value_id=#{item.formAttributeValueId} then #{item.objectParameterJson}
+            </if>
+            <if test="true">
+              when form_attribute_value_id=#{item.formAttributeValueId} then ba_form_attribute_value.object_parameter_json
+            </if>
+          </foreach>
+        </trim>
+        <trim prefix="logger_json=case" suffix="end,">
+          <foreach collection="formAttributeValueList" item="item" index="index">
+            <if test="true">
+              when form_attribute_value_id=#{item.formAttributeValueId} then #{item.loggerJson}
+            </if>
+            <if test="true">
+              when form_attribute_value_id=#{item.formAttributeValueId} then ba_form_attribute_value.logger_json
+            </if>
+          </foreach>
+        </trim>
+      </trim>
+    where
+    <foreach collection="formAttributeValueList" index="index" item="item" separator="or">
+        form_attribute_value_id=#{item.formAttributeValueId}
+    </foreach>
+  </update>
+
+  <insert id="addBaFormAttributeValueList" parameterType="java.util.List">
+    INSERT INTO ba_form_attribute_value(
+    create_date,update_date,produce_task_id,work_process_id,object_parameter_json,logger_json,handle_type,create_user_id
+    )VALUES
+    <foreach collection="addFormAttributeValueList" index="index" item="item" separator=",">
+      (now(),now(),#{item.produceTaskId},#{item.workProcessId},#{item.objectParameterJson},#{item.loggerJson},#{item.handleType},#{item.createUserId})
+    </foreach>
+  </insert>
+</mapper>

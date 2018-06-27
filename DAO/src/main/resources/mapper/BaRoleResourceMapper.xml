@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaRoleResourceMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BaRoleResource">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="role_resource_id" jdbcType="BIGINT" property="roleResourceId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="resource_id" jdbcType="BIGINT" property="resourceId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--添加角色资源-->
+  <insert id="addBaRoleResource" parameterType="com.dalian.sea.model.BaRoleResource" keyProperty="roleResourceId" useGeneratedKeys="true">
+    insert into ba_role_resource (role_id,resource_id,create_user_id,create_date,update_date
+    ) values (#{roleId},#{resourceId},${createUserId},now(),now())
+  </insert>
+
+  <!--修改角色资源-->
+  <update id="updateBaRoleResource" parameterType="com.dalian.sea.model.BaRoleResource">
+    update ba_role_resource
+    <trim prefix="set" suffixOverrides="," suffix=" where role_resource_id=#{roleResourceId}">
+      <if test="roleId!=null">role_id=#{roleId},</if>
+      <if test="resourceId">resource_id=#{resourceId},</if>
+      <if test="updateUserId">update_user_id=#{updateUserId},</if>
+      <if test="status">status=#{status},</if>
+    </trim>
+  </update>
+
+  <!--删除角色资源-->
+  <update id="deleteBaRoleResource" parameterType="com.dalian.sea.model.BaRoleResource">
+    update ba_role_resource set status = 6 where role_resource_id=#{roleResourceId}
+  </update>
+
+  <!--删除角色资源-->
+  <delete id="deleteBaRoleResourceByRoleId" parameterType="java.lang.Long">
+    delete from ba_role_resource where role_id = #{roleId}
+  </delete>
+
+  <!--添加角色资源-->
+  <insert id="addBaRoleResourceByRoleId" >
+    insert into ba_role_resource (role_id,resource_id,create_user_id,create_date,update_date
+    ) values
+    <foreach collection="resourceId" item="item" index="index" separator=",">
+      (#{roleId},#{item},#{createUserId},now(),now())
+    </foreach>
+  </insert>
+</mapper>

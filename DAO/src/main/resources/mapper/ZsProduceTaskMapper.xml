@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsProduceTaskMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsProduceTask">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+        <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+        <result column="produce_task_status" jdbcType="TINYINT" property="produceTaskStatus"/>
+        <result column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+        <result column="check_user_id" jdbcType="BIGINT" property="checkUserId"/>
+        <result column="check_status" jdbcType="TINYINT" property="checkStatus"/>
+    </resultMap>
+
+    <resultMap id="PZsProduceTask" type="com.dalian.sea.parameter.PZsProduceTask" extends="BaseResultMap">
+        <result column="leaveStockNumber" jdbcType="INTEGER" property="leaveStockNumber"/>
+        <result column="enterStockNumber" jdbcType="INTEGER" property="enterStockNumber"/>
+        <result column="currentChecker" jdbcType="VARCHAR" property="currentChecker"/>
+        <result column="currentOperatingProcedures" jdbcType="VARCHAR" property="currentOperatingProcedures"/>
+        <result column="leaveUser" jdbcType="VARCHAR" property="leaveUser"/>
+        <result column="leaveDates" jdbcType="TIMESTAMP" property="leaveDates"/>
+        <result column="warehouse" jdbcType="VARCHAR" property="warehouse"/>
+        <result column="enterWarehouse" jdbcType="VARCHAR" property="enterWarehouse"/>
+        <result column="enterDates" jdbcType="TIMESTAMP" property="enterDates"/>
+        <result column="enterUser" jdbcType="VARCHAR" property="enterUser"/>
+        <result column="endUserName" jdbcType="VARCHAR" property="endUserName" />
+        <association property="pSaLeaveStock" javaType="com.dalian.sea.parameter.PSaLeaveStock" columnPrefix="ps_">
+            <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="leave_date" jdbcType="TIMESTAMP" property="leaveDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="leave_person" jdbcType="VARCHAR" property="leavePerson"/>
+            <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        </association>
+        <association property="pPuEnterStock" javaType="com.dalian.sea.parameter.PPuEnterStock" columnPrefix="pp_">
+            <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="enter_date" jdbcType="TIMESTAMP" property="enterDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="enter_person" jdbcType="VARCHAR" property="enterPerson"/>
+            <result column="warehouse_name" jdbcType="VARCHAR" property="warehouseName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="PZsProduceTaskColType" type="com.dalian.sea.parameter.PZsProduceTask" extends="BaseResultMap">
+        <association property="workFlow" javaType="com.dalian.sea.model.ZsWorkFlow">
+            <id column="work_flow_id" jdbcType="BIGINT" property="workFlowId"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="code" jdbcType="VARCHAR" property="code"/>
+            <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+            <result column="category" jdbcType="TINYINT" property="category"/>
+            <result column="a_level" jdbcType="INTEGER" property="aLevel"/>
+            <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+            <result column="first_id" jdbcType="BIGINT" property="firstId"/>
+            <result column="is_tree" jdbcType="TINYINT" property="isTree"/>
+            <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+            <result column="remark" jdbcType="VARCHAR" property="remark"/>
+            <result column="flage" jdbcType="VARCHAR" property="flage"/>
+            <result column="flage_name" jdbcType="VARCHAR" property="flageName"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </association>
+        <association property="zsWorkProcess" javaType="com.dalian.sea.model.ZsWorkProcess" columnPrefix="zwp_">
+            <id column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+            <result column="work_flow_id" jdbcType="BIGINT" property="workFlowId"/>
+            <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+            <result column="name_id" jdbcType="BIGINT" property="nameId"/>
+            <result column="is_workshop_record" jdbcType="TINYINT" property="isWorkshopRecord"/>
+            <result column="check_state" jdbcType="INTEGER" property="checkState"/>
+            <result column="is_before_record" jdbcType="TINYINT" property="isBeforeRecord"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </association>
+        <association property="saLeaveStock" javaType="com.dalian.sea.model.SaLeaveStock">
+            <id column="leave_stock_id" jdbcType="BIGINT" property="leaveStockId"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+            <result column="remark" jdbcType="VARCHAR" property="remark"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+            <result column="leave_date" jdbcType="TIMESTAMP" property="leaveDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+            <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+            <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="leave_no" jdbcType="VARCHAR" property="leaveNo"/>
+            <result column="leave_person" jdbcType="VARCHAR" property="leavePerson"/>
+            <result column="brokerage" jdbcType="VARCHAR" property="brokerage"/>
+            <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+            <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        </association>
+        <association property="formAttribute" javaType="com.dalian.sea.model.BaFormAttribute">
+            <id column="form_attribute_id" jdbcType="BIGINT" property="formAttributeId"/>
+            <result column="module_id" jdbcType="BIGINT" property="moduleId"/>
+            <result column="property_name" jdbcType="VARCHAR" property="propertyName"/>
+            <result column="control_name" jdbcType="VARCHAR" property="controlName"/>
+            <result column="control_type" jdbcType="TINYINT" property="controlType"/>
+            <result column="restrictive_conditions" jdbcType="INTEGER" property="restrictiveConditions"/>
+            <result column="control_style" jdbcType="VARCHAR" property="controlStyle"/>
+            <result column="control_validator" jdbcType="VARCHAR" property="controlValidator"/>
+            <result column="import_length" jdbcType="INTEGER" property="importLength"/>
+            <result column="default_value" jdbcType="VARCHAR" property="defaultValue"/>
+            <result column="attributes_property" jdbcType="VARCHAR" property="attributesProperty"/>
+            <result column="data_source_type" jdbcType="TINYINT" property="dataSourceType"/>
+            <result column="data_source_code" jdbcType="VARCHAR" property="dataSourceCode"/>
+            <result column="data_source" jdbcType="VARCHAR" property="dataSource"/>
+            <result column="control_colspan" jdbcType="VARCHAR" property="controlColspan"/>
+            <result column="remark" jdbcType="VARCHAR" property="remark"/>
+            <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+            <result column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+            <result column="handle_type" jdbcType="TINYINT" property="handleType"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </association>
+        <collection property="formAttributeValueList" javaType="java.util.List"
+                    ofType="com.dalian.sea.model.BaFormAttributeValue">
+            <id column="form_attribute_value_id" jdbcType="BIGINT" property="formAttributeValueId"/>
+            <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <id column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+            <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson"/>
+            <result column="logger_json" jdbcType="CHAR" property="loggerJson"/>
+            <result column="handle_type" jdbcType="TINYINT" property="handleType"/>
+            <result column="type_index" jdbcType="TINYINT" property="typeIndex"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="PProduceTaskPDA" type="com.dalian.sea.parameter.PProduceTaskPDA" extends="BaseResultMap">
+    </resultMap>
+
+    <resultMap id="PProduceTaskAndValueListAndWorkProcessId" type="com.dalian.sea.parameter.PZsProduceTask"
+               extends="BaseResultMap">
+        <result column="currentOperatingProcedures" jdbcType="VARCHAR" property="currentOperatingProcedures"/>
+        <collection property="pZsWorkProcessList" javaType="java.util.List"
+                    ofType="com.dalian.sea.parameter.PZsWorkProcess" columnPrefix="pzs_">
+            <id column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+            <result column="work_flow_id" jdbcType="BIGINT" property="workFlowId"/>
+            <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+            <result column="name_id" jdbcType="BIGINT" property="nameId"/>
+            <result column="is_workshop_record" jdbcType="TINYINT" property="isWorkshopRecord"/>
+            <result column="check_state" jdbcType="INTEGER" property="checkState"/>
+            <result column="is_before_record" jdbcType="TINYINT" property="isBeforeRecord"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </collection>
+        <collection property="formAttributeValueList" javaType="java.util.List"
+                    ofType="com.dalian.sea.model.BaFormAttributeValue" columnPrefix="for_">
+            <id column="form_attribute_value_id" jdbcType="BIGINT" property="formAttributeValueId"/>
+            <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <id column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+            <result column="object_parameter_json" jdbcType="CHAR" property="objectParameterJson"/>
+            <result column="logger_json" jdbcType="CHAR" property="loggerJson"/>
+            <result column="handle_type" jdbcType="TINYINT" property="handleType"/>
+            <result column="type_index" jdbcType="TINYINT" property="typeIndex"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+        </collection>
+    </resultMap>
+
+    <!--获取进行中生产任务-->
+    <select id="getProcessProduceTask" parameterType="com.dalian.sea.parameter.PZsProduceTask"
+            resultMap="PZsProduceTask">
+        SELECT zpt.*,
+        (SELECT count(sls.leave_stock_id)FROM sa_leave_stock sls WHERE sls.produce_task_id=zpt.produce_task_id) as
+        leaveStockNumber,
+        (SELECT count(pes.enter_stock_id)FROM pu_enter_stock pes WHERE pes.produce_task_no=zpt.produce_task_no) as
+        enterStockNumber,
+        pSls.leave_date as leaveDates,
+        pSls.leave_person as leaveUser,
+        zwp.c_name as currentOperatingProcedures,
+        bu.c_name as currentChecker
+        FROM (SELECT zt.* FROM zs_produce_task zt WHERE zt.status!=6
+        <if test="lastUserName != null and lastUserName != ''">
+            AND zt.produce_task_id in (
+            SELECT sal.produce_task_id FROM sa_leave_stock sal WHERE sal.status=1 AND sal.leave_person=#{lastUserName}
+            )
+        </if>
+        <if test="beginDate != null">
+            AND zt.produce_task_id in (
+            SELECT sal.produce_task_id FROM sa_leave_stock sal WHERE sal.status=1
+            <![CDATA[ and sal.leave_date >= #{beginDate} ]]>
+            )
+        </if>
+        <if test="endDate != null">
+            AND zt.produce_task_id in (
+            SELECT sal.produce_task_id FROM sa_leave_stock sal WHERE sal.status=1
+            <![CDATA[ and sal.leave_date <= #{endDate} ]]>
+            )
+        </if>
+        ) as zpt
+        LEFT JOIN (SELECT sls.* FROM sa_leave_stock as sls
+        WHERE sls.leave_date = (
+        SELECT max(leave_date)
+        FROM sa_leave_stock
+        WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON
+        pSls.produce_task_id=zpt.produce_task_id
+        LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+        LEFT JOIN ba_user bu ON bu.user_id=zpt.check_user_id
+        WHERE zpt.status=1 AND zpt.produce_task_status=1
+        <if test="produceTaskNo!=null and produceTaskNo!=''">
+            and zpt.produce_task_no=#{produceTaskNo}
+        </if>
+        <if test="produceTaskName!=null and produceTaskName!=''">
+            and zpt.produce_task_name=#{produceTaskName}
+        </if>
+        <if test="auditStatus==0">
+            and zpt.work_process_id!=null and zpt.check_status=0
+        </if>
+        <if test="auditStatus==1">
+            and zpt.check_status=1
+        </if>
+        <if test="auditStatus==2">
+            and zpt.check_status=2
+        </if>
+        <if test="auditStatus==3">
+            and zpt.work_process_id is null and zpt.check_status=0
+        </if>
+        group by zpt.produce_task_id order by zpt.update_date desc
+    </select>
+
+    <!--获取已结束生产任务-->
+    <select id="getEndProduceTask" parameterType="com.dalian.sea.parameter.PZsProduceTask" resultMap="PZsProduceTask">
+        SELECT zpt.*,
+        (SELECT count(sls.leave_stock_id)FROM sa_leave_stock sls WHERE sls.produce_task_id=zpt.produce_task_id) as
+        leaveStockNumber,
+        (SELECT count(pes.enter_stock_id)FROM pu_enter_stock pes WHERE pes.produce_task_no=zpt.produce_task_no) as
+        enterStockNumber,
+        pSls.leave_date as leaveDates,
+        pSls.leave_person as leaveUser,
+        pPes.enter_date as enterDates,
+        pPes.enter_person as enterUser,
+        bu.c_name as endUserName
+        FROM (SELECT zt.* FROM zs_produce_task zt WHERE zt.status!=6
+        <if test="lastUserName != null and lastUserName != ''">
+            AND zt.produce_task_id in (
+            SELECT sal.produce_task_id FROM sa_leave_stock sal WHERE sal.status=1 AND sal.leave_person=#{lastUserName}
+            )
+        </if>
+        <if test="beginDate != null">
+            AND zt.produce_task_id in (
+            SELECT sal.produce_task_id FROM sa_leave_stock sal WHERE sal.status=1
+            <![CDATA[ and sal.leave_date >= #{beginDate} ]]>
+            )
+        </if>
+        <if test="endDate != null">
+            AND zt.produce_task_id in (
+            SELECT sal.produce_task_id FROM sa_leave_stock sal WHERE sal.status=1
+            <![CDATA[ and sal.leave_date <= #{endDate} ]]>
+            )
+        </if>
+        ) as zpt
+        LEFT JOIN ba_user bu ON bu.user_id=zpt.update_user_id
+        LEFT JOIN (SELECT sls.* FROM sa_leave_stock sls
+        WHERE sls.leave_date = (
+        SELECT max(leave_date)
+        FROM sa_leave_stock
+        WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON
+        pSls.produce_task_id=zpt.produce_task_id
+        LEFT JOIN (SELECT pes.* FROM pu_enter_stock pes
+        WHERE pes.enter_date = (
+        SELECT max(enter_date)
+        FROM pu_enter_stock
+        WHERE pes.produce_task_no = produce_task_no group by produce_task_id)) as pPes ON
+        pPes.produce_task_no=zpt.produce_task_no
+        WHERE zpt.status=1 AND zpt.produce_task_status=2
+        <if test="produceTaskNo!=null and produceTaskNo!=''">
+            and zpt.produce_task_no=#{produceTaskNo}
+        </if>
+        <if test="produceTaskName!=null and produceTaskName!=''">
+            and zpt.produce_task_name=#{produceTaskName}
+        </if>
+        group by zpt.produce_task_id order by zpt.update_date desc
+    </select>
+
+    <!--根据id获取生产任务-->
+    <select id="getProduceTaskByDetailId" parameterType="java.lang.Long" resultMap="PZsProduceTask">
+    SELECT * FROM zs_produce_task WHERE produce_task_id=#{id}
+  </select>
+
+    <!--根据id获取生产任务-->
+    <select id="getProduceTaskByIdForPDA" parameterType="java.lang.Long" resultMap="PProduceTaskPDA">
+    SELECT * FROM zs_produce_task WHERE produce_task_id=#{id}
+  </select>
+
+    <!--通过produce_task_id删除生产任务-->
+    <update id="deleteProduceTaskById" parameterType="com.dalian.sea.model.ZsProduceTask">
+        UPDATE zs_produce_task SET status=6
+        <if test="updateUserId != null and updateUserId != ''">
+            ,update_user_id=#{updateUserId}
+        </if>
+        WHERE produce_task_id=#{produceTaskId}
+    </update>
+
+    <!--根据编号获取生产任务-->
+    <select id="getProduceTaskByProduceTaskNo" resultMap="BaseResultMap">
+    select * from zs_produce_task WHERE status =1 AND produce_task_status=1 AND produce_task_no =#{produceTaskNo};
+  </select>
+
+    <!--根据编号获取生产任务-->
+    <select id="getProduceTaskByNo" resultMap="BaseResultMap" parameterType="String">
+    select * from zs_produce_task WHERE status =1 AND produce_task_no =#{no};
+  </select>
+
+    <!--修改当前工艺和状态-->
+    <update id="updateProduceTask" parameterType="com.dalian.sea.model.ZsProduceTask">
+    UPDATE zs_produce_task SET work_process_id=#{workProcessId},check_user_id=#{checkUserId},check_status=#{checkStatus}
+    WHERE produce_task_id=#{produceTaskId}
+  </update>
+
+    <!--通过操作类型获取生产任务详情colType(1-产看 2-操作)-->
+    <select id="getPZsProduceTaskByColType" parameterType="java.lang.Integer" resultMap="PZsProduceTaskColType">
+        SELECT zpt.*,zwf.*,zwp.c_name as zwp_c_name,pSls.*
+        FROM zs_produce_task zpt
+        LEFT JOIN zs_task_detail_value ztdv ON ztdv.produce_task_id=zpt.produce_task_id
+        LEFT JOIN zs_work_flow zwf ON zwf.work_flow_id=ztdv.work_flow_id
+        LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+        LEFT JOIN (SELECT sls.* FROM sa_leave_stock sls
+        WHERE sls.leave_date = (
+        SELECT max(leave_date)
+        FROM sa_leave_stock
+        WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON
+        pSls.produce_task_id=zpt.produce_task_id
+        WHERE zpt.status=1 AND zpt.produce_task_status=1
+        <if test="cloType==2">
+            AND zpt.check_status!=1
+        </if>
+        order by zpt.create_date desc
+    </select>
+
+    <!--通过操作类型获取生产任务详情colType(3-审核)-->
+    <select id="getPZsProduceTaskByColTypeThree" resultMap="PZsProduceTaskColType">
+    SELECT zpt.*,zwf.*,zwp.c_name as zwp_c_name,pSls.*,bfa.*,bfav.*
+    FROM zs_produce_task zpt
+    LEFT JOIN zs_task_detail_value ztdv ON ztdv.produce_task_id=zpt.produce_task_id
+    LEFT JOIN zs_work_flow zwf ON zwf.work_flow_id=ztdv.work_flow_id
+    LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT * FROM ba_form_attribute fa
+    WHERE fa.property_name='审核人' AND fa.handle_type=1) as bfa ON bfa.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT * FROM ba_form_attribute_value fav
+    ) as bfav ON bfav.produce_task_id=zpt.produce_task_id AND bfav.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT sls.* FROM sa_leave_stock sls
+	WHERE sls.leave_date = (
+	SELECT max(leave_date)
+	FROM sa_leave_stock
+	WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON pSls.produce_task_id=zpt.produce_task_id
+	WHERE zpt.status=1 AND zpt.check_status=1 AND zpt.produce_task_status=1
+	order by zpt.create_date desc
+  </select>
+
+    <!--通过操作类型获取生产任务详情colType(3-审核)-->
+    <select id="getPZsProduceTaskByColTypeThreeForPDAByCode" resultMap="PZsProduceTaskColType">
+    SELECT zpt.*,zwf.*,zwp.c_name as zwp_c_name,pSls.*,bfa.*,bfav.*
+    FROM zs_produce_task zpt
+    LEFT JOIN zs_task_detail_value ztdv ON ztdv.produce_task_id=zpt.produce_task_id
+    LEFT JOIN zs_work_flow zwf ON zwf.work_flow_id=ztdv.work_flow_id
+    LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT * FROM ba_form_attribute fa
+    WHERE fa.property_name='审核人' AND fa.handle_type=1) as bfa ON bfa.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT * FROM ba_form_attribute_value fav
+    ) as bfav ON bfav.produce_task_id=zpt.produce_task_id AND bfav.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT sls.* FROM sa_leave_stock sls
+	WHERE sls.leave_date = (
+	SELECT max(leave_date)
+	FROM sa_leave_stock
+	WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON pSls.produce_task_id=zpt.produce_task_id
+	WHERE zpt.status=1 AND zpt.check_status=1 AND zpt.produce_task_status=1
+	and zpt.produce_task_no=#{code}
+    order by zpt.create_date desc
+  </select>
+
+
+    <!--通过操作类型获取生产任务详情（colType=4）-->
+    <select id="getPZsProduceTaskByCollType" resultMap="PZsProduceTaskColType">
+    SELECT zpt.*,zwf.*,zwp.c_name as zwp_c_name,pSls.*
+    FROM zs_produce_task zpt
+    LEFT JOIN zs_task_detail_value ztdv ON ztdv.produce_task_id=zpt.produce_task_id
+    LEFT JOIN zs_work_flow zwf ON zwf.work_flow_id=ztdv.work_flow_id
+    LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+    LEFT JOIN (SELECT sls.* FROM sa_leave_stock sls
+	WHERE sls.leave_date = (
+	SELECT max(leave_date)
+	FROM sa_leave_stock
+	WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON pSls.produce_task_id=zpt.produce_task_id
+	WHERE zpt.status=1 AND zpt.produce_task_status=1 AND zpt.produce_task_id IN (
+      SELECT produce_task_id FROM ba_form_attribute_value WHERE status=1 AND handle_type=2 group by work_process_id
+	)
+	order by zpt.create_date desc
+  </select>
+
+    <!--通过操作类型获取生产任务详情colType(1-产看 2-操作 4-巡检)-->
+    <select id="getPZsProduceTaskByColTypeForPDAByCode" parameterType="java.lang.Integer"
+            resultMap="PZsProduceTaskColType">
+        SELECT zpt.*,zwf.*,zwp.c_name as zwp_c_name,pSls.*
+        FROM zs_produce_task zpt
+        LEFT JOIN zs_task_detail_value ztdv ON ztdv.produce_task_id=zpt.produce_task_id
+        LEFT JOIN zs_work_flow zwf ON zwf.work_flow_id=ztdv.work_flow_id
+        LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+        LEFT JOIN (SELECT sls.* FROM sa_leave_stock sls
+        WHERE sls.leave_date = (
+        SELECT max(leave_date)
+        FROM sa_leave_stock
+        WHERE sls.produce_task_id = produce_task_id group by produce_task_id)) as pSls ON
+        pSls.produce_task_id=zpt.produce_task_id
+        WHERE zpt.status=1 AND zpt.produce_task_status=1
+        <if test="cloType==2">
+            AND zpt.check_status!=1
+        </if>
+        <if test="cloType==4">
+            AND zpt.produce_task_id IN (
+            SELECT produce_task_id FROM ba_form_attribute_value WHERE status=1 AND handle_type=2 group by
+            work_process_id
+            )
+        </if>
+        and zpt.produce_task_no=#{code}
+    </select>
+
+    <!--通过id修改produceTaskStatus为已结束-->
+    <update id="updateTaskStatusById">
+    UPDATE zs_produce_task SET produce_task_status=2,work_process_id=NULL,check_user_id=NULL ,check_status=0,update_user_id=#{updateUserId}
+    WHERE produce_task_id=#{produceTaskId}
+  </update>
+
+    <!--获取今日生产任务-->
+    <select id="getTodayProduceTask" resultMap="PProduceTaskAndValueListAndWorkProcessId">
+    SELECT zpt.* ,
+    wp.work_process_id as pzs_work_process_id,
+    bfav.work_process_id as for_work_process_id,
+    zwp.c_name as currentOperatingProcedures
+    FROM zs_produce_task zpt
+    LEFT JOIN zs_work_process zwp ON zwp.work_process_id=zpt.work_process_id
+    LEFT JOIN zs_task_detail_value ztdv ON ztdv.produce_task_id=zpt.produce_task_id
+    LEFT JOIN zs_work_process wp ON wp.work_flow_id=ztdv.work_flow_id AND wp.is_workshop_record=1
+    LEFT JOIN ba_form_attribute_value bfav ON bfav.produce_task_id=zpt.produce_task_id AND bfav.handle_type=2
+    WHERE zpt.produce_task_status=1 ORDER BY zpt.update_date DESC
+  </select>
+
+    <insert id="newProduceTask" useGeneratedKeys="true" keyColumn="produce_task_id" keyProperty="yh.produceTaskId">
+        INSERT INTO zs_produce_task(
+        <trim prefixOverrides=",">
+            <if test="yh.produceTaskName!=null and yh.produceTaskName!=''">
+                ,produce_task_name
+            </if>
+            <if test="yh.produceTaskNo!=null and yh.produceTaskNo!=''">
+                ,produce_task_no
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,update_user_id
+            </if>
+            <if test="date!=null">
+                ,update_date
+            </if>
+        </trim>
+        )VALUES(
+        <trim prefixOverrides=",">
+            <if test="yh.produceTaskName!=null and yh.produceTaskName!=''">
+                ,#{yh.produceTaskName}
+            </if>
+            <if test="yh.produceTaskNo!=null and yh.produceTaskNo!=''">
+                ,#{yh.produceTaskNo}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="getProduceTaskStatusById" resultType="java.lang.Byte" parameterType="java.lang.Long">
+        SELECT produce_task_status FROM zs_produce_task
+        WHERE status=1 AND produce_task_id=#{produceTaskId}
+    </select>
+</mapper>

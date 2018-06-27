@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsScheduleMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsSchedule">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="schedule_id" jdbcType="BIGINT" property="scheduleId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="product_type_id" jdbcType="BIGINT" property="productTypeId"/>
+        <result column="product_type" jdbcType="VARCHAR" property="productType"/>
+        <result column="product_spec" jdbcType="VARCHAR" property="productSpec"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+    </resultMap>
+
+    <resultMap id="DataResult" type="com.dalian.sea.parameter.ZsSchedulePara" extends="BaseResultMap">
+        <result property="percent" jdbcType="DECIMAL" column="percent"/>
+        <result property="completeCount" jdbcType="DECIMAL" column="completeCount"/>
+    </resultMap>
+
+    <insert id="addSchedule">
+        INSERT INTO zs_schedule(
+        create_date,
+        create_user,
+        create_user_id,
+        update_date,
+        update_user_id,
+        product_type_id,
+        product_type,
+        product_spec,
+        amount,
+        unit_id,
+        unit_name
+        )VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{date},
+            #{userName},
+            #{userId},
+            #{date},
+            #{userId},
+            #{item.productTypeId},
+            #{item.productType},
+            #{item.productSpec},
+            #{item.amount},
+            #{item.unitId},
+            #{item.unitName}
+            )
+        </foreach>
+    </insert>
+
+    <select id="duringMonthSchedule" resultType="java.lang.Integer">
+        SELECT count(*) FROM zs_schedule WHERE DATE_FORMAT(create_date,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m') AND status!=6
+    </select>
+
+    <select id="getAllSchedule" resultMap="DataResult">
+    SELECT * FROM zs_schedule WHERE status!=6 ORDER BY create_date DESC
+    </select>
+
+    <select id="getMonthSchedule" resultMap="DataResult">
+      SELECT * FROM zs_schedule WHERE status!=6 AND DATE_FORMAT(create_date,'%Y-%m')=DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
+
+    <update id="updateMonthSchedule">
+       UPDATE zs_schedule
+       SET
+       product_spec=#{zs.productSpec},
+       amount=#{zs.amount},
+       unit_id=#{zs.unitId},
+       unit_name=#{zs.unitName},
+       update_date=now(),
+       update_user_id=#{userId}
+       WHERE schedule_id=#{zs.scheduleId}
+    </update>
+</mapper>

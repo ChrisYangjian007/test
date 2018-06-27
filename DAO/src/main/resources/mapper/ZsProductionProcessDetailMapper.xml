@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsProductionProcessDetailMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsProductionProcessDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="production_process_detailed_id" jdbcType="BIGINT" property="productionProcessDetailedId" />
+    <result column="production_process_detail_number" jdbcType="INTEGER" property="productionProcessDetailNumber" />
+    <result column="production_process_detail_name" jdbcType="VARCHAR" property="productionProcessDetailName" />
+    <result column="production_process_id" jdbcType="BIGINT" property="productionProcessId" />
+    <result column="process_description" jdbcType="VARCHAR" property="processDescription" />
+    <result column="detail_image" jdbcType="CHAR" property="detailImage" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <resultMap id="PZsProductionProcessDetail" type="com.dalian.sea.parameter.PZsProductionProcessDetail" extends="BaseResultMap">
+
+  </resultMap>
+  
+  <!--通过productionProcessId获取生产过程详情-->
+  <select id="getProdutionProcessDetailByProductionProcessId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_process_detail WHERE status=1 AND production_process_id=#{productionProcessId}
+  </select>
+
+  <!--通过productionProcessId获取生产过程详情继承类-->
+  <select id="getPProdutionProcessDetailByProductionProcessId" parameterType="java.lang.Long" resultMap="PZsProductionProcessDetail">
+    SELECT * FROM zs_production_process_detail WHERE status=1 AND production_process_id=#{productionProcessId}
+  </select>
+
+  <!--批量添加生产过程详情-->
+  <insert id="addProductionProcessDetailByList" parameterType="java.util.List">
+    INSERT INTO zs_production_process_detail(create_date,update_date,production_process_detail_number,production_process_id,process_description,detail_image,create_user_id,update_user_id)
+    VALUES
+    <foreach collection="detailList" index="index" item="item" separator=",">
+      (now(),now(),#{item.productionProcessDetailNumber},#{item.productionProcessId},#{item.processDescription},#{item.detailImage},#{item.createUserId},#{item.updateUserId})
+    </foreach>
+  </insert>
+
+  <!--获取全部生产过程-->
+  <select id="getAllProductionProcessDetailForGrid" resultMap="PZsProductionProcessDetail">
+    SELECT zppt.*,zpp.production_process_name as productionProcessName
+    FROM zs_production_process_detail zppt
+    LEFT JOIN zs_production_process zpp ON zpp.production_process_id=zppt.production_process_id
+    WHERE zppt.status=1 ORDER BY zppt.update_date DESC
+  </select>
+
+  <!--通过productionProcessId删除-->
+  <update id="deleteProductionProcessDetailByProductionProcessId" parameterType="com.dalian.sea.model.ZsProductionProcess">
+    UPDATE zs_production_process_detail SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE production_process_id=#{productionProcessId}
+  </update>
+
+  <!--添加生产过程详情-->
+  <insert id="addProductionProcessDetail" parameterType="com.dalian.sea.model.ZsProductionProcessDetail">
+    INSERT INTO zs_production_process_detail(create_date,update_date
+    <if test="productionProcessDetailNumber != null">,production_process_detail_number</if>
+    <if test="productionProcessDetailName != null">,production_process_detail_name</if>
+    <if test="productionProcessId != null">,production_process_id</if>
+    <if test="processDescription != null">,process_description</if>
+    <if test="detailImage != null">,detail_image</if>
+    <if test="createUserId != null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    )VALUES (now(),now()
+    <if test="productionProcessDetailNumber != null">,#{productionProcessDetailNumber}</if>
+    <if test="productionProcessDetailName != null">,#{productionProcessDetailName}</if>
+    <if test="productionProcessId != null">,#{productionProcessId}</if>
+    <if test="processDescription != null">,#{processDescription}</if>
+    <if test="detailImage != null">,#{detailImage}</if>
+    <if test="createUserId != null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    )
+  </insert>
+
+  <!--根据id获取-->
+  <select id="getProductionProcessDetailById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_process_detail WHERE production_process_detailed_id=#{productionProcessDetailId}
+  </select>
+
+  <!--修改生产过程详情-->
+  <update id="updateProductionProcessDetail" parameterType="com.dalian.sea.model.ZsProductionProcessDetail">
+    UPDATE zs_production_process_detail
+    SET production_process_detail_number=#{productionProcessDetailNumber},production_process_detail_name=#{productionProcessDetailName},production_process_id=#{productionProcessId},process_description=#{processDescription},detail_image=#{detailImage}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE production_process_detailed_id=#{productionProcessDetailedId}
+  </update>
+
+  <!--删除生产过程详情-->
+  <update id="deleteProductionProcessDetail" parameterType="com.dalian.sea.model.ZsProductionProcessDetail">
+    UPDATE zs_production_process_detail SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE production_process_detailed_id=#{productionProcessDetailedId}
+  </update>
+
+  <!--通过productionProcessId和name获取-->
+  <select id="getProductionProcessDetailByProductionProcessIdAndName" parameterType="com.dalian.sea.model.ZsProductionProcessDetail" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_process_detail WHERE status=1 AND production_process_detail_name=#{productionProcessDetailName} AND production_process_id=#{productionProcessId}
+  </select>
+</mapper>

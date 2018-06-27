@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsQrCodeIntervalMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsQrCodeInterval">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="interval_id" jdbcType="BIGINT" property="intervalId" />
+    <result column="start_code" jdbcType="VARCHAR" property="startCode" />
+    <result column="end_code" jdbcType="VARCHAR" property="endCode" />
+    <result column="interval_number" jdbcType="BIGINT" property="intervalNumber" />
+    <result column="download_status" jdbcType="TINYINT" property="downloadStatus" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--根据情况获取二维码编码间隔-->
+  <select id="getQrCodeIntervalByQrCode" parameterType="com.dalian.sea.parameter.PZsQrCode" resultMap="BaseResultMap">
+    select zqci.*,bu1.c_name as createUserName,bu2.c_name as updateUserName
+    from zs_qr_code_interval zqci
+    left join ba_user bu1 on bu1.user_id = zqci.create_user_id
+    left join ba_user bu2 on bu2.user_id = zqci.update_user_id
+    where zqci.status=1
+    <if test="qrCode!=null and qrCode!=''"> and INET_ATON(#{qrCode}) between zqci.start_code and zqci.end_code </if>
+    order by zqci.update_date desc
+  </select>
+
+  <!--根据ID获取二维码编码间隔-->
+  <select id="getQrCodeIntervalForNew" resultMap="BaseResultMap">
+    select * from zs_qr_code_interval order by end_code desc LIMIT 1
+  </select>
+
+  <!--根据ID获取二维码编码间隔-->
+  <select id="getQrCodeIntervalByIntervalId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from zs_qr_code_interval where interval_id=#{intervalId}
+  </select>
+
+  <!--添加-->
+  <insert id="addQrCodeInterval" parameterType="com.dalian.sea.parameter.PZsQrCodeInterval" keyProperty="intervalId" useGeneratedKeys="true">
+    insert into zs_qr_code_interval (start_code,end_code,interval_number,create_user_id,create_date,update_date
+    ) values (#{startCode},#{endCode},#{intervalNumber},#{createUserId},now(),now())
+  </insert>
+
+  <!--根据ID获取二维码编码间隔-->
+  <update id="updateQrCodeIntervalByIntervalIdForDownStatus" parameterType="com.dalian.sea.parameter.PZsQrCodeInterval">
+    update zs_qr_code_interval set download_status = 2 , update_user_id = #{updateUserId} where interval_id=#{intervalId}
+  </update>
+
+  <!--删除-->
+  <update id="deleteQrCodeIntervalBy" parameterType="com.dalian.sea.parameter.PZsQrCodeInterval">
+    update zs_qr_code_interval set status = 6 , update_user_id = #{updateUserId} where interval_id=#{intervalId}
+  </update>
+
+
+</mapper>

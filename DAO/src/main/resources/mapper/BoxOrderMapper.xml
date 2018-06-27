@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BoxOrderMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BoxOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="box_order_id" jdbcType="BIGINT" property="boxOrderId" />
+    <result column="box_code" jdbcType="VARCHAR" property="boxCode" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="heap_code" jdbcType="VARCHAR" property="heapCode" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="order_detail_code" jdbcType="LONGVARCHAR" property="orderDetailCode" />
+    <result column="order_detail_qr" jdbcType="LONGVARCHAR" property="orderDetailQr" />
+  </resultMap>
+  <insert id="insertBoxOrderByBatch" parameterType="java.util.List">
+    insert into zs_box_order (box_code, heap_code,order_code,order_detail_code,order_detail_qr)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.boxCode,jdbcType=VARCHAR}, #{item.heapCode,jdbcType=VARCHAR},#{item.orderCode,jdbcType=VARCHAR},#{item.orderDetailCode,jdbcType=LONGVARCHAR},#{item.orderDetailQr,jdbcType=LONGVARCHAR})
+    </foreach>
+  </insert>
+
+  <!--根据箱码获取-->
+  <select id="getBoxOrderByBoxCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from zs_box_order where box_code = #{boxCode} LIMIT 1
+  </select>
+
+  <!--根据箱码获取-->
+  <select id="getBoxOrderByOrderCodeForPDA" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from zs_box_order where order_code = #{orderCode}
+  </select>
+  <update id="updateBoxOrderByOrder" parameterType="com.dalian.sea.model.BoxOrder">
+    update zs_box_order
+    <set >
+      <if test="orderDetailCode != null" >
+        order_detail_code = #{orderDetailCode},
+      </if>
+      <if test="orderDetailQr != null" >
+        order_detail_qr = #{orderDetailQr},
+      </if>
+    </set>
+    where box_order_id = #{boxOrderId}
+  </update>
+  <select id="getBoxCodeByOrderDetailCode" resultMap="BaseResultMap">
+   SELECT  GROUP_CONCAT(box_code) as boxCode FROM  zs_box_order WHERE order_detail_code LIKE  CONCAT('%',#{orderDetailCode},'%')
+  </select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaAreaIpMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BaAreaIp">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="ip_start" jdbcType="VARCHAR" property="ipStart" />
+    <result column="ip_end" jdbcType="VARCHAR" property="ipEnd" />
+    <result column="ip_start_num" jdbcType="BIGINT" property="ipStartNum" />
+    <result column="ip_end_num" jdbcType="BIGINT" property="ipEndNum" />
+    <result column="continent" jdbcType="VARCHAR" property="continent" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="isp" jdbcType="VARCHAR" property="isp" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="country_english" jdbcType="VARCHAR" property="countryEnglish" />
+    <result column="country_code" jdbcType="VARCHAR" property="countryCode" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+  </resultMap>
+  <!--根据Ip查询-->
+  <select id="getAreaIpByIp" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM ba_area_ip WHERE INET_ATON(#{ip}) BETWEEN ip_start_num AND ip_end_num LIMIT 1
+  </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsWarehouseImagesMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsWarehouseImages">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="warehouse_image_id" jdbcType="BIGINT" property="warehouseImageId" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="upload_month" jdbcType="TIMESTAMP" property="uploadMonth" />
+    <result column="image_size" jdbcType="INTEGER" property="imagesSize" />
+    <result column="images_json" jdbcType="CHAR" property="imagesJson" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+
+  <!--添加-->
+  <insert id="addZsWarehouseImages" parameterType="com.dalian.sea.model.ZsWarehouseImages" keyProperty="warehouseImageId" useGeneratedKeys="true">
+    insert into zs_warehouse_images(warehouse_id,upload_month,image_size,images_json,
+    create_user_id,create_date,update_date
+    ) values (#{warehouseId},#{uploadMonth},#{imagesSize},#{imagesJson},#{createUserId},now(),now())
+  </insert>
+
+  <!--修改-->
+  <insert id="updateZsWarehouseImages" parameterType="com.dalian.sea.model.ZsWarehouseImages" >
+    update zs_warehouse_images set image_size=#{imagesSize}, images_json=#{imagesJson}
+    <if test="updateUserId!=null">,update_user_id=#{updateUserId} </if>
+    where warehouse_image_id = #{warehouseImageId}
+  </insert>
+
+  <!--根据ID获取-->
+  <select id="getImagesById" resultMap="BaseResultMap">
+    select zwi.*,ba1.c_name as createUserName,ba2.c_name as updateUserName from zs_warehouse_images zwi
+    left join ba_user ba1 on ba1.user_id = zwi.create_user_id
+    left join ba_user ba2 on ba2.user_id = zwi.update_user_id
+    where zwi.status=1 and zwi.warehouse_image_id=#{id}
+  </select>
+
+  <!--根据仓库ID获取-->
+  <select id="getAllImagesByWarehouseId" resultMap="BaseResultMap">
+    select zwi.*,ba1.c_name as createUserName,ba2.c_name as updateUserName from zs_warehouse_images zwi
+    left join ba_user ba1 on ba1.user_id = zwi.create_user_id
+    left join ba_user ba2 on ba2.user_id = zwi.update_user_id
+    where zwi.status=1 and zwi.warehouse_id=#{warehouseId}
+    order by zwi.upload_month desc
+  </select>
+
+  <!--根据仓库ID获取当月的-->
+  <select id="getAllImagesByWarehouseIdForMonth" resultMap="BaseResultMap">
+    select * from zs_warehouse_images
+    where status=1 and warehouse_id=#{warehouseId}
+    and DATE_FORMAT(upload_month, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+  </select>
+
+  <!--根据仓库ID和年月获取-->
+  <select id="getImagesByWarehouseIdAndUploadMonth" resultMap="BaseResultMap">
+    select zwi.*,ba1.c_name as createUserName,ba2.c_name as updateUserName from zs_warehouse_images zwi
+    left join ba_user ba1 on ba1.user_id = zwi.create_user_id
+    left join ba_user ba2 on ba2.user_id = zwi.update_user_id
+    where zwi.status=1 and zwi.warehouse_id=#{warehouseId}
+    <if test="uploadMonth!=null">and zwi.upload_month=#{uploadMonth}</if>
+    order by zwi.upload_month desc
+  </select>
+
+</mapper>

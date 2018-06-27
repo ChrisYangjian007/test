@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsCorporateNewsMapper">
+  <resultMap id="CorporateNews" type="com.dalian.sea.model.ZsCorporateNews">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="corporate_news_id" jdbcType="BIGINT" property="corporateNewsId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="link" jdbcType="VARCHAR" property="link" />
+    <result column="corporate_news_date" jdbcType="TIMESTAMP" property="corporateNewsDate" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="corporate_news_name" jdbcType="VARCHAR" property="corporateNewsName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <!--分页查询-->
+  <select id="getCorporateNewsBy"  resultMap="CorporateNews">
+    SELECT * FROM zs_corporate_news WHERE status!=6 order by update_date desc
+  </select>
+  <!--根据id查询信息-->
+  <select id="getCorporateNewsById" parameterType="java.lang.Long" resultMap="CorporateNews">
+    SELECT * FROM zs_corporate_news
+    WHERE corporate_news_id=#{corporateNewsId}
+  </select>
+  <!--新增-->
+  <insert id="addCorporateNews" parameterType="com.dalian.sea.model.ZsCorporateNews">
+    INSERT INTO zs_corporate_news (
+    <if test="title!=null and title!=''">title</if>
+    <if test="link!=null and link!=''">,link</if>
+    <if test="corporateNewsDate!=null">,corporate_news_date</if>
+    <if test="image!=null and image!=''">,image</if>
+    <if test="createDate!=null">,create_date</if>
+    <if test="createUserId!=null and createUserId!=''">,create_user_id</if>,update_date
+    )
+     VALUES
+    (
+      <if test="title!=null and title!=''">#{title}</if>
+      <if test="link!=null and link!=''">,#{link}</if>
+      <if test="corporateNewsDate!=null">,#{corporateNewsDate}</if>
+      <if test="image!=null and image!=''">,#{image}</if>
+      <if test="createDate!=null">,#{createDate}</if>
+      <if test="createUserId!=null and createUserId!=''">,#{createUserId}</if>,#{updateDate}
+    )
+  </insert>
+  <!--修改-->
+  <update id="updateCorporateNews" parameterType="com.dalian.sea.model.ZsCorporateNews">
+    UPDATE zs_corporate_news SET title=#{title},link=#{link},corporate_news_date=#{corporateNewsDate},image=#{image}
+    <if test="updateUserId!=null and updateUserId !=''">,update_user_id=#{updateUserId}</if>
+    WHERE corporate_news_id=#{corporateNewsId}
+  </update>
+  <!--增加内容-->
+  <update id="updateAddCorporateNews" parameterType="com.dalian.sea.model.ZsCorporateNews">
+    UPDATE zs_corporate_news SET corporate_news_name=#{corporateNewsName},remark=#{remark}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE corporate_news_id=#{corporateNewsId}
+  </update>
+  <!--删除-->
+  <update id="delectCorporateNews" parameterType="com.dalian.sea.model.ZsCorporateNews">
+    UPDATE zs_corporate_news set status=6
+    <if test="updateUserId != ''">,update_user_id=#{updateUserId}</if>
+    WHERE corporate_news_id=#{corporateNewsId}
+  </update>
+</mapper>

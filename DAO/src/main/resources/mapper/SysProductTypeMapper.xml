@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SysProductTypeMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.SysProductType">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="product_type_id" jdbcType="BIGINT" property="productTypeId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="flag_name" jdbcType="VARCHAR" property="flagName" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="t_name" jdbcType="VARCHAR" property="tName" />
+    <result column="e_name" jdbcType="VARCHAR" property="eName" />
+    <result column="pin_yin_a" jdbcType="VARCHAR" property="pinYinA" />
+    <result column="pin_yin_s" jdbcType="VARCHAR" property="pinYinS" />
+    <result column="appropriate" jdbcType="VARCHAR" property="appropriate" />
+    <result column="avoid" jdbcType="VARCHAR" property="avoid" />
+    <result column="is_inputs" jdbcType="TINYINT" property="isInputs" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+
+  <!--获取全部产品类型-->
+  <select id="getSysProductTypeByNameAndParentIdAndALevel" resultMap="BaseResultMap">
+    SELECT * FROM sys_product_type WHERE status != 6 and c_name=#{name} and a_level=#{aLevel}
+    <if test="parentId!=null">and parent_id = #{parentId}</if>
+    order by list_index ASC
+    LIMIT 1
+  </select>
+
+
+  <!--获取全部产品类型-->
+  <select id="getAllSsysProductType" resultMap="BaseResultMap">
+    SELECT * FROM sys_product_type  WHERE status != 6 order by list_index ASC
+  </select>
+
+  <!--获取产品类型-->
+  <select id="getSysProductTypeByForGridTable" resultMap="BaseResultMap">
+    SELECT * FROM sys_product_type WHERE 1=1
+    <if test="cName != null and cName != ''">and c_name=#{cName}</if>
+    <if test="parentId != null">and parent_id=#{parentId}</if>
+    <choose>
+      <when test="status != null">
+        and status=#{status}
+      </when>
+      <otherwise>
+        and status!=6
+      </otherwise>
+    </choose>
+  </select>
+
+  <!--通过id获取产品类型-->
+  <select id="getSysproductTypeById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM sys_product_type WHERE status != 6 and product_type_id=#{id}
+  </select>
+
+  <!--获取最大顺序-->
+  <select id="getSysProductTypeMaxListIndex" resultMap="BaseResultMap">
+    SELECT MAX(list_index) as list_index FROM sys_product_type WHERE status != 6 limit 1
+  </select>
+
+  <!--通过parentId获取产品类型-->
+  <select id="getSysProductTypeByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM sys_product_type WHERE status != 6 AND parent_id=#{id}
+  </select>
+
+  <!--添加产品类型-->
+  <insert id="addSysProductType" parameterType="com.dalian.sea.model.SysProductType" keyProperty="productTypeId" useGeneratedKeys="true">
+    INSERT INTO sys_product_type(create_date,update_date
+    <if test="cName != null">,c_name</if>
+    <if test="listIndex != null">,list_index</if>
+    <if test="aLevel != null">,a_level</if>
+    <if test="parentId != null">,parent_id</if>
+    <if test="firstId != null">,first_id</if>
+    <if test="flag != null">,flag</if>
+    <if test="flagName != null">,flar_name</if>
+    <if test="memo != null">,memo</if>
+    <if test="tName != null">,t_name</if>
+    <if test="eName != null">,e_name</if>
+    <if test="pinYinA != null">,pin_yin_a</if>
+    <if test="pinYinS != null">,pin_yin_s</if>
+    <if test="appropriate != null">,appropriate</if>
+    <if test="avoid != null">,avoid</if>
+    <if test="isInputs != null">,is_inputs</if>
+    <if test="createUserId !=null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    <if test="status != null">,status</if>
+    )VALUES (now(),now()
+    <if test="cName != null">,#{cName}</if>
+    <if test="listIndex != null">,#{listIndex}</if>
+    <if test="aLevel != null">,#{aLevel}</if>
+    <if test="parentId != null">,#{parentId}</if>
+    <if test="firstId != null">,#{firstId}</if>
+    <if test="flag != null">,#{flag}</if>
+    <if test="flagName != null">,#{flagName}</if>
+    <if test="memo != null">,#{memo}</if>
+    <if test="tName != null">,#{tName}</if>
+    <if test="eName != null">,#{eName}</if>
+    <if test="pinYinA != null">,#{pinYinA}</if>
+    <if test="pinYinS != null">,#{pinYinS}</if>
+    <if test="appropriate != null">,#{appropriate}</if>
+    <if test="avoid != null">,#{avoid}</if>
+    <if test="isInputs != null">,#{isInputs}</if>
+    <if test="createUserId !=null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    <if test="status != null">,#{status}</if>
+    )
+  </insert>
+
+  <!--通过parentId和cName获取产品类型-->
+  <select id="getSysProductTypeByParentIdAndCName" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.SysProductType">
+    SELECT * FROM sys_product_type WHERE status != 6 AND parent_id=#{parentId} and c_name=#{cName}
+  </select>
+
+  <!--修改产品类型-->
+  <update id="updateSysProductTypeById" parameterType="com.dalian.sea.model.SysProductType">
+    UPDATE sys_product_type SET c_name=#{cName},memo=#{memo}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where product_type_id=#{productTypeId}
+  </update>
+
+  <!--修改产品类型-->
+  <update id="updateSysProductType" parameterType="com.dalian.sea.model.SysProductType">
+    UPDATE sys_product_type
+    <trim prefix="set" suffixOverrides="," suffix="where product_type_id=#{productTypeId}">
+      <if test="cName != null">c_name=#{cName},</if>
+      <if test="listIndex != null">list_index=#{listIndex},</if>
+      <if test="aLevel != null"> a_level=#{aLevel},</if>
+      <if test="parentId != null">parent_id=#{parentId},</if>
+      <if test="firstId != null">first_id=#{firstId},</if>
+      <if test="flag != null">flag=#{flag},</if>
+      <if test="flagName != null">flag_name=#{flagName},</if>
+      <if test="memo != null">memo=#{memo},</if>
+      <if test="tName ！=null">t_name=#{tName},</if>
+      <if test="eName != null">e_name=#{eName},</if>
+      <if test="pinYinA != null">pin_yin_a=#{pinYinA},</if>
+      <if test="pinYinS != null">pin_yin_s=#{pinYinS},</if>
+      <if test="appropriate != null">appropriate=#{appropriate},</if>
+      <if test="avoid != null">avoid=#{avoid},</if>
+      <if test="isInputs != null">is_inputs=#{isInputs},</if>
+      <if test="createUserId != null">create_user_id=#{createUserId},</if>
+      <if test="updateUserId != null">update_user_id=#{updateUserId},</if>
+      <if test="createDate != null">create_date=#{createDate},</if>
+      <if test="updateDate != null">update_date=#{updateDate},</if>
+      <if test="status != null">status=#{status},</if>
+    </trim>
+  </update>
+
+  <select id="getSysProductTypeByALevel" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT * FROM sys_product_type WHERE status != 6 and a_level=#{aLevel}
+  </select>
+
+  <!--通过首级名称、父级名称和自身名称获取-->
+  <select id="getSysProductTypeByNameAndParentName" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsCompanyProduct">
+    select *
+    from sys_product_type spt
+    left join sys_product_type pc on pc.product_type_id=spt.parent_id and pc.status=1
+    left join sys_product_type pl on pl.product_type_id=pc.parent_id and pl.status=1
+    where spt.status=1 and spt.c_name=#{productTypeName}
+    and pc.c_name=#{productCategory}
+    and pl.c_name=#{productLine} limit 1
+  </select>
+
+  <!--删除-->
+  <update id="deleteSysProductTypeById" parameterType="java.lang.Long">
+    UPDATE sys_product_type SET status=6 WHERE product_type_id=#{id}
+  </update>
+
+  <!--根据productTypeId获取自己和下级的全部产品类型-->
+<select id="getAllSysProductTypeById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  SELECT * FROM sys_product_type WHERE status = 1 and product_type_id=#{id} or status = 1 and parent_id=#{id}
+  or status = 1 and product_type_id in(
+  SELECT product_type_id  FROM sys_product_type WHERE status = 1 and parent_id in (
+  SELECT product_type_id  FROM sys_product_type WHERE status = 1 and parent_id =#{id})
+) or status = 1 and parent_id in (
+SELECT product_type_id  FROM sys_product_type WHERE status = 1 and parent_id in (
+SELECT product_type_id  FROM sys_product_type WHERE status = 1 and parent_id =#{id})
+)
+</select>
+
+  <!--批量删除-->
+  <update id="deleteProductTypeByList" parameterType="java.util.List">
+    UPDATE sys_product_type SET status=6 WHERE product_type_id in(
+      <foreach collection="productTypeList" separator="," item="item" index="index">
+        #{item.productTypeId}
+      </foreach>
+    )
+  </update>
+</mapper>

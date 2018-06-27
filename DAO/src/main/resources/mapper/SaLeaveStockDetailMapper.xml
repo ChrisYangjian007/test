@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SaLeaveStockDetailMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.SaLeaveStockDetail">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="leave_stock_detail_id" jdbcType="BIGINT" property="leaveStockDetailId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="out_weight" jdbcType="DECIMAL" property="outWeight"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="leave_id" jdbcType="BIGINT" property="leaveId"/>
+        <result column="is_material" jdbcType="BIGINT" property="isMaterial"/>
+        <result column="product_status" jdbcType="BIGINT" property="productStatus"/>
+        <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+        <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        <result column="loss" jdbcType="VARCHAR" property="loss"/>
+    </resultMap>
+
+    <resultMap id="DataTableMap" extends="BaseResultMap" type="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        <association property="saLeaveStock" javaType="com.dalian.sea.model.SaLeaveStock" columnPrefix="sl_">
+            <id column="id" property="leaveStockId" jdbcType="BIGINT"/>
+            <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+            <result column="create_user_id" property="createUserId" jdbcType="BIGINT"/>
+            <result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+            <result column="update_user_id" property="updateUserId" jdbcType="BIGINT"/>
+            <result column="status" property="status" jdbcType="TINYINT"/>
+            <result column="remark" property="remark" jdbcType="VARCHAR"/>
+            <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+            <result column="leave_date" jdbcType="TIMESTAMP" property="leaveDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+            <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+            <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="produce_task_tag" jdbcType="VARCHAR" property="produceTaskTag"/>
+            <result column="leave_no" jdbcType="VARCHAR" property="leaveNo"/>
+            <result column="leave_person" jdbcType="VARCHAR" property="leavePerson"/>
+            <result column="brokerage" jdbcType="VARCHAR" property="brokerage"/>
+            <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+            <result column="related_type" jdbcType="TINYINT" property="relatedType"/>
+        </association>
+        <association property="baDataDictionaryDetails" javaType="com.dalian.sea.model.BaDataDictionaryDetails"
+                     columnPrefix="bd_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+        <association property="baDataDictionaryDetailsTwo" javaType="com.dalian.sea.model.BaDataDictionaryDetails"
+                     columnPrefix="bd2_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+        <association property="zsWarehouse" javaType="com.dalian.sea.model.ZsWarehouse" columnPrefix="zw_">
+            <result column="c_name" jdbcType="BIGINT" property="cName"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="PLeaveStockValueAndStock" type="com.dalian.sea.parameter.SaLeaveStockDetailPara"
+               extends="BaseResultMap">
+        <result column="materialName" jdbcType="VARCHAR" property="materialName"/>
+        <result column="productStatusName" jdbcType="VARCHAR" property="productStatusName"/>
+        <association property="saLeaveStock" javaType="com.dalian.sea.model.SaLeaveStock" columnPrefix="sls_">
+            <result column="leave_date" jdbcType="TIMESTAMP" property="leaveDate"/>
+            <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+            <result column="leave_no" jdbcType="VARCHAR" property="leaveNo"/>
+            <result column="leave_person" jdbcType="VARCHAR" property="leavePerson"/>
+            <result column="brokerage" jdbcType="VARCHAR" property="brokerage"/>
+        </association>
+        <association property="zsWarehouse" javaType="com.dalian.sea.model.ZsWarehouse" columnPrefix="w_">
+            <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        </association>
+    </resultMap>
+
+
+    <select id="getAllSaLeaveStockDetail" resultMap="DataTableMap"
+            parameterType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        SELECT sld.*,
+        sl.leave_stock_id AS sl_id,
+        sl.create_date AS sl_create_date,
+        sl.update_date AS sl_update_date,
+        sl.update_user_id AS sl_update_id,
+        sl.status AS sl_status,
+        sl.remark AS sl_remark,
+        sl.company_id AS sl_company_id,
+        sl.leave_date AS sl_leave_date,
+        sl.warehouse_id AS sl_warehouse_id,
+        sl.produce_task_name AS sl_produce_task_name,
+        sl.produce_task_no AS sl_produce_task_no,
+        sl.produce_task_id AS sl_produce_task_id,
+        sl.produce_task_tag AS sl_produce_task_tag,
+        sl.leave_no AS sl_leave_no,
+        sl.leave_person AS sl_leave_person,
+        sl.brokerage AS sl_brokerage,
+        sl.related_id AS sl_related_id,
+        sl.related_type AS sl_related_type,
+        bddd.c_name as bd_c_name,
+        bddd2.c_name as bd2_c_name,
+        zw.c_name AS zw_c_name
+        FROM sa_leave_stock_detail sld LEFT JOIN sa_leave_stock sl ON sld.leave_id=sl.leave_stock_id
+        LEFT JOIN ba_data_dictionary_details bddd ON sld.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details bddd2 ON sld.product_status =bddd2.data_dictionary_details_id
+        LEFT JOIN zs_warehouse zw ON sld.warehouse_id=zw.warehouse_id
+        WHERE sl.status=1 AND sld.status=1
+        <choose>
+            <when test="sa.method==1">
+                AND sld.loss='否'
+            </when>
+            <when test="sa.method==2">
+                AND sld.loss!='否'
+            </when>
+        </choose>
+        <if test="sa!=null">
+            <if test="sa.beginTime != null">
+                <![CDATA[ AND sl.leave_date>=#{sa.beginTime} ]]>
+            </if>
+            <if test="sa.endTime != null">
+                <![CDATA[ AND sl.leave_date<=#{sa.endTime} ]]>
+            </if>
+            <if test="sa.warehouseId!=null and sa.warehouseId!=''">
+                AND sld.warehouse_id=#{sa.warehouseId}
+            </if>
+            <if test="sa.batchNo!=null and sa.batchNo!=''">
+                AND sld.batch_no=#{sa.batchNo}
+            </if>
+            <if test="sa.isMaterial!=null and sa.isMaterial!=''">
+                AND sld.is_material=#{sa.isMaterial}
+            </if>
+            <if test="sa.productStatus!=null and sa.productStatus!=''">
+                AND sld.product_status=#{sa.productStatus}
+            </if>
+            <if test="sa.productId!=null and sa.productId!=''">
+                AND sld.product_id=#{sa.productId}
+            </if>
+            <if test="sa.leavePerson!=null and sa.leavePerson!=''">
+                AND sl.leave_person=#{sa.leavePerson}
+            </if>
+            <if test="sa.brokerage!=null and sa.brokerage!=''">
+                AND sl.brokerage=#{sa.brokerage}
+            </if>
+            <if test="sa.leaveStockDetailId!=null and sa.leaveStockDetailId!=''">
+                AND sld.leave_stock_detail_id=#{sa.leaveStockDetailId}
+            </if>
+        </if>
+        <if test="ids!=null">
+            AND sld.warehouse_id IN
+            <foreach item="item" index="index" collection="ids"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY update_date DESC
+    </select>
+
+    <select id="getAllLossDetail" resultMap="DataTableMap"
+            parameterType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        SELECT sld.*,
+        sl.leave_stock_id AS sl_id,
+        sl.create_date AS sl_create_date,
+        sl.update_date AS sl_update_date,
+        sl.update_user_id AS sl_update_id,
+        sl.status AS sl_status,
+        sl.remark AS sl_remark,
+        sl.company_id AS sl_company_id,
+        sl.leave_date AS sl_leave_date,
+        sl.warehouse_id AS sl_warehouse_id,
+        sl.produce_task_name AS sl_produce_task_name,
+        sl.produce_task_no AS sl_produce_task_no,
+        sl.produce_task_id AS sl_produce_task_id,
+        sl.produce_task_tag AS sl_produce_task_tag,
+        sl.leave_no AS sl_leave_no,
+        sl.leave_person AS sl_leave_person,
+        sl.brokerage AS sl_brokerage,
+        sl.related_id AS sl_related_id,
+        sl.related_type AS sl_related_type,
+        bddd.c_name as bd_c_name,
+        bddd2.c_name as bd2_c_name,
+        zw.c_name AS zw_c_name
+        FROM sa_leave_stock_detail sld LEFT JOIN sa_leave_stock sl ON sld.leave_id=sl.leave_stock_id
+        LEFT JOIN ba_data_dictionary_details bddd ON sld.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details bddd2 ON sld.product_status =bddd2.data_dictionary_details_id
+        LEFT JOIN zs_warehouse zw ON sld.warehouse_id=zw.warehouse_id
+        WHERE sl.status=1 AND sld.status=1 AND sld.loss!='否'
+        <if test="beginTime != null">
+            <![CDATA[ AND sl.leave_date>=#{beginTime} ]]>
+        </if>
+        <if test="endTime != null">
+            <![CDATA[ AND sl.leave_date<=#{endTime} ]]>
+        </if>
+        <if test="warehouseId!=null and warehouseId!=''">
+            AND sld.warehouse_id=#{warehouseId}
+        </if>
+        <if test="batchNo!=null and batchNo!=''">
+            AND sld.batch_no=#{batchNo}
+        </if>
+
+        <if test="isMaterial!=null and isMaterial!=''">
+            AND sld.is_material=#{isMaterial}
+        </if>
+        <if test="productStatus!=null and productStatus!=''">
+            AND sld.product_status=#{productStatus}
+        </if>
+        <if test="productId!=null and productId!=''">
+            AND sld.product_id=#{productId}
+        </if>
+        <if test="leavePerson!=null and leavePerson!=''">
+            AND sl.leave_person=#{leavePerson}
+        </if>
+        <if test="brokerage!=null and brokerage!=''">
+            AND sl.brokerage=#{brokerage}
+        </if>
+        ORDER BY create_date DESC
+
+    </select>
+    <select id="getStockIsMaterial" resultType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        select bddd.data_dictionary_details_id as isMaterial, bddd.c_name as materialName
+        from sa_leave_stock_detail slsd
+        left join ba_data_dictionary_details bddd on slsd.is_material=bddd.data_dictionary_details_id
+        where slsd.status!=6 and slsd.loss='否'
+        AND slsd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY bddd.c_name
+    </select>
+
+    <select id="getLossIsMaterial" resultType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+         select bddd.data_dictionary_details_id as isMaterial, bddd.c_name as materialName
+        from sa_leave_stock_detail slsd
+        left join ba_data_dictionary_details bddd on slsd.is_material=bddd.data_dictionary_details_id
+        where slsd.status!=6 and slsd.loss!='否'
+        AND slsd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY bddd.c_name
+    </select>
+
+    <select id="getStockProductStatus" resultType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        select bddd.data_dictionary_details_id as productStatus, bddd.c_name as productStatusName
+        from sa_leave_stock_detail slsd
+        left join ba_data_dictionary_details bddd on slsd.product_status=bddd.data_dictionary_details_id
+        where slsd.status!=6 and slsd.loss='否'
+        AND slsd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY bddd.c_name
+    </select>
+
+    <select id="getLossProductStatus" resultType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        select bddd.data_dictionary_details_id as productStatus, bddd.c_name as productStatusName
+        from sa_leave_stock_detail slsd
+        left join ba_data_dictionary_details bddd on slsd.product_status=bddd.data_dictionary_details_id
+        where slsd.status!=6 and slsd.loss!='否'
+        AND slsd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY bddd.c_name
+    </select>
+
+    <!--通过produceTaskId获取出库记录-->
+    <select id="getLeaveStockDetailByProduceId" parameterType="java.lang.Long" resultMap="PLeaveStockValueAndStock">
+      SELECT slsd.*,
+      zw.c_name as w_c_name,
+      bddd.c_name as materialName,
+      bddds.c_name as productStatusName,
+      sls.leave_no as sls_leave_no,
+      sls.leave_person as sls_leave_person,
+      sls.brokerage as sls_brokerage,
+      sls.leave_date as sls_leave_date
+      FROM sa_leave_stock_detail slsd
+      LEFT JOIN zs_warehouse zw ON zw.warehouse_id=slsd.warehouse_id
+      LEFT JOIN ba_data_dictionary_details bddd ON bddd.data_dictionary_details_id=slsd.is_material
+      LEFT JOIN  sa_leave_stock sls ON sls.leave_stock_id=slsd.leave_id
+      LEFT JOIN ba_data_dictionary_details bddds ON bddds.data_dictionary_details_id=slsd.product_status
+      WHERE slsd.status=1 AND slsd.related_type=5 AND slsd.related_id=#{produceTaskId} AND slsd.loss="否"
+    </select>
+
+    <insert id="InsertLeaveStockDetail" useGeneratedKeys="true" keyProperty="sa.leaveStockDetailId"
+            keyColumn="leave_stock_detail_id">
+        INSERT INTO sa_leave_stock_detail(
+        status,
+        related_id,
+        related_type,
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,update_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,update_user_id
+            </if>
+            <if test="sa.remark!=null and sa.remark!=''">
+                ,remark
+            </if>
+            <if test="sa.companyId!=null and sa.companyId!=''">
+                ,company_id
+            </if>
+            <if test="sa.outWeight!=null and sa.outWeight!=''">
+                ,out_weight
+            </if>
+            <if test="sa.unitId!=null and sa.unitId!=''">
+                ,unit_id
+            </if>
+            <if test="sa.unitName!=null and sa.unitName!=''">
+                ,unit_name
+            </if>
+            <if test="sa.productSpecName!=null and sa.productSpecName!=''">
+                ,product_spec_name
+            </if>
+            <if test="sa.productId!=null and sa.productId!=''">
+                ,product_id
+            </if>
+            <if test="sa.productName!=null and sa.productName!=''">
+                ,product_name
+            </if>
+            <if test="sa.warehouseId!=null and sa.warehouseId!=''">
+                ,warehouse_id
+            </if>
+            <if test="sa.leaveId!=null and sa.leaveId!=''">
+                ,leave_id
+            </if>
+            <if test="sa.isMaterial!=null and sa.isMaterial!=''">
+                ,is_material
+            </if>
+            <if test="sa.batchNo!=null and sa.batchNo!=''">
+                ,batch_no
+            </if>
+            <if test="sa.productStatus!=null and sa.productStatus!=''">
+                ,product_status
+            </if>
+            <if test="sa.loss!=null and sa.loss!=''">
+                ,loss
+            </if>
+        </trim>
+        )VALUES(
+        1,
+        #{relatedId},
+        5,
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="sa.remark!=null and sa.remark!=''">
+                ,#{sa.remark}
+            </if>
+            <if test="sa.companyId!=null and sa.companyId!=''">
+                ,#{sa.companyId}
+            </if>
+            <if test="sa.outWeight!=null and sa.outWeight!=''">
+                ,#{sa.outWeight}
+            </if>
+            <if test="sa.unitId!=null and sa.unitId!=''">
+                ,#{sa.unitId}
+            </if>
+            <if test="sa.unitName!=null and sa.unitName!=''">
+                ,#{sa.unitName}
+            </if>
+            <if test="sa.productSpecName!=null and sa.productSpecName!=''">
+                ,#{sa.productSpecName}
+            </if>
+            <if test="sa.productId!=null and sa.productId!=''">
+                ,#{sa.productId}
+            </if>
+            <if test="sa.productName!=null and sa.productName!=''">
+                ,#{sa.productName}
+            </if>
+            <if test="sa.warehouseId!=null and sa.warehouseId!=''">
+                ,#{sa.warehouseId}
+            </if>
+            <if test="sa.leaveId!=null and sa.leaveId!=''">
+                ,#{sa.leaveId}
+            </if>
+            <if test="sa.isMaterial!=null and sa.isMaterial!=''">
+                ,#{sa.isMaterial}
+            </if>
+            <if test="sa.batchNo!=null and sa.batchNo!=''">
+                ,#{sa.batchNo}
+            </if>
+            <if test="sa.productStatus!=null and sa.productStatus!=''">
+                ,#{sa.productStatus}
+            </if>
+            <if test="sa.loss!=null and sa.loss!=''">
+                ,#{sa.loss}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="getReturnProduct" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT product_id,product_name
+        FROM sa_leave_stock_detail
+        WHERE is_material=#{isMaterial} and loss='否'
+        GROUP BY product_id
+    </select>
+
+    <select id="getSpec" resultMap="DataTableMap" parameterType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        SELECT product_spec_name FROM sa_leave_stock_detail
+        WHERE is_material=#{isMaterial} AND product_id=#{productId} AND loss='否'
+        GROUP BY product_spec_name
+    </select>
+
+    <select id="getReturnProductSpecName" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT product_spec_name
+        FROM sa_leave_stock_detail
+        WHERE product_id=#{productId} and loss='否'
+        GROUP BY product_id
+    </select>
+
+    <select id="getLossProduct" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT product_id,product_name
+        FROM sa_leave_stock_detail
+        WHERE is_material=#{isMaterial} and loss!='否'
+        GROUP BY product_id
+    </select>
+
+    <select id="getLossSpec" resultMap="DataTableMap" parameterType="com.dalian.sea.parameter.SaLeaveStockDetailPara">
+        SELECT product_spec_name FROM sa_leave_stock_detail
+        WHERE is_material=#{isMaterial} AND product_id=#{productId} AND loss!='否'
+        GROUP BY product_spec_name
+    </select>
+
+</mapper>

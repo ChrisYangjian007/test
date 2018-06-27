@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaRolesMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BaRoles">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="category" jdbcType="TINYINT" property="category" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="roles_level" jdbcType="INTEGER" property="rolesLevel" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <resultMap id="PBaRoles" type="com.dalian.sea.parameter.PBaRoles" extends="BaseResultMap">
+    <result column="role_number" jdbcType="INTEGER" property="roleNumber" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+  </resultMap>
+
+  <!--获取所有角色-->
+  <select id="getAllBaRoles" resultMap="BaseResultMap">
+    select * from ba_roles where status=1 and company_id!=0
+  </select>
+
+  <!--根据公司ID获取角色-->
+  <select id="getBaRolesByCompanyId" resultMap="PBaRoles" parameterType="java.lang.Long">
+    select r.*,count(ur.role_id) as role_number, bc.c_name as company_name
+    from ba_roles r
+    left join ba_user_role ur on r.role_id=ur.role_id and ur.status=1
+    left join ba_company bc on bc.company_id=r.company_id
+    where r.status=1
+    <if test="companyId!=0">
+    and r.company_id = #{companyId}
+    </if>
+    group by r.role_id order by r.code
+  </select>
+
+  <!--获取角色和公司名称-->
+  <select id="getBaRolesAndCompanyName" resultMap="PBaRoles">
+   select *,(select c_name from ba_company c where c.company_id = r.company_id) as company_name
+    from ba_roles r where r.status=1 order by r.role_id
+  </select>
+
+  <!--根据用户ID获取角色-->
+  <select id="getBaRolesByUserId" resultMap="BaseResultMap">
+    select br.* from ba_roles br where br.status=1
+    <if test="2!=category">and br.category = #{category}</if>
+    and br.role_id in (select bur.role_id from ba_user_role bur where bur.status=1 and bur.user_id=#{userId} group by bur.role_id) group by br.role_id
+  </select>
+
+  <!--根据ID获取角色-->
+  <select id="getBaRolesById" resultMap="BaseResultMap">
+    select * from ba_roles where role_id=#{id}
+  </select>
+
+  <!--根据名称获取角色-->
+  <select id="getBaRolesByName" resultMap="BaseResultMap">
+    select * from ba_roles where status=1 and c_name=#{name}
+  </select>
+
+  <!--添加角色-->
+  <insert id="addBaRoles" parameterType="com.dalian.sea.model.BaRoles" keyProperty="roleId" useGeneratedKeys="true">
+    insert into ba_roles (c_name,create_user_id,create_date,update_date
+    <if test="companyId!=null">,company_id</if>
+    <if test="category!=null">,category</if>
+    <if test="code!=null">,code</if>
+    <if test="remark!=null">,remark</if>
+    <if test="listIndex!=null">,list_index</if>
+    <if test="rolesLevel!=null">,roles_level</if>
+    ) VALUES (#{cName},#{createUserId},now(),now()
+    <if test="companyId!=null">,#{companyId}</if>
+    <if test="category!=null">,#{category}</if>
+    <if test="code!=null">,#{code}</if>
+    <if test="remark!=null">,#{remark}</if>
+    <if test="listIndex!=null">,#{listIndex}</if>
+    <if test="rolesLevel!=null">,#{rolesLevel}</if>
+    )
+  </insert>
+
+  <!--修改角色-->
+  <update id="updateBaRolesById" parameterType="com.dalian.sea.model.BaRoles">
+    update ba_roles
+    <trim prefix="set" suffixOverrides="," suffix=" where role_id = #{id} ">
+      <if test="cName!=null">c_name=#{cName},</if>
+      <if test="companyId!=null">company_id=#{companyId},</if>
+      <if test="category!=null">category=#{category},</if>
+      <if test="code!=null">code=#{code},</if>
+      <if test="remark!=null">remark=#{remark},</if>
+      <if test="listIndex!=null">list_index=#{listIndex},</if>
+      <if test="rolesLevel!=null">roles_level=#{rolesLevel},</if>
+      <if test="updateUserId!=null">,update_user_id=#{updateUserId}</if>
+    </trim>
+  </update>
+
+  <!--删除角色-->
+  <update id="deleteBaRolesById" parameterType="com.dalian.sea.model.BaRoles">
+    update ba_roles set status=6
+    <if test="updateUserId!=null">,update_user_id=#{updateUserId}</if>
+    where role_id=#{roleId}
+  </update>
+
+  <!--获取最大顺序-->
+  <select id="getBaRoleByMaxListIndex" resultMap="BaseResultMap">
+    SELECT max(list_index) as list_index FROM ba_roles WHERE status != 6 limit 1
+  </select>
+
+  <!--通过名字和公司id获取角色-->
+  <select id="getBaRolesByNameAndCompanyId" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaRoles">
+    SELECT * FROM ba_roles WHERE status!=6 AND c_name=#{cName} and company_id=#{companyId}
+  </select>
+
+  <!--修改角色部分信息-->
+  <update id="updateRolesById" parameterType="com.dalian.sea.model.BaRoles">
+    UPDATE ba_roles SET code=#{code},c_name=#{cName},category=#{category},
+    remark=#{remark},list_index=#{listIndex},roles_level=#{rolesLevel},update_user_id=#{updateUserId}
+    where role_id=#{roleId}
+  </update>
+
+  <!--通过编码获取角色-->
+  <select id="getRolesByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM ba_roles WHERE status!=6 AND code=#{code}
+  </select>
+</mapper>

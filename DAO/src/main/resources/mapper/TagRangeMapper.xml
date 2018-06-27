@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.TagRangeMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PTagRange">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="range_id" jdbcType="BIGINT" property="rangeId" />
+    <result column="start_no" jdbcType="BIGINT" property="startNo" />
+    <result column="end_no" jdbcType="BIGINT" property="endNo" />
+    <result column="rule_name" jdbcType="VARCHAR" property="ruleName" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="task_code" jdbcType="VARCHAR" property="taskCode" />
+  </resultMap>
+  <insert id="insertTagRangeByBatch" parameterType="java.util.List">
+    insert into tag_range (start_no,end_no,rule_name,batch_id,create_date,task_code)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.startNo,jdbcType=VARCHAR}, #{item.endNo,jdbcType=VARCHAR},#{item.ruleName,jdbcType=VARCHAR},#{item.batchId,jdbcType=VARCHAR},#{item.createDate,jdbcType=TIMESTAMP},#{item.taskCode,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+<select id="getTagRangeByRange" resultMap="BaseResultMap">
+   SELECT * FROM  tag_range
+   <trim prefix="where" suffixOverrides="and">
+     <if test="ruleName!=null">
+       rule_name =#{ruleName} and
+     </if>
+     <if test="clearCode!=null ">
+       start_no &lt;= #{clearCode} and
+       end_no  &gt;= #{clearCode} and
+     </if>
+   </trim>
+</select>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsWarehouseUserMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsWarehouseUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="warehouse_user_id" jdbcType="BIGINT" property="warehouseUserId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--批量添加-->
+  <insert id="addWarehouseUserList" parameterType="java.util.List">
+    INSERT INTO zs_warehouse_user(create_date,update_date,user_id,warehouse_id,create_user_id,update_user_id)
+    VALUES
+    <foreach collection="warehouseUserList" index="index" item="item"  separator=",">
+      (now(),now(),#{item.userId},#{item.warehouseId},#{item.createUserId},#{item.updateUserId})
+    </foreach>
+  </insert>
+
+  <!--通过warehouseId获取-->
+  <select id="getWarehouseUserByWarehouseId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_warehouse_user WHERE status=1 AND warehouse_id=#{warehouseId}
+  </select>
+
+  <!--通过warehouseId删除-->
+  <update id="deleteByWarehouseId" parameterType="com.dalian.sea.model.ZsWarehouse">
+    UPDATE zs_warehouse_user SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE warehouse_id=#{warehouseId}
+  </update>
+
+  <select id="getWarehouseIdByUserId" resultType="java.lang.Long" parameterType="java.lang.Long">
+    SELECT warehouse_id FROM zs_warehouse_user WHERE user_id=#{userId} AND status=1
+  </select>
+
+</mapper>

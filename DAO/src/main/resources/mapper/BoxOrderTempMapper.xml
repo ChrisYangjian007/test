@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BoxOrderTempMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PBoxOrderTemp">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="box_order_temp_id" jdbcType="BIGINT" property="boxOrderTempId" />
+    <result column="box_code" jdbcType="VARCHAR" property="boxCode" />
+    <result column="heap_code" jdbcType="VARCHAR" property="heapCode" />
+    <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_detail_code" jdbcType="VARCHAR" property="orderDetailCode" />
+    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="product_format" jdbcType="VARCHAR" property="productFormat" />
+    <result column="product_unit" jdbcType="VARCHAR" property="productUnit" />
+    <result column="random" jdbcType="VARCHAR" property="random" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    <result column="is_pack" jdbcType="TINYINT" property="isPack" />
+  </resultMap>
+  <resultMap id="BaseResultMap1" type="com.dalian.sea.parameter.POrderDetail">
+    <result column="order_detail_name" jdbcType="VARCHAR" property="orderDetailName" />
+    <result column="order_detail_qrcode" jdbcType="LONGVARCHAR" property="orderDetailQrcode" />
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="com.dalian.sea.model.BoxOrder">
+    <result column="box_code" jdbcType="VARCHAR" property="boxCode" />
+    <result column="heap_code" jdbcType="VARCHAR" property="heapCode" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="order_detail_code" jdbcType="LONGVARCHAR" property="orderDetailCode" />
+    <result column="order_detail_qr" jdbcType="LONGVARCHAR" property="orderDetailQr" />
+  </resultMap>
+  <insert id="insertBoxOrderSelective" parameterType="com.dalian.sea.model.BoxOrderTemp" >
+    insert into zs_box_order_temp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="boxOrderTempId != null" >
+        box_order_temp_id,
+      </if>
+      <if test="boxCode != null" >
+        box_code,
+      </if>
+      <if test="heapCode != null" >
+        heap_code,
+      </if>
+      <if test="qrCode != null" >
+        qr_code,
+      </if>
+      <if test="orderCode != null" >
+        order_code,
+      </if>
+      <if test="orderDetailCode != null" >
+        order_detail_code,
+      </if>
+      <if test="productCode != null" >
+        product_code,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="productFormat != null" >
+        product_format,
+      </if>
+      <if test="productUnit != null" >
+        product_unit,
+      </if>
+      <if test="random != null" >
+        random,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="boxOrderTempId != null" >
+        #{boxOrderTempId,jdbcType=BIGINT},
+      </if>
+      <if test="boxCode != null" >
+        #{boxCode,jdbcType=VARCHAR},
+      </if>
+      <if test="heapCode != null" >
+        #{heapCode,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCode != null" >
+        #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailCode != null" >
+        #{orderDetailCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productFormat != null" >
+        #{productFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="productUnit != null" >
+        #{productUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="random != null" >
+        #{random,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBoxOrderTempByBatch" parameterType="java.util.List">
+    insert into zs_box_order_temp (box_code, heap_code,qr_code,order_code,order_detail_code,product_code,product_name,product_format,product_unit,random,create_date,create_user_id,create_user_name)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.boxCode,jdbcType=VARCHAR}, #{item.heapCode,jdbcType=VARCHAR},#{item.qrCode,jdbcType=VARCHAR},#{item.orderCode,jdbcType=VARCHAR},#{item.orderDetailCode,jdbcType=VARCHAR},#{item.productCode,jdbcType=VARCHAR},#{item.productName,jdbcType=VARCHAR},#{item.productFormat,jdbcType=VARCHAR},#{item.productUnit,jdbcType=VARCHAR},#{item.random,jdbcType=VARCHAR},#{item.createDate,jdbcType=TIMESTAMP},#{item.createUserId,jdbcType=BIGINT},#{item.createUserName,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectListBoxOrderTempByGroupDetail" parameterType="com.dalian.sea.parameter.PBoxOrderTemp" resultMap="BaseResultMap1">
+   SELECT t.order_detail_code as order_detail_name,GROUP_CONCAT(t.qr_code) as order_detail_qrcode FROM zs_box_order_temp t  WHERE t.random =#{random} GROUP BY t.order_detail_code
+  </select>
+  <select id="selectListBoxOrderTempByGroupBox" parameterType="com.dalian.sea.parameter.PBoxOrderTemp" resultMap="BaseResultMap2">
+    SELECT t.box_code as box_code,GROUP_CONCAT(t.order_detail_code) as order_detail_code,GROUP_CONCAT(t.qr_code) as order_detail_qr,t.heap_code as heap_code,t.order_code as order_code  FROM zs_box_order_temp t  WHERE t.random =#{random} GROUP BY t.box_code
+  </select>
+
+  <select id="getBoxOrderTempByQrCodeOrOrderCodeForPDA" parameterType="com.dalian.sea.parameter.PBoxOrderTemp" resultMap="BaseResultMap">
+    select * from zs_box_order_temp where status = 1 and qr_code=#{qrCode}
+    <if test="boxCode!=null and boxCode!=''">box_code = #{boxCode}</if>
+  </select>
+
+<select id="selectBoxOrderTempListByNotPack" resultMap="BaseResultMap">
+  SELECT  t.box_order_temp_id,t.qr_code ,t.order_code,t.create_date FROM  zs_box_order_temp t WHERE  status =1 and is_pack=0
+</select>
+
+  <update id="updateListBoxOrderTem" parameterType="java.util.Map" >
+    UPDATE zs_box_order_temp SET is_pack =1  WHERE box_order_temp_id IN
+    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </update>
+
+</mapper>

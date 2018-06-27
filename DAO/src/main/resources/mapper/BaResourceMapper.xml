@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaResourceMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BaResource">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="resource_id" jdbcType="BIGINT" property="resourceId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="resource_type" jdbcType="TINYINT" property="resourceType" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="mobile_location" jdbcType="VARCHAR" property="mobileLocation" />
+    <result column="mobile_icon" jdbcType="VARCHAR" property="mobileIcon" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="is_expand" jdbcType="TINYINT" property="isExpand" />
+    <result column="category" jdbcType="INTEGER" property="category" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="flag_name" jdbcType="VARCHAR" property="flagName" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="js_event" jdbcType="VARCHAR" property="jsEvent" />
+    <result column="split" jdbcType="TINYINT" property="split" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <!--手机调用-->
+  <resultMap id="BaResource" type="com.dalian.sea.parameter.PBaResource">
+    <id column="resource_id" jdbcType="BIGINT" property="resourceId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="resource_type" jdbcType="TINYINT" property="resourceType" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="mobile_location" jdbcType="VARCHAR" property="mobileLocation" />
+    <result column="mobile_icon" jdbcType="VARCHAR" property="mobileIcon" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="is_expand" jdbcType="TINYINT" property="isExpand" />
+    <result column="category" jdbcType="INTEGER" property="category" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="flag_name" jdbcType="VARCHAR" property="flagName" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="js_event" jdbcType="VARCHAR" property="jsEvent" />
+    <result column="split" jdbcType="TINYINT" property="split" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <collection column="{resourceId=resource_id,resourceType=resourceType,roleId=roleId}" property="resourceList" ofType="com.dalian.sea.model.BaResource" javaType="java.util.ArrayList" select="selectParent">
+    </collection>
+  </resultMap>
+
+  <!--获取排序最大的资源-->
+  <select id="getBaResourceByMaxListIndex" resultMap="BaseResultMap">
+     select max(list_index) as list_index from ba_resource where status!=6 LIMIT 1
+  </select>
+
+  <!--获取所有资源-->
+  <select id="getAllBaResource" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_resource where status!=6 order by list_index ASC
+  </select>
+
+  <!--获取所有资源根据日志-->
+  <select id="getAllBaResourceBySysLog" resultMap="BaseResultMap" >
+    select * from ba_resource where resource_id in
+    (select resource_id from sys_sys_log where status = 1
+    <if test="companyId != 0">
+      and created_user_id not in
+      (select user_id from ba_user where company_id = 0)
+    </if>
+    ) order by list_index ASC
+  </select>
+
+  <!--获取所有资源-->
+  <select id="getAllBaResourceByResourceType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select * from ba_resource
+    where status!=6 and resource_type=#{resourceType}
+    <if test="companyId!=0">
+      and code not in
+      (0108011300,0108010700,0108010800,0108010900,0108011000,0108011100,0108011200,0108011300,
+      0108020100,0108020101,0108020102,0108020103,0108020104,0108020105,0108020106)
+    </if>
+    order by list_index ASC
+  </select>
+
+  <!--导航-->
+  <select id="getMenuByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_resource
+    where status=1 and <![CDATA[ category < 3 ]]>
+    and parent_id!=0 and resource_type=0
+    and resource_id in (
+      select resource_id from ba_role_resource
+      where status=1 and role_id in
+      (select role_id from ba_user_role
+        where status=1 and user_id=#{userId})
+      )
+      order by list_index ASC
+  </select>
+
+  <!--获取用户所有资源-->
+  <select id="getAllBaResourceByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_resource where status=1
+    <if test="resourceType!=2">
+      and resource_type=#{resourceType}
+    </if>
+     and resource_id in
+     (select resource_id from ba_role_resource where status=1 and role_id in
+     (select role_id from ba_user_role where status=1 and user_id=#{userId}))
+      order by list_index ASC
+  </select>
+
+  <!--根据父级ID获取子级-->
+  <select id="getAllBaResourceByPid" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_resource where status=1 and parent_id=#{pid}
+  </select>
+
+  <!--根据情况获取子级-->
+  <select id="getBaResourceBy" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaResource">
+    select * from ba_resource where 1=1
+    <if test="code!=null and code!=''">and code=#{code}</if>
+    <if test="cName!=null and cName!=''">and c_name=#{cName}</if>
+    <if test="category!=null">and category=#{category}</if>
+    <if test="parentId!=null">and parent_id=#{parentId}</if>
+    <choose>
+      <when test="status != null">
+        and status=#{status}
+      </when>
+      <otherwise>
+        and status!=6
+      </otherwise>
+    </choose>
+    order by list_index asc,update_date desc
+  </select>
+
+  <!--根据ID获取-->
+  <select id="getBaResourceById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_resource where status=1 and resource_id=#{id}
+  </select>
+
+  <!--判断同级同名-->
+  <select id="getBaResourceByNameAndPid" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaResource">
+    select * from ba_resource where status=1 and c_name=#{cName} and parent_id = #{parentId}
+  </select>
+
+  <!--判断同级同名-->
+  <select id="getBaResourceByLocation" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaResource">
+    select * from ba_resource where status=1 and location = #{location}
+    <choose>
+      <when test="mobileLocation != null and mobileLocation!=''">
+        and mobile_location=#{mobileLocation}
+      </when>
+      <otherwise>
+        and location = #{location}
+      </otherwise>
+    </choose>
+  </select>
+
+  <!--根据角色ID获取资源-->
+  <select id="getAllBaResourceByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_resource where status=1
+    <if test="resourceType!=2">
+      and resource_type=#{resourceType}
+    </if>
+    <if test="companyId!=0">
+      and code not in
+      (0108011300,0108010700,0108010800,0108010900,0108011000,0108011100,0108011200,0108011300,
+      0108020100,0108020101,0108020102,0108020103,0108020104,0108020105,0108020106)
+    </if>
+    and resource_id in (select resource_id from ba_role_resource where status=1 and role_id=#{roleId})
+  </select>
+
+  <!--手机调用-->
+  <select id="getBaResourceByRoleId" resultMap="BaResource" >
+    select *,#{resourceType} as resourceType,#{roleId} as roleId
+    from ba_resource
+    where status=1
+    <if test="resourceType!=2">
+      and resource_type=#{resourceType}
+    </if>
+    and a_level!=0 and category=1 and resource_id in (select resource_id from ba_role_resource where status=1 and role_id=#{roleId})
+  </select>
+  <select id="selectParent" resultMap="BaseResultMap">
+    select * from ba_resource
+    where status=1
+    <if test="resourceType!=2">
+      and resource_type=#{resourceType}
+    </if>
+    and a_level!=0 and parent_id=#{resourceId} and resource_id in (select resource_id from ba_role_resource where status=1 and role_id=#{roleId})
+  </select>
+
+  <!--添加资源-->
+  <insert id="addBaResource" parameterType="com.dalian.sea.model.BaResource" keyProperty="resourceId" useGeneratedKeys="true">
+    insert into ba_resource (c_name,location,parent_id,create_user_id,create_date,update_date
+    <if test="resourceType!=null">,resource_type</if>
+    <if test="icon!=null">,icon</if>
+    <if test="mobileLocation!=null">,mobile_location</if>
+    <if test="mobileIcon!=null">,mobile_icon</if>
+    <if test="remark!=null">,remark</if>
+    <if test="listIndex!=null">,list_index</if>
+    <if test="aLevel!=null">,a_level</if>
+    <if test="firstId!=null">,first_id</if>
+    <if test="isExpand!=null">,is_expand</if>
+    <if test="category!=null">,category</if>
+    <if test="code!=null">,code</if>
+    <if test="flag!=null">,flag</if>
+    <if test="flagName!=null">,flag_name</if>
+    <if test="target!=null">,target</if>
+    <if test="jsEvent!=null">,js_event</if>
+    <if test="split!=null">,split</if>
+    ) values (#{cName},#{location},#{parentId},#{createUserId},now(),now()
+    <if test="resourceType!=null">,#{resourceType}</if>
+    <if test="icon!=null">,#{icon}</if>
+    <if test="mobileLocation!=null">,#{mobileLocation}</if>
+    <if test="mobileIcon!=null">,#{mobileIcon}</if>
+    <if test="remark!=null">,#{remark}</if>
+    <if test="listIndex!=null">,#{listIndex}</if>
+    <if test="aLevel!=null">,#{aLevel}</if>
+    <if test="firstId!=null">,#{firstId}</if>
+    <if test="isExpand!=null">,#{isExpand}</if>
+    <if test="category!=null">,#{category}</if>
+    <if test="code!=null">,#{code}</if>
+    <if test="flag!=null">,#{flag}</if>
+    <if test="flagName!=null">,#{flagName}</if>
+    <if test="target!=null">,#{target}</if>
+    <if test="jsEvent!=null">,#{jsEvent}</if>
+    <if test="split!=null">,#{split}</if>
+    )
+  </insert>
+
+  <!--修改资源-->
+  <update id="updateBaResource" parameterType="com.dalian.sea.model.BaResource">
+    update ba_resource
+    <trim prefix="set" suffixOverrides="," suffix=" where resource_id=#{resourceId}">
+      <if test="cName!=null">c_name=#{cName},</if>
+      <if test="location!=null">location=#{location},</if>
+      <if test="parentId!=null">parent_id=#{parentId},</if>
+      <if test="resourceType!=null">resource_type=#{resourceType},</if>
+      <if test="icon!=null">icon=#{icon},</if>
+      <if test="mobileLocation!=null">mobile_location=#{mobileLocation},</if>
+      <if test="mobileIcon!=null">mobile_icon=#{mobileIcon},</if>
+      <if test="remark!=null">remark=#{remark},</if>
+      <if test="listIndex!=null">list_index=#{listIndex},</if>
+      <if test="aLevel!=null">a_level=#{aLevel},</if>
+      <if test="firstId!=null">first_id=#{firstId},</if>
+      <if test="isExpand!=null">is_expand=#{isExpand},</if>
+      <if test="category!=null">category=#{category},</if>
+      <if test="code!=null">code=#{code},</if>
+      <if test="flag!=null">flag=#{flag},</if>
+      <if test="flagName!=null">flag_name=#{flagName},</if>
+      <if test="target!=null">target=#{target},</if>
+      <if test="jsEvent!=null">js_event=#{jsEvent},</if>
+      <if test="split!=null">split=#{split},</if>
+      <if test="updateUserId!=null">update_user_id=#{updateUserId},</if>
+      <if test="status!=null">status=#{status},</if>
+    </trim>
+  </update>
+
+  <!--删除资源-->
+  <update id="deleteBaResource" parameterType="com.dalian.sea.model.BaResource">
+    update ba_resource set status=6
+    <if test="updateUserId!=null">,update_user_id=#{updateUserId}</if>
+    where resource_id=#{resourceId}
+  </update>
+
+  <!--修改资源部分信息-->
+  <update id="updateBaResourceById" parameterType="com.dalian.sea.model.BaResource">
+    UPDATE ba_resource set code=#{code},c_name=#{cName},category=#{category},
+    icon=#{icon},target=#{target},is_expand=#{isExpand},location=#{location},remark=#{remark},resource_type=#{resourceType}
+    <if test="listIndex != null">,list_index=#{listIndex}</if>
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where resource_id=#{resourceId}
+  </update>
+
+  <!--通过编码获取资源-->
+  <select id="getResourceByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM ba_resource WHERE status!=6 AND code=#{code}
+  </select>
+
+</mapper>

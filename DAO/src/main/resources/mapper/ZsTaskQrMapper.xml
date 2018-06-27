@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsTaskQrMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsTaskQr">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="task_qr_id" jdbcType="BIGINT" property="taskQrId" />
+    <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId" />
+    <result column="qr_code_id" jdbcType="BIGINT" property="qrCodeId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+  </resultMap>
+  
+  <insert id="insertTaskQr" useGeneratedKeys="true" keyProperty="taskQrId">
+    insert into zs_task_qr (task_qr_id
+    <if test="produceTaskId!=null and produceTaskId!=''">
+      ,produce_task_id
+    </if>
+    <if test="qrCodeId!=null and qrCodeId!=''">
+      ,qr_code_id
+    </if>
+    <if test="code!=null and code!=''">
+      ,code
+    </if>
+    ) values (
+    #{taskQrId}
+    <if test="produceTaskId!=null and produceTaskId!=''">
+      ,#{produceTaskId}
+    </if>
+    <if test="qrCodeId!=null and qrCodeId!=''">
+      ,#{qrCodeId}
+    </if>
+    <if test="code!=null and code!=''">
+      ,#{code}
+    </if>
+    );
+  </insert>
+
+  <select id="getTaskQrByCode" parameterType="Long" resultMap="BaseResultMap">
+    select * from zs_task_qr WHERE qr_code_id=#{codeId};
+  </select>
+
+  <!--通过produceTaskId获取编码-->
+  <select id="getTaskQrByProduceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_task_qr WHERE produce_task_id=#{produceTaskId}
+  </select>
+</mapper>

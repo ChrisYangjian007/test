@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsCertificateManageMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsCertificateManage">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="certificate_manage_id" jdbcType="BIGINT" property="certificateManageId" />
+    <result column="big_product_type_id" jdbcType="BIGINT" property="bigProductTypeId" />
+    <result column="small_product_type_id" jdbcType="BIGINT" property="smallProductTypeId" />
+    <result column="production_license" jdbcType="VARCHAR" property="productionLicense" />
+    <result column="production_process_id" jdbcType="BIGINT" property="productionProcessId" />
+    <result column="product_standards" jdbcType="VARCHAR" property="productStandards" />
+    <result column="test_result" jdbcType="TINYINT" property="testResult" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="certificate_image" jdbcType="CHAR" property="certificateImage" />
+    <result column="content_title" jdbcType="VARCHAR" property="contentTitle" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  
+  <resultMap id="PZsCertificateManage" type="com.dalian.sea.parameter.PZsCertificateManage" extends="BaseResultMap">
+
+  </resultMap>
+
+  <!--获取所有的证书管理-->
+  <select id="getCertificateManageForGrid" resultMap="PZsCertificateManage">
+    SELECT zcm.* ,
+    spt.c_name as bigProductTypeName,
+    pt.c_name as smallProductTypeName,
+    zpp.production_process_name as productionProcessName
+    FROM zs_certificate_manage zcm
+    LEFT JOIN sys_product_type spt ON spt.product_type_id=zcm.big_product_type_id
+    LEFT JOIN sys_product_type pt ON pt.product_type_id=zcm.small_product_type_id
+    LEFT JOIN zs_production_process zpp ON zpp.production_process_id=zcm.production_process_id
+    WHERE zcm.status=1 ORDER BY zcm.update_date DESC
+  </select>
+
+  <!--添加证书-->
+  <insert id="addCertificateManage" parameterType="com.dalian.sea.model.ZsCertificateManage">
+    INSERT INTO zs_certificate_manage(create_date,update_date
+    <if test="bigProductTypeId != null">,big_product_type_id</if>
+    <if test="smallProductTypeId != null">,small_product_type_id</if>
+    <if test="productionLicense != null">,production_license</if>
+    <if test="productionProcessId != null">,production_process_id</if>
+    <if test="productStandards != null">,product_standards</if>
+    <if test="testResult != null">,test_result</if>
+    <if test="endDate != null">,end_date</if>
+    <if test="certificateImage != null">,certificate_image</if>
+    <if test="createUserId != null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    )VALUES (now(),now()
+    <if test="bigProductTypeId != null">,#{bigProductTypeId}</if>
+    <if test="smallProductTypeId != null">,#{smallProductTypeId}</if>
+    <if test="productionLicense != null">,#{productionLicense}</if>
+    <if test="productionProcessId != null">,#{productionProcessId}</if>
+    <if test="productStandards != null">,#{productStandards}</if>
+    <if test="testResult != null">,#{testResult}</if>
+    <if test="endDate != null">,#{endDate}</if>
+    <if test="certificateImage != null">,#{certificateImage}</if>
+    <if test="createUserId != null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    )
+  </insert>
+
+  <!--删除证书-->
+  <update id="deleteCertificateManageById" parameterType="com.dalian.sea.model.ZsCertificateManage">
+      UPDATE zs_certificate_manage SET status=6
+      <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+      WHERE certificate_manage_id=#{certificateManageId}
+  </update>
+
+  <!--通过smallProductTypeID和productionLicense获取-->
+  <select id="getCertificateManageBySProductTypeAndName" parameterType="com.dalian.sea.model.ZsCertificateManage" resultMap="BaseResultMap">
+    SELECT * FROM zs_certificate_manage WHERE status=1 AND small_product_type_id=#{smallProductTypeId} AND production_license=#{productionLicense}
+  </select>
+
+  <!--通过certificateManageId获取-->
+  <select id="getCertificateManageByCertificateManageId" parameterType="java.lang.Long" resultMap="PZsCertificateManage">
+    SELECT zcm.*,
+    bspt.c_name as bigProductTypeName,
+    sspt.c_name as smallProductTypeName,
+    zpp.production_process_name as productionProcessName
+    FROM zs_certificate_manage zcm
+    LEFT JOIN sys_product_type bspt ON bspt.product_type_id=zcm.big_product_type_id
+    LEFT JOIN sys_product_type sspt ON sspt.product_type_id=zcm.small_product_type_id
+    LEFT JOIN zs_production_process zpp ON zpp.production_process_id=zcm.production_process_id
+    WHERE zcm.status=1 AND zcm.certificate_manage_id=#{certificateManageId}
+  </select>
+
+  <!--修改证书-->
+  <update id="updateCertificateManage" parameterType="com.dalian.sea.model.ZsCertificateManage">
+    UPDATE zs_certificate_manage
+    SET big_product_type_id=#{bigProductTypeId},small_product_type_id=#{smallProductTypeId},
+    production_license=#{productionLicense},production_process_id=#{productionProcessId},product_standards=#{productStandards},
+    test_result=#{testResult},end_date=#{endDate},certificate_image=#{certificateImage}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE certificate_manage_id=#{certificateManageId}
+  </update>
+
+  <!--增加内容-->
+  <update id="addCertificateContent" parameterType="com.dalian.sea.model.ZsCertificateManage">
+    UPDATE zs_certificate_manage SET content_title=#{contentTitle},content=#{content}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE certificate_manage_id=#{certificateManageId}
+  </update>
+
+  <!--通过smallProductTypeId获取-->
+  <select id="getCertificateManageBySmallProductTypeId" parameterType="java.lang.Long" resultMap="PZsCertificateManage">
+    SELECT * FROM zs_certificate_manage WHERE status=1 AND small_product_type_id=#{smallProductTypeId}
+  </select>
+</mapper>

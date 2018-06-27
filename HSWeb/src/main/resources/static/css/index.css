@@ -1,0 +1,60 @@
+
+body{
+    width: 100%;
+    height:auto;
+    background:url(../images/bg.png) no-repeat;
+    background-size: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+.logo{
+    margin:0 auto;
+}
+
+.circleBox{
+    width:100%;
+    position:absolute;
+    top:45%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+.circleBox>p{
+    width:100%;
+    font-size:2.8em;
+    margin-top:1em;
+    color:#fff;
+    letter-spacing: 3px;
+}
+.circle1,.circle2,.circle3,.circle4,.circle5,.circle6{
+    position:absolute;
+    opacity:0;
+}
+.circle1{
+    top:45em;
+    left:2em;
+}
+.circle2{
+    animation-delay:0.5s;
+    top:35em;
+    left:35em;
+}
+.circle3{
+    animation-delay:1s;
+    top:62em;
+    left:22em;
+}
+.circle4{
+    animation-delay:1.5s;
+    top:83em;
+    left:5em;
+}
+.circle5{
+    animation-delay:2s;
+    top:86em;
+    left:44em;
+}
+.circle6{
+    animation-delay:2.5s;
+    top:100em;
+    left:22em;
+}

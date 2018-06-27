@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportBoxLabel" language="groovy" pageWidth="204" pageHeight="127" columnWidth="204" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="345f6a21-16cd-4925-ab7a-58cd3d2b0258">
+	<property name="ireport.zoom" value="4.17724816941566"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select * from MYDEMO]]>
+	</queryString>
+	<field name="batchNo" class="java.lang.String">
+		<fieldDescription><![CDATA[batchNo]]></fieldDescription>
+	</field>
+	<field name="materialName" class="java.lang.String">
+		<fieldDescription><![CDATA[materialName]]></fieldDescription>
+	</field>
+	<field name="productName" class="java.lang.String">
+		<fieldDescription><![CDATA[productName]]></fieldDescription>
+	</field>
+	<field name="productStatusName" class="java.lang.String">
+		<fieldDescription><![CDATA[productStatusName]]></fieldDescription>
+	</field>
+	<field name="productSpecName" class="java.lang.String">
+		<fieldDescription><![CDATA[productSpecName]]></fieldDescription>
+	</field>
+	<field name="inWeight" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[inWeight]]></fieldDescription>
+	</field>
+	<field name="unitName" class="java.lang.String">
+		<fieldDescription><![CDATA[unitName]]></fieldDescription>
+	</field>
+	<field name="createDate" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[createDate]]></fieldDescription>
+	</field>
+	<field name="every" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[every]]></fieldDescription>
+	</field>
+	<field name="num" class="java.lang.Integer">
+		<fieldDescription><![CDATA[num]]></fieldDescription>
+	</field>
+	<field name="qrcode" class="java.lang.String">
+		<fieldDescription><![CDATA[qrcode]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="109" splitType="Stretch">
+			<textField>
+				<reportElement x="51" y="34" width="78" height="12" uuid="a670555d-a8a8-4268-b7b0-b1478a016eb5"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{materialName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="80" width="42" height="12" uuid="661b8555-c4fe-4e5b-a592-a090f1b05e73"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[产品状态:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="80" width="25" height="12" uuid="d9a2a7ea-7a8e-4cb2-a2c1-e647f92701b2"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[总量:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="51" y="80" width="67" height="12" uuid="af875c35-558b-4453-8cf7-03e3f51bed70"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productStatusName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="42" y="4" width="87" height="12" uuid="a4378d34-0930-4c16-b31a-bc68a9bfac91"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{batchNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="49" width="97" height="12" uuid="c305774d-d664-491c-b424-2f78e9534eea"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productSpecName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="4" width="33" height="12" uuid="f0fe2c4b-a0cb-43ae-85cc-c72c0cc7a3bd"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[批次号:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="19" width="42" height="12" uuid="b1fa5964-5392-4304-913a-d4c17db122cb"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[产品名称:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="181" y="95" width="22" height="12" uuid="2698460f-9fca-4ea2-9c95-ec100351ebff"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unitName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="95" width="23" height="12" uuid="2b76ba0d-8c2e-4c91-94f4-557bd3dd7b3a"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[时间:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="148" y="80" width="34" height="12" uuid="f2d0fa70-0572-48a2-ab43-0f35bd8ea18b"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inWeight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="95" width="86" height="12" uuid="3660b4db-77a6-4f4d-a364-9c0e10f7b3fd"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{createDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="49" width="23" height="12" uuid="0e60c822-0537-425a-8f80-287cee1212a5"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[规格:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="51" y="19" width="78" height="12" uuid="2cedcf8d-e06f-47cf-9989-317a3fa4f908"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="34" width="42" height="12" uuid="8e987437-d66f-4f72-9cf1-cea76c43ee3a"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[货物类型:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="123" y="95" width="25" height="12" uuid="e58c1ce7-cce9-429f-8822-3ad547348aed"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[重量:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="148" y="95" width="34" height="12" uuid="2da9c9c9-df52-45c0-907c-6c53044cb285"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{every}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="80" width="22" height="12" uuid="962672d2-0cff-4b9c-b7ea-f1acdf257e26"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unitName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="64" width="23" height="12" uuid="a29ce1fb-4855-48e3-8073-b17859c1d906"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[件数:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="32" y="64" width="36" height="12" uuid="45a7e9a9-8bd5-41b8-a842-f2cd512e9c1d"/>
+				<textElement>
+					<font fontName="微软雅黑" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="135" y="8" width="61" height="58" uuid="8bb10d5e-b965-42cb-ba39-5b46f801641b"/>
+				<imageExpression><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(new com.google.zxing.qrcode.QRCodeWriter().encode($F{qrcode},com.google.zxing.BarcodeFormat.QR_CODE,320,320))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="79" y="64" width="125" height="13" uuid="1b22bd43-3163-43ab-bf51-082f45cf341a"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qrcode}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

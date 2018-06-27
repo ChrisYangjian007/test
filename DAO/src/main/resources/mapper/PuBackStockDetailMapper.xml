@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PuBackStockDetailMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.PuBackStockDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="back_stock_detail_id" jdbcType="BIGINT" property="backStockDetailId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName" />
+    <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="is_material" jdbcType="TINYINT" property="isMaterial" />
+    <result column="product_status" jdbcType="TINYINT" property="productStatus" />
+    <result column="weight" jdbcType="DECIMAL" property="weight" />
+    <result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+    <result column="receipt_status" jdbcType="TINYINT" property="receiptStatus" />
+    <result column="back_stock_id" jdbcType="BIGINT" property="backStockId" />
+  </resultMap>
+</mapper>

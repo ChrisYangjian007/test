@@ -1,0 +1,36 @@
+.main{
+    width:90%;
+    margin:0 auto;
+}
+.main>.col-md-6,.main>.col-md-12{
+    margin:10px 0;
+}
+.main>.col-md-6>p{
+    width:40%;
+    float:left;
+    background:#ddd;
+    padding:5px;
+    text-align:center;
+    border:1px solid #ccc;
+    border-right:0;
+}
+.main>.col-md-6>div{
+    display:inline-block;
+    float:right;
+    padding:5px 0 5px 20px;
+    border:1px solid #ccc;
+    width:60%;
+}
+.main>.col-md-12>p{
+    width:100%;
+    text-align:center;
+}
+.col-md-12>div{
+    width:100%;
+    font-size:0;
+}
+.col-md-12>div>img{
+    width:19%;
+    height:100%;
+    margin:5px 0.5%;
+}

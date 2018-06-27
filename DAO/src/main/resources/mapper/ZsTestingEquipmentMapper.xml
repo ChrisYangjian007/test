@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsTestingEquipmentMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PTestingEquipment">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="testing_equipment_id" jdbcType="BIGINT" property="testingEquipmentId" />
+    <result column="data_dictionary_details_id" jdbcType="BIGINT" property="dataDictionaryDetailsId" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="images" jdbcType="VARCHAR" property="images" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <!--查询所有信息-->
+  <select id="getTestingEquipment" resultMap="BaseResultMap">
+    SELECT a.*,b.c_name AS testCName FROM zs_testing_equipment a
+    INNER  JOIN ba_data_dictionary_details b
+    on b.data_dictionary_details_id = a.data_dictionary_details_id
+    WHERE a.status !=6
+    order by id ASC
+  </select>
+  <!--查询检验室-->
+  <select id="getDictionary" resultMap="BaseResultMap">
+    SELECT data_dictionary_details_id AS dataDictionaryDetailsId,c_name AS testCName FROM ba_data_dictionary_details
+    WHERE data_dictionary_id = 17
+  </select>
+  <!--新增-->
+  <insert id="addTestingEquipment" parameterType="com.dalian.sea.parameter.PTestingEquipment">
+    INSERT INTO zs_testing_equipment(
+    <if test="dataDictionaryDetailsId!=null and dataDictionaryDetailsId!=''"> data_dictionary_details_id</if>
+    <if test="id!=null and id!=''">,id</if>
+    <if test="remark!=null and remark!=''">,remark</if>
+    <if test="images!=null and images!=''">,images</if>
+    <if test="createUserId!=null and createUserId!=''"> ,create_user_id</if>
+    <if test="createDate!=null">,create_date</if>,update_date
+      )VALUES (
+    <if test="dataDictionaryDetailsId!=null and dataDictionaryDetailsId!=''">#{dataDictionaryDetailsId} </if>
+    <if test="id!=null and id!=''">,#{id}</if>
+    <if test="remark!=null and remark!=''">,#{remark}</if>
+    <if test="images!=null and images!=''">,#{images}</if>
+    <if test="createUserId!=null and createUserId!=''"> ,#{createUserId}</if>
+    <if test="createDate!=null">,#{createDate}</if>,#{updateDate}
+      )
+  </insert>
+  <!--根据id查询-->
+  <select id="getTestingEquipmentById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT a.*,b.c_name AS testCName FROM zs_testing_equipment a
+    INNER  JOIN ba_data_dictionary_details b
+    on b.data_dictionary_details_id = a.data_dictionary_details_id
+    WHERE a.testing_equipment_id=#{testingEquipmentId}
+  </select>
+  <!--修改-->
+  <update id="updateTestingEquipment" parameterType="com.dalian.sea.parameter.PTestingEquipment">
+    UPDATE  zs_testing_equipment SET data_dictionary_details_id=#{dataDictionaryDetailsId},id=#{id},remark=#{remark},images=#{images}
+    <if test="updateUserId!=null and updateUserId!=''">,update_user_id=#{updateUserId}</if>
+    WHERE testing_equipment_id=#{testingEquipmentId}
+  </update>
+  <!--删除-->
+  <update id="delectTestingEquipment" parameterType="com.dalian.sea.parameter.PTestingEquipment">
+    UPDATE zs_testing_equipment SET status =6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE testing_equipment_id=#{testingEquipmentId}
+  </update>
+  <!--查询现有检验室-->
+  <select id="getEquipment" resultMap="BaseResultMap">
+    SELECT a.testing_equipment_id AS testingEquipmentId,b.c_name AS testCName FROM zs_testing_equipment a
+    INNER  JOIN ba_data_dictionary_details b
+    on b.data_dictionary_details_id = a.data_dictionary_details_id
+    WHERE a.status !=6
+  </select>
+
+  <!--通过dataDictionaryIDetailsId获取-->
+  <select id="getPTestingEquipmentByDataDictionaryDetailsId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_testing_equipment WHERE status=1 AND data_dictionary_details_id=#{dataDictionaryIDetailsId}
+  </select>
+
+  <!--获取全部-->
+  <select id="getAllTestingEquipment" resultMap="BaseResultMap">
+    SELECT * FROM zs_testing_equipment WHERE statsu=1
+  </select>
+</mapper>

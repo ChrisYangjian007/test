@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsWarehouseMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsWarehouse">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="warehouse_type" jdbcType="VARCHAR" property="warehouseType"/>
+        <result column="warning_day" jdbcType="INTEGER" property="warningDay"/>
+        <result column="manager_id" jdbcType="BIGINT" property="managerId"/>
+        <result column="manager" jdbcType="VARCHAR" property="manager"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+    </resultMap>
+
+    <resultMap id="PZsWarehouse" type="com.dalian.sea.parameter.PZsWarehouse" extends="BaseResultMap">
+        <result column="createUserName" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="updateUserName" jdbcType="VARCHAR" property="updateUserName"/>
+        <result column="warehouseUserName" jdbcType="VARCHAR" property="warehouseUserName"/>
+    </resultMap>
+
+    <!--加载到表格-->
+    <select id="getWareHouseForGrid" resultMap="PZsWarehouse" parameterType="com.dalian.sea.parameter.PZsWarehouse">
+        SELECT zw.*,
+        bu.c_name as createUserName,
+        buu.c_name as updateUserName,
+        zwi.image_size as warehouseImageSize,
+        zwi.create_date as warehouseImageCreateDate,
+        zwi.update_date as warehouseImageUpdateDate,
+        bu1.c_name as warehouseImageCreateName,
+        bu2.c_name as warehouseImageUpdateName,
+        group_concat(buuu.c_name) as warehouseUserName
+        FROM( SELECT z.* FROM zs_warehouse z WHERE z.status=1
+        <if test="userWarehouseId != null and userWarehouseId != ''">
+            AND z.warehouse_id in (
+            SELECT zu.warehouse_id FROM zs_warehouse_user zu
+            WHERE zu.status=1 AND zu.user_id=#{userWarehouseId}
+            )
+        </if>
+        ) as zw
+        LEFT JOIN ba_user bu ON bu.user_id=zw.create_user_id
+        LEFT JOIN ba_user buu on buu.user_id = zw.update_user_id
+        LEFT JOIN zs_warehouse_user zwu ON zwu.warehouse_id=zw.warehouse_id AND zwu.status=1
+        LEFT JOIN ba_user buuu ON zwu.user_id=buuu.user_id and buuu.status=1
+        LEFT JOIN zs_warehouse_images zwi ON zwi.warehouse_id=zw.warehouse_id and DATE_FORMAT( zwi.create_date, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        LEFT JOIN ba_user bu1 ON bu1.user_id=zwi.create_user_id
+        LEFT JOIN ba_user bu2 on bu2.user_id = zwi.update_user_id
+        WHERE zw.status=1
+        <if test="warehouseName != null and warehouseName != ''">
+            and zw.c_name=#{warehouseName}
+        </if>
+        GROUP BY zw.warehouse_id ORDER BY zw.update_date DESC
+    </select>
+
+    <!--通过名字获取仓库-->
+    <select id="getWarehouseByName" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.ZsWarehouse">
+    SELECT * FROM zs_warehouse WHERE status != 6 and c_name=#{cName}
+  </select>
+
+    <!--添加-->
+    <insert id="addWarehouse" parameterType="com.dalian.sea.model.ZsWarehouse" useGeneratedKeys="true"
+            keyProperty="warehouseId">
+        INSERT INTO zs_warehouse(create_date,update_date
+        <if test="cName != null">,c_name</if>
+        <if test="warehouseType != null">,warehouse_type</if>
+        <if test="warningDay != null">,warning_day</if>
+        <if test="managerId != null">,manager_id</if>
+        <if test="manager != null">,manager</if>
+        <if test="phone != null">,phone</if>
+        <if test="companyId != null">,company_id</if>
+        <if test="listIndex != null">,list_index</if>
+        <if test="remark != null">,remark</if>
+        <if test="createUserId != null">,create_user_id</if>
+        <if test="updateUserId != null">,update_user_id</if>
+        <if test="status != null">,status</if>
+        )VALUES (now(),now()
+        <if test="cName != null">,#{cName}</if>
+        <if test="warehouseType != null">,#{warehouseType}</if>
+        <if test="warningDay != null">,#{warningDay}</if>
+        <if test="managerId != null">,#{managerId}</if>
+        <if test="manager != null">,#{manager}</if>
+        <if test="phone != null">,#{phone}</if>
+        <if test="companyId != null">,#{companyId}</if>
+        <if test="listIndex != null">,#{listIndex}</if>
+        <if test="remark != null">,#{remark}</if>
+        <if test="createUserId != null">,#{createUserId}</if>
+        <if test="updateUserId != null">,#{updateUserId}</if>
+        <if test="status != null">,#{status}</if>
+        )
+    </insert>
+
+    <!--获取最大顺序数-->
+    <select id="getWarehouseMaxListIndex" resultMap="BaseResultMap">
+    SELECT max(list_index) as list_index FROM zs_warehouse WHERE status != 6 limit 1
+  </select>
+
+    <!--通过id获取仓库信息-->
+    <select id="getWarehouseById" resultMap="PZsWarehouse" parameterType="java.lang.Long">
+    SELECT zw.*,
+    group_concat(bu.c_name) as warehouseUserName
+    FROM zs_warehouse as zw
+    LEFT JOIN zs_warehouse_user zwu ON zwu.warehouse_id=zw.warehouse_id
+    LEFT JOIN ba_user bu ON zwu.user_id=bu.user_id
+    WHERE zw.status != 6 AND zw.warehouse_id=#{id}
+  </select>
+
+    <!--修改-->
+    <update id="updateZsWarehouseById" parameterType="com.dalian.sea.model.ZsWarehouse">
+        UPDATE zs_warehouse SET
+        c_name=#{cName},warehouse_type=#{warehouseType},warning_day=#{warningDay},manager_id=#{managerId},manager=#{manager},company_id=#{companyId},phone=#{phone},remark=#{remark}
+        <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+        where warehouse_id=#{warehouseId}
+    </update>
+
+    <!--修改-->
+    <update id="updateZsWarehouse" parameterType="com.dalian.sea.model.ZsWarehouse">
+        UPDATE zs_warehouse
+        <trim prefix="set" suffixOverrides="," suffix="where warehouse_id=#{warehouseId}">
+            <if test="cName != null">c_name=#{cName},</if>
+            <if test="warehouseType != null">warehouse_type=#{warehouseType},</if>
+            <if test="warningDay != null">warning_day=#{warningDay},</if>
+            <if test="managerId != null">manager_id=#{managerId},</if>
+            <if test="manager != null">manager=#{manager},</if>
+            <if test="phone != null">phone=#{phone},</if>
+            <if test="companyId != null">company_id=#{companyId},</if>
+            <if test="listIndex != null">list_index=#{listIndex},</if>
+            <if test="remark != null">remark=#{remark},</if>
+            <if test="createUserId != null">create_user_id=#{createUserId},</if>
+            <if test="updateUserId != null">update_user_id=#{updateUserId},</if>
+            <if test="createDate != null">create_date=#{createDate},</if>
+            <if test="updateDate != null">update_date=#{updateDate},</if>
+            <if test="status != null">status=#{status},</if>
+        </trim>
+    </update>
+
+    <!--删除-->
+    <update id="deleteZsWarehouseById" parameterType="com.dalian.sea.model.ZsWarehouse">
+        UPDATE zs_warehouse SET status = 6
+        <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+        WHERE warehouse_id=#{warehouseId}
+    </update>
+
+    <!--获取所有仓库信息-->
+    <select id="getAllWarehouse" resultMap="BaseResultMap">
+    SELECT * FROM zs_warehouse WHERE  status=1
+  </select>
+
+    <select id="getWareHouseByUserId" resultMap="BaseResultMap">
+    SELECT zw.* FROM zs_warehouse zw
+    LEFT JOIN zs_warehouse_user zwu ON zwu.warehouse_id =zw.warehouse_id and zwu.status =1
+    WHERE zw.status =1 AND zwu.user_id =#{userId}
+    ORDER BY
+    CASE WHEN zw.warehouse_type =1 THEN 1 ELSE zw.warehouse_id END
+  </select>
+
+    <select id="getWarehouseByWarehouseId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM zs_warehouse WHERE warehouse_id=#{id} AND status=1
+  </select>
+</mapper>

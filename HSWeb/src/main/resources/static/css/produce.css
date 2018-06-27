@@ -1,0 +1,141 @@
+body{
+    overflow: auto;
+}
+.produce-container{
+    margin-bottom: 10px;
+}
+.produce-main{
+    background:#eef1f5;
+    padding:20px;
+}
+.produce-box{
+    background:#fff;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.produce-task{
+    display:flex;
+    justify-content: space-between;
+}
+.produce-task>li{
+    border-right:1px solid #e7ecf1;
+    padding:10px 7% 10px 5%;
+}
+.produce-task>li>p{
+    margin-top:5px;
+    color:#8d8d8d;
+    text-align: center;
+}
+.finish{
+    display:inline-block;
+    padding:5px 20px;
+    background:#36c6d3;
+    color:#fff;
+    border-radius: 12px;
+}
+.line{
+    display: inline-block;
+    background: #d41112;
+    height:26px;
+    width:2px;
+    vertical-align: middle;
+}
+.diagonal{
+    display: inline-block;
+    background: #ebeff3;
+    height:50px;
+    width:2px;
+    transform:translate(-50%,-50%) rotate(45deg);
+    position:absolute;
+    top:50%;
+    left:70%;
+}
+.title-name{
+    font-weight: bold;
+    font-size:22px;
+    vertical-align: middle;
+}
+.title{
+    padding:10px 0;
+}
+.produce-record>li:first-child{
+    background: #25cb73;
+    color:#fff;
+}
+.produce-record>li{
+    float:left;
+    width:16.66%;
+    position:relative;
+    padding:25px 15px;
+    margin-bottom:20px;
+    border-right:1px solid #e7ecf1;
+}
+.produce-record>li>p:first-child{
+    text-align: left;
+    font-size:18px;
+    color:#8d8d8d;
+}
+.produce-record>li>p:last-child{
+    text-align: right;
+    font-size:18px;
+    color:#25cb73;
+}
+.produce-record>li:first-child>p{
+    color:#fff;
+}
+.produce-record>li:first-child>.diagonal{
+    color:#fff;
+}
+.table{
+    margin:0;
+}
+.table td{
+    border:1px solid #e7ecf1;
+}
+.table th{
+    border:1px solid #e7ecf1!important;
+}
+.table>thead{
+    background: #f6f8fa;
+}
+.table-box{
+    padding:20px;
+}
+.produce-num{
+    display:inline-block;
+    padding:5px;
+    background:#d70010;
+    color:#fff;
+    font-size:16px;
+}
+.produce-title{
+    width:100px;
+    height:30px;
+    line-height: 30px;
+    text-align: center;
+    color:#fff;
+    border-radius:0 15px 15px 0 ;
+    border-left:3px solid #000;
+    background: #25cb73;
+    margin:10px 0;
+}
+
+.record>.table{
+    margin:20px;
+}
+.record-list{
+    overflow: hidden;
+}
+.produce-left{
+    float:left;
+    width:30%;
+    font-weight: bold;
+}
+.produce-right{
+    float:left;
+    width:70%;
+}
+.record-list .col-md-4,.record-list .col-md-6{
+    margin:10px 0;
+}

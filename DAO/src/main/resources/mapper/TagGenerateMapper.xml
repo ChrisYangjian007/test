@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.TagGenerateMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PTagGenerate">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="generate_id" jdbcType="BIGINT" property="generateId"/>
+        <result column="all_code" jdbcType="VARCHAR" property="allCode"/>
+        <result column="alloted_code" jdbcType="VARCHAR" property="allotedCode"/>
+        <result column="un_allot_code" jdbcType="VARCHAR" property="unAllotCode"/>
+        <result column="loss_code" jdbcType="VARCHAR" property="lossCode"/>
+        <result column="print_batch" jdbcType="VARCHAR" property="printBatch"/>
+        <result column="tag_count" jdbcType="INTEGER" property="tagCount"/>
+        <result column="already_count" jdbcType="INTEGER" property="alreadyCount"/>
+        <result column="loss_count" jdbcType="INTEGER" property="lossCount"/>
+        <result column="prefix" jdbcType="VARCHAR" property="prefix"/>
+        <result column="rule_id" jdbcType="BIGINT" property="ruleId"/>
+        <result column="rule_name" jdbcType="VARCHAR" property="ruleName"/>
+        <result column="tag_spec_id" jdbcType="BIGINT" property="tagSpecId"/>
+        <result column="tag_spec_name" jdbcType="VARCHAR" property="tagSpecName"/>
+        <result column="is_finish" jdbcType="TINYINT" property="isFinish"/>
+        <result column="is_print" jdbcType="TINYINT" property="isPrint"/>
+        <result column="is_allot" jdbcType="TINYINT" property="isAllot"/>
+        <result column="start_no" jdbcType="INTEGER" property="startNo"/>
+        <result column="end_no" jdbcType="INTEGER" property="endNo"/>
+        <result column="current_no" jdbcType="BIGINT" property="currentNo"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="is_create" jdbcType="TINYINT" property="isCreate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="tag_type" jdbcType="INTEGER" property="tagType"/>
+        <result column="pesticide_license" jdbcType="VARCHAR" property="pesticideLicense"/>
+        <result column="tag_spec_no" jdbcType="VARCHAR" property="tagSpecNo"/>
+        <result column="remain_count" jdbcType="INTEGER" property="remainCount"/>
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="last_no" jdbcType="VARCHAR" property="lastNo"/>
+        <result column="measure" jdbcType="VARCHAR" property="measure"/>
+        <result column="dosage_type_name" jdbcType="VARCHAR" property="dosageTypeName"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="import_count" jdbcType="INTEGER" property="importCount"/>
+        <result column="import_date" jdbcType="TIMESTAMP" property="importDate"/>
+    </resultMap>
+
+    <select id="getTagGenerateByGrid" resultMap="BaseResultMap">
+        SELECT * FROM tag_generate WHERE 1=1
+        <choose>
+            <when test="status != null">
+                and status=#{status}
+            </when>
+            <otherwise>
+                and status!=6
+            </otherwise>
+        </choose>
+        ORDER BY update_date desc
+    </select>
+    <!--删除资源-->
+    <update id="deleteGenerateById" parameterType="com.dalian.sea.model.TagGenerate">
+    update tag_generate set status=6
+    where generate_id=#{generateId}
+  </update>
+    <select id="getTagGenerateById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM tag_generate WHERE   generate_id=#{0}
+
+  </select>
+    <select id="getTagGenerateByRule" resultMap="BaseResultMap">
+     select  *   from  tag_generate  WHERE rule_name=#{0}
+   order by end_no desc limit 1;
+  </select>
+    <insert id="addTagGenerate" keyProperty="generateId" useGeneratedKeys="true">
+        insert into tag_generate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="allCode != null">
+                all_code,
+            </if>
+            <if test="allotedCode != null">
+                alloted_code,
+            </if>
+            <if test="unAllotCode != null">
+                un_allot_code,
+            </if>
+            <if test="lossCode != null">
+                loss_code,
+            </if>
+            <if test="printBatch != null">
+                print_batch,
+            </if>
+            <if test="tagCount != null">
+                tag_count,
+            </if>
+            <if test="alreadyCount != null">
+                already_count,
+            </if>
+            <if test="lossCount != null">
+                loss_count,
+            </if>
+            <if test="prefix != null">
+                prefix,
+            </if>
+            <if test="ruleId != null">
+                rule_id,
+            </if>
+            <if test="ruleName != null">
+                rule_name,
+            </if>
+            <if test="tagSpecId != null">
+                tag_spec_id,
+            </if>
+            <if test="tagSpecName != null">
+                tag_spec_name,
+            </if>
+            <if test="isFinish != null">
+                is_finish,
+            </if>
+            <if test="isPrint != null">
+                is_print,
+            </if>
+            <if test="isAllot != null">
+                is_allot,
+            </if>
+            <if test="startNo != null">
+                start_no,
+            </if>
+            <if test="endNo != null">
+                end_no,
+            </if>
+            <if test="currentNo != null">
+                current_no,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="isCreate != null">
+                is_create,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="tagType != null">
+                tag_type,
+            </if>
+            <if test="pesticideLicense != null">
+                pesticide_license,
+            </if>
+            <if test="tagSpecNo != null">
+                tag_spec_no,
+            </if>
+            <if test="remainCount != null">
+                remain_count,
+            </if>
+            <if test="cName != null">
+                c_name,
+            </if>
+            <if test="lastNo != null">
+                last_no,
+            </if>
+            <if test="measure != null">
+                measure,
+            </if>
+            <if test="dosageTypeName != null">
+                dosage_type_name,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createUserName != null">
+                create_user_name,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+            <if test="updateUserId != null">
+                update_user_id,
+            </if>
+            <if test="listIndex != null">
+                list_index,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="allCode != null">
+                #{allCode,jdbcType=VARCHAR},
+            </if>
+            <if test="allotedCode != null">
+                #{allotedCode,jdbcType=VARCHAR},
+            </if>
+            <if test="unAllotCode != null">
+                #{unAllotCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lossCode != null">
+                #{lossCode,jdbcType=VARCHAR},
+            </if>
+            <if test="printBatch != null">
+                #{printBatch,jdbcType=VARCHAR},
+            </if>
+            <if test="tagCount != null">
+                #{tagCount,jdbcType=INTEGER},
+            </if>
+            <if test="alreadyCount != null">
+                #{alreadyCount,jdbcType=INTEGER},
+            </if>
+            <if test="lossCount != null">
+                #{lossCount,jdbcType=INTEGER},
+            </if>
+            <if test="prefix != null">
+                #{prefix,jdbcType=VARCHAR},
+            </if>
+            <if test="ruleId != null">
+                #{ruleId,jdbcType=BIGINT},
+            </if>
+            <if test="ruleName != null">
+                #{ruleName,jdbcType=VARCHAR},
+            </if>
+            <if test="tagSpecId != null">
+                #{tagSpecId,jdbcType=BIGINT},
+            </if>
+            <if test="tagSpecName != null">
+                #{tagSpecName,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinish != null">
+                #{isFinish,jdbcType=TINYINT},
+            </if>
+            <if test="isPrint != null">
+                #{isPrint,jdbcType=TINYINT},
+            </if>
+            <if test="isAllot != null">
+                #{isAllot,jdbcType=TINYINT},
+            </if>
+            <if test="startNo != null">
+                #{startNo,jdbcType=INTEGER},
+            </if>
+            <if test="endNo != null">
+                #{endNo,jdbcType=INTEGER},
+            </if>
+            <if test="currentNo != null">
+                #{currentNo,jdbcType=BIGINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="isCreate != null">
+                #{isCreate,jdbcType=TINYINT},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="tagType != null">
+                #{tagType,jdbcType=INTEGER},
+            </if>
+            <if test="pesticideLicense != null">
+                #{pesticideLicense,jdbcType=VARCHAR},
+            </if>
+            <if test="tagSpecNo != null">
+                #{tagSpecNo,jdbcType=VARCHAR},
+            </if>
+            <if test="remainCount != null">
+                #{remainCount,jdbcType=INTEGER},
+            </if>
+            <if test="cName != null">
+                #{cName,jdbcType=VARCHAR},
+            </if>
+            <if test="lastNo != null">
+                #{lastNo,jdbcType=VARCHAR},
+            </if>
+            <if test="measure != null">
+                #{measure,jdbcType=VARCHAR},
+            </if>
+            <if test="dosageTypeName != null">
+                #{dosageTypeName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createUserName != null">
+                #{createUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null">
+                #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="listIndex != null">
+                #{listIndex,jdbcType=INTEGER},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectTagGenerateBy" resultMap="BaseResultMap">
+        SELECT * FROM tag_generate
+        <trim prefix="where" suffixOverrides="and">
+            <if test="startNo!=null and endNo!=null ">
+                end_no &gt;= #{startNo} and
+                start_no  &lt;= #{endNo} and
+            </if>
+            <if test="ruleName !=null">
+                rule_name =#{ruleName} and
+            </if>
+            <if test="isPrint != null">
+                is_print =#{isPrint}
+            </if>
+        </trim>
+
+    </select>
+    <update id="updateGenerateByGenerate" parameterType="com.dalian.sea.model.TagGenerate">
+        update tag_generate
+        <set>
+            <if test="allotedCode != null">
+                alloted_code = #{allotedCode},
+            </if>
+            <if test="unAllotCode != null">
+                un_allot_code = #{unAllotCode},
+            </if>
+            <if test="alreadyCount != null">
+                already_count = #{alreadyCount},
+            </if>
+            <if test="remainCount != null">
+                remain_count = #{remainCount},
+            </if>
+            <if test="lossCount != null">
+                loss_count = #{lossCount},
+            </if>
+            <if test="isPrint != null">
+                is_print =#{isPrint},
+            </if>
+            <if test="importCount != null">
+                import_count =#{importCount},
+            </if>
+            <if test="importDate != null">
+                import_date =#{importDate}
+            </if>
+        </set>
+        where generate_id = #{generateId}
+    </update>
+    <select id="getTagCountTotal" resultType="java.lang.Integer">
+    SELECT SUM(tag_count) FROM tag_generate WHERE status!=6
+  </select>
+
+    <select id="getMonthTagCount" resultType="java.lang.Integer">
+    SELECT SUM(tag_count) FROM tag_generate
+    WHERE YEAR(create_date)=YEAR(NOW()) AND MONTH(create_date)=MONTH(NOW()) AND status!=6
+  </select>
+
+    <select id="getGenerateCountByDate" resultType="java.lang.Integer">
+    SELECT SUM(tag_count)
+    FROM tag_generate WHERE status!=6
+    AND DATE_FORMAT(create_date,'%Y-%m-%d')=#{date}
+  </select>
+
+    <select id="getGenerateCountByYearMonth" resultType="java.lang.Integer">
+    SELECT SUM(tag_count)
+    FROM tag_generate WHERE status!=6
+    AND DATE_FORMAT(create_date,'%Y-%m')=#{date}
+    </select>
+</mapper>

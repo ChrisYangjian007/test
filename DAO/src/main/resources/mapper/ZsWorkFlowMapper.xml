@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsWorkFlowMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsWorkFlow">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="work_flow_id" jdbcType="BIGINT" property="workFlowId"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="category" jdbcType="TINYINT" property="category"/>
+        <result column="a_level" jdbcType="INTEGER" property="aLevel"/>
+        <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+        <result column="first_id" jdbcType="BIGINT" property="firstId"/>
+        <result column="is_tree" jdbcType="TINYINT" property="isTree"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="flage" jdbcType="VARCHAR" property="flage"/>
+        <result column="flage_name" jdbcType="VARCHAR" property="flageName"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+
+    <!--根据父级id获取工艺流程-->
+    <select id="getWorkFlowByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT * FROM zs_work_flow WHERE status = 1 and parent_id=#{parnetId}
+    </select>
+
+    <!--根据父级id 获取生产任务-->
+    <select id="getProduceTaskByWorkFlow" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT zf.* FROM zs_work_flow zf LEFT JOIN zs_work_process zp ON zf.work_flow_id=zp.work_flow_id
+    WHERE zf.status = 1 AND zp.status=1 AND zf.work_flow_id=#{workFlowId} GROUP BY zf.work_flow_id
+    </select>
+
+    <!--根据id获取工艺流程-->
+    <select id="getWorkFlowById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT zwf.*,wf.c_name as parentName FROM zs_work_flow zwf left join zs_work_flow wf on wf.work_flow_id=zwf.parent_id WHERE zwf.work_flow_id=#{id}
+    </select>
+
+    <!--获取最大顺序-->
+    <select id="getWorkFlowMaxListIndex" resultMap="BaseResultMap">
+    SELECT max(list_index) as list_index FROM zs_work_flow WHERE status!=6 limit 1
+    </select>
+
+    <!--添加工艺流程-->
+    <insert id="addZsWorkFlow" parameterType="com.dalian.sea.model.ZsWorkFlow" keyProperty="workFlowId"
+            useGeneratedKeys="true">
+        insert into zs_work_flow(c_name,create_date,update_date,create_user_id
+        <if test="companyId != null">,company_id</if>
+        <if test="code != null">,code</if>
+        <if test="category != null">,category</if>
+        <if test="aLevel != null">,a_level</if>
+        <if test="parentId != null">,parent_id</if>
+        <if test="firstId != null">,first_id</if>
+        <if test="isTree != null">,is_tree</if>
+        <if test="listIndex != null">,list_index</if>
+        <if test="remark != null">,remark</if>
+        <if test="flage != null">,flage</if>
+        <if test="flageName != null">,flage_name</if>
+        ) values (#{cName},now(),now(),#{createUserId}
+        <if test="companyId != null">,#{companyId}</if>
+        <if test="code != null">,#{code}</if>
+        <if test="category != null">,#{category}</if>
+        <if test="aLevel != null">,#{aLevel}</if>
+        <if test="parentId != null">,#{parentId}</if>
+        <if test="firstId != null">,#{firstId}</if>
+        <if test="isTree != null">,#{isTree}</if>
+        <if test="listIndex != null">,#{listIndex}</if>
+        <if test="remark != null">,#{remark}</if>
+        <if test="flage != null">,#{flage}</if>
+        <if test="flageName != null">,#{flageName}</if>
+        )
+    </insert>
+
+    <!--修改工艺流程-->
+    <update id="updateWorkFlow" parameterType="com.dalian.sea.model.ZsWorkFlow">
+        update zs_work_flow
+        <trim prefix="set" suffixOverrides="," suffix="where work_flow_id=#{workFlowId}">
+            <if test="companyId != null">company_id=#{companyId},</if>
+            <if test="code != null">code=#{code},</if>
+            <if test="cName != null">c_name=#{cName},</if>
+            <if test="category != null">category=#{category},</if>
+            <if test="aLevel != null">a_level=#{aLevel},</if>
+            <if test="parentId != null">parent_id=#{parentId},</if>
+            <if test="firstId != null">first_id=#{firstId},</if>
+            <if test="isTree != null">is_tree=#{isTree},</if>
+            <if test="listIndex != null">list_index=#{listIndex},</if>
+            <if test="remark != null">remark=#{remark},</if>
+            <if test="flage != null">flage=#{flage},</if>
+            <if test="flageName != null">flage_name=#{flageName},</if>
+            <if test="createUserId != null">create_user_id=#{createUserId},</if>
+            <if test="createDate != null">create_date=#{createDate},</if>
+            <if test="updateUserId != null">update_user_id=#{updateUserId},</if>
+            <if test="updateDate != null">update_date=#{updateDate},</if>
+            <if test="status != null">status=#{status},</if>
+        </trim>
+    </update>
+
+    <!--获取全部工艺流程-->
+    <select id="getAllWorkFlow" resultMap="BaseResultMap">
+    SELECT * FROM zs_work_flow WHERE status!=6
+   </select>
+
+    <!--通过parentId和cName获取工艺流程-->
+    <select id="getWorkFlowByParentIdAndName" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.ZsWorkFlow">
+    SELECT * FROM zs_work_flow WHERE status=1 and parent_id=#{parentId} and c_name=#{cName}
+    </select>
+
+    <!--删除-->
+    <update id="deleteWorkFlow" parameterType="com.dalian.sea.model.ZsWorkFlow">
+        UPDATE zs_work_flow SET status=6
+        <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+        WHERE work_flow_id=#{workFlowId}
+    </update>
+
+    <!--通过produceTaskId获取工艺流程-->
+    <select id="getWorkFlowByProduceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT zwf.* FROM zs_work_flow zwf WHERE zwf.status=1 AND zwf.work_flow_id=(
+    SELECT ztdv.work_flow_id FROM zs_task_detail_value ztdv WHERE ztdv.produce_task_id=#{produceTaskId}
+    )
+   </select>
+
+    <select id="getWorkFlowNameById" parameterType="java.lang.Long" resultType="java.lang.String">
+    select c_name from zs_work_flow
+    where work_flow_id=#{workFlowId}
+   </select>
+</mapper>

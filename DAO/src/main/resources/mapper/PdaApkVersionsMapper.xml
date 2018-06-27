@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PdaApkVersionsMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.PdaApkVersions">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="app_id" jdbcType="BIGINT" property="appId" />
+    <result column="app_name" jdbcType="VARCHAR" property="appName" />
+    <result column="app_url" jdbcType="VARCHAR" property="appUrl" />
+    <result column="service_url" jdbcType="VARCHAR" property="serviceUrl" />
+    <result column="app_versions" jdbcType="VARCHAR" property="appVersions" />
+    <result column="app_versions_code" jdbcType="VARCHAR" property="appVersionsCode" />
+    <result column="versions_remarks" jdbcType="VARCHAR" property="versionsRemarks" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+  </resultMap>
+  <!--获取指定APP-->
+  <select id="getPdaApkVersionsById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from pda_apk_versions where is_delete = 1 and id = #{id}
+  </select>
+
+  <!--根据名称获取所有APP版本-->
+  <select id="getAllPdaApkVersionsByAppName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from pda_apk_versions where is_delete = 1 and app_name=#{appName} order by app_versions desc,update_date desc
+  </select>
+
+  <!--根据情况获取所有APP版本-->
+  <select id="getAllPdaApkVersionsBy" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from pda_apk_versions where is_delete = 1 order by app_versions desc,update_date desc
+  </select>
+
+  <!--根据情况获取最新版本-->
+  <select id="getNewPdaApkVersionsBy" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.PdaApkVersions">
+    select * from pda_apk_versions where is_delete = 1
+    <if test="appName!=null and appName!=''"> and app_name=#{appName}</if>
+    <if test="appVersions!=null and appVersions!=''"> and app_versions=#{appVersions}</if>
+    order by app_versions desc,update_date desc LIMIT 1
+  </select>
+
+  <!--添加App-->
+  <insert id="addPdaApkVersions" parameterType="com.dalian.sea.model.PdaApkVersions" keyProperty="appId" useGeneratedKeys="true">
+    insert into pda_apk_versions (app_name,app_url,service_url,app_versions,app_versions_code,create_date,update_date,create_user_id
+    <if test="versionsRemarks!=null and versionsRemarks!=''">,versions_remarks</if>
+    ) values (#{appName},#{appUrl},#{serviceUrl},#{appVersions},#{appVersionsCode},now(),now(),#{createUserId}
+    <if test="versionsRemarks!=null and versionsRemarks!=''">,#{versionsRemarks}</if>
+    )
+  </insert>
+
+</mapper>

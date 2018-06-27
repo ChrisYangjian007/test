@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsStockMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsStock">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="stock_id" jdbcType="BIGINT" property="stockId"/>
+        <result column="related_id" jdbcType="BIGINT" property="relatedId"/>
+        <result column="is_expend" jdbcType="TINYINT" property="isExpend"/>
+        <result column="weight" jdbcType="DECIMAL" property="weight"/>
+        <result column="in_weight" jdbcType="DECIMAL" property="inWeight"/>
+        <result column="out_weight" jdbcType="DECIMAL" property="outWeight"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="is_material" jdbcType="BIGINT" property="isMaterial"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="product_status" jdbcType="BIGINT" property="productStatus"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="time_warn" jdbcType="INTEGER" property="timeWarn"/>
+        <result column="stock_warn" jdbcType="INTEGER" property="stockWarn"/>
+        <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>
+        <result column="warehouseName" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="MaterialName" jdbcType="VARCHAR" property="materialName"/>
+        <result column="ProductStatusName" jdbcType="VARCHAR" property="productStatusName"/>
+        <result column="rest_status" jdbcType="TINYINT" property="restStatus"/>
+        <result column="in_create_date" jdbcType="TIMESTAMP" property="inCreateDate"/>
+    </resultMap>
+    <resultMap id="PZsStock" type="com.dalian.sea.parameter.PZsStock" extends="BaseResultMap">
+
+    </resultMap>
+    <insert id="insertZsStock" parameterType="com.dalian.sea.model.ZsStock" keyProperty="stockId"
+            useGeneratedKeys="true">
+        INSERT INTO zs_stock(
+        <trim prefixOverrides=",">
+            <if test="relatedId !=null">
+                ,related_id
+            </if>
+            <if test="isExpend !=null">
+                ,is_expend
+            </if>
+            <if test="weight !=null">
+                ,weight
+            </if>
+            <if test="inWeight !=null">
+                ,in_weight
+            </if>
+            <if test="outWeight !=null">
+                ,out_weight
+            </if>
+            <if test="productId !=null">
+                ,product_id
+            </if>
+            <if test="productName !=null and productName !=''">
+                ,product_name
+            </if>
+            <if test="remark !=null and remark !=''">
+                ,remark
+            </if>
+            <if test="companyId !=null">
+                ,company_id
+            </if>
+            <if test="listIndex !=null">
+                ,list_index
+            </if>
+            <if test="status !=null">
+                ,status
+            </if>
+            <if test="isMaterial !=null">
+                ,is_material
+            </if>
+            <if test="unitId !=null">
+                ,unit_id
+            </if>
+            <if test="unitName !=null and unitName !=''">
+                ,unit_name
+            </if>
+            <if test="createDate !=null">
+                ,create_date
+            </if>
+            <if test="createUserId !=null">
+                ,create_user_id
+            </if>
+            <if test="updateDate !=null">
+                ,update_date
+            </if>
+            <if test="updateUserId !=null">
+                ,update_user_id
+            </if>
+            <if test="batchNo !=null and batchNo !=''">
+                ,batch_no
+            </if>
+            <if test="productStatus !=null">
+                ,product_status
+            </if>
+            <if test="productSpecName !=null and productSpecName !=null">
+                ,product_spec_name
+            </if>
+            <if test="productSpecId !=null">
+                ,product_spec_id
+            </if>
+            <if test="warehouseId !=null">
+                ,warehouse_id
+            </if>
+            <if test="timeWarn !=null">
+                ,time_warn
+            </if>
+            <if test="stockWarn !=null">
+                ,stock_warn
+            </if>
+            <if test="restStatus !=null">
+                ,rest_status
+            </if>
+            <if test="inCreateDate !=null">
+                ,in_create_date
+            </if>
+        </trim>
+        ) VALUES (
+        <trim prefixOverrides=",">
+            <if test="relatedId !=null">
+                ,#{relatedId}
+            </if>
+            <if test="isExpend !=null">
+                ,#{isExpend}
+            </if>
+            <if test="weight !=null">
+                ,#{weight}
+            </if>
+            <if test="inWeight !=null">
+                ,#{inWeight}
+            </if>
+            <if test="outWeight !=null">
+                ,#{outWeight}
+            </if>
+            <if test="productId !=null">
+                ,#{productId}
+            </if>
+            <if test="productName !=null and productName !=''">
+                ,#{productName}
+            </if>
+            <if test="remark !=null and remark !=''">
+                ,#{remark}
+            </if>
+            <if test="companyId !=null">
+                ,#{companyId}
+            </if>
+            <if test="listIndex !=null">
+                ,#{listIndex}
+            </if>
+            <if test="status !=null">
+                ,#{status}
+            </if>
+            <if test="isMaterial !=null">
+                ,#{isMaterial}
+            </if>
+            <if test="unitId !=null">
+                ,#{unitId}
+            </if>
+            <if test="unitName !=null and unitName !=''">
+                ,#{unitName}
+            </if>
+            <if test="createDate !=null">
+                ,now()
+            </if>
+            <if test="createUserId !=null">
+                ,#{createUserId}
+            </if>
+            <if test="updateDate !=null">
+                ,now()
+            </if>
+            <if test="updateUserId !=null">
+                ,#{updateUserId}
+            </if>
+            <if test="batchNo !=null and batchNo !=''">
+                ,#{batchNo}
+            </if>
+            <if test="productStatus !=null">
+                ,#{productStatus}
+            </if>
+            <if test="productSpecName !=null and productSpecName !=null">
+                ,#{productSpecName}
+            </if>
+            <if test="productSpecId !=null">
+                ,#{productSpecId}
+            </if>
+            <if test="warehouseId !=null">
+                ,#{warehouseId}
+            </if>
+            <if test="timeWarn !=null">
+                ,#{timeWarn}
+            </if>
+            <if test="stockWarn !=null">
+                ,#{stockWarn}
+            </if>
+            <if test="restStatus !=null">
+                ,#{restStatus}
+            </if>
+            <if test="inCreateDate !=null">
+                ,#{inCreateDate}
+            </if>
+        </trim>
+        )
+    </insert>
+    <select id="getZsStockByGrid" resultMap="PZsStock" parameterType="com.dalian.sea.parameter.PZsStock">
+        SELECT
+        zs.*,
+        bddd.c_name as materialName,
+        bddd2.c_name as productStatusName,
+        zw.warning_day AS warningDay,
+        DATEDIFF(DATE_ADD(zs.in_create_date,INTERVAL zw.warning_day day),NOW()) AS dateLast,
+        zs.weight -zs.stock_warn AS weightSum
+        FROM zs_stock as zs
+        LEFT JOIN ba_data_dictionary_details as bddd ON zs.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details as bddd2 ON zs.product_status =bddd2.data_dictionary_details_id
+        LEFT JOIN zs_warehouse as zw ON zs.warehouse_id =zw.warehouse_id
+        <trim prefix="where" suffixOverrides="and">
+            zs.rest_status !=0 AND zs.status !=6 AND
+            <if test="batchNo !=null and batchNo !=''">
+                zs.batch_no =#{batchNo} and
+            </if>
+            <if test="warehouseId !=null">
+                zs.warehouse_id =#{warehouseId} and
+            </if>
+            <if test="isMaterial !=null">
+                zs.is_material =#{isMaterial} and
+            </if>
+            <if test="productStatus !=null">
+                zs.product_status =#{productStatus} and
+            </if>
+            <if test="productId !=null">
+                zs.product_id =#{productId} and
+            </if>
+            <if test="productSpecId !=null">
+                zs.product_spec_name =#{productSpecName} and
+            </if>
+            <if test="beginTime !=null and endTime !=null">
+                zs.in_create_date between #{beginTime} and #{endTime} and
+            </if>
+            <choose>
+                <when test="status != null and status != ''">
+                    zs.status=#{status} and
+                </when>
+                <otherwise>
+                    zs.status != 6 and
+                </otherwise>
+            </choose>
+        </trim>
+        ORDER BY
+        <![CDATA[
+       CASE WHEN dateLast <= 0 AND (zs.weight-zs.stock_warn)<= 0 THEN 1 ELSE 10 END,
+       CASE WHEN dateLast <= 0 THEN 2 ELSE 10 END,
+       CASE WHEN (zs.weight-zs.stock_warn) <= 0 THEN 3 ELSE 10 END,
+       CASE WHEN dateLast > 0 THEN zs.in_create_date ELSE 10 END DESC
+       ]]>
+    </select>
+
+    <select id="getWarehouse" resultMap="BaseResultMap">
+        SELECT zw.c_name AS warehouseName,zw.warehouse_id AS warehouseId
+        FROM zs_stock zs LEFT JOIN zs_warehouse zw ON zw.warehouse_id=zs.warehouse_id
+        WHERE zs.status =1 AND zs.rest_status!=0 AND zw.warehouse_type !=1
+        AND zs.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY zw.c_name
+        ORDER BY zw.warehouse_id
+    </select>
+
+    <select id="getGoodsTypeByWarehouseId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select bddd.data_dictionary_details_id as isMaterial, bddd.c_name as materialName
+    from zs_stock zcp
+    left join ba_data_dictionary_details bddd on zcp.is_material=bddd.data_dictionary_details_id
+    where zcp.status!=6 AND zcp.warehouse_id=#{warehouseId} AND rest_status!=0
+    GROUP BY bddd.c_name
+  </select>
+
+    <select id="getProductName" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsStock">
+    SELECT product_id,product_name FROM zs_stock
+    WHERE warehouse_id=#{warehouseId} AND is_material=#{isMaterial} AND status!=6 AND rest_status!=0
+    GROUP BY product_id
+  </select>
+
+    <select id="getProductStatus" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsStock">
+    SELECT bddd.data_dictionary_details_id AS productStatus, bddd.c_name AS productStatusName
+    FROM zs_stock zcp
+    LEFT JOIN ba_data_dictionary_details bddd ON zcp.product_status=bddd.data_dictionary_details_id
+    WHERE zcp.status!=6 AND rest_status!=0
+    AND zcp.warehouse_id=#{warehouseId}
+    AND zcp.is_material=#{isMaterial}
+    AND zcp.product_id=#{productId}
+    GROUP BY bddd.c_name
+  </select>
+
+    <select id="getProductSpec" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsStock">
+    SELECT product_spec_name
+    FROM zs_stock
+    WHERE warehouse_id=#{warehouseId}
+    AND is_material=#{isMaterial}
+    AND product_id=#{productId}
+    AND product_status=#{productStatus}
+    AND status!=6 AND rest_status!=0
+    GROUP BY product_spec_name
+  </select>
+
+    <select id="getBatchNo" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsStock">
+      SELECT batch_no
+      FROM zs_stock
+      WHERE warehouse_id=#{warehouseId}
+      AND is_material=#{isMaterial}
+      AND product_id=#{productId}
+      AND product_status=#{productStatus}
+      AND product_spec_name=#{productSpecName}
+      AND status!=6 AND rest_status!=0
+    </select>
+
+    <select id="getUnitAndWeight" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsStock">
+      SELECT unit_id,unit_name,weight
+      FROM zs_stock
+      WHERE warehouse_id=#{warehouseId}
+      AND is_material=#{isMaterial}
+      AND product_id=#{productId}
+      AND product_status=#{productStatus}
+      AND product_spec_name=#{productSpecName}
+      AND batch_no=#{batchNo}
+      AND status!=6 AND rest_status!=0
+    </select>
+
+    <select id="getStockIsMaterial" resultMap="BaseResultMap">
+    select bddd.data_dictionary_details_id as isMaterial, bddd.c_name as materialName
+    from zs_stock zcp
+    left join ba_data_dictionary_details bddd on zcp.is_material=bddd.data_dictionary_details_id
+    where zcp.status!=6
+    GROUP BY bddd.c_name
+  </select>
+
+    <select id="getStockProductStatus" resultMap="BaseResultMap">
+    select bddd.data_dictionary_details_id as productStatus, bddd.c_name as productStatusName
+    from zs_stock zcp
+    left join ba_data_dictionary_details bddd on zcp.product_status=bddd.data_dictionary_details_id
+    where zcp.status!=6
+    GROUP BY bddd.c_name
+  </select>
+
+    <select id="getOneZsStock" resultMap="BaseResultMap" parameterType="com.dalian.sea.parameter.PZsStock">
+        SELECT *
+        FROM zs_stock
+        WHERE warehouse_id=#{warehouseId}
+        AND is_material=#{isMaterial}
+        AND product_id=#{productId}
+        AND product_status=#{productStatus}
+        AND product_spec_name=#{productSpecName}
+        AND batch_no=#{batchNo}
+        AND status!=6
+    </select>
+    <select id="getZsStockByMuchOption" resultMap="BaseResultMap">
+        SELECT * FROM zs_stock WHERE status !=6
+        <if test="batchNo !=null and batchNo !=''">
+            AND batch_no =#{batchNo}
+        </if>
+        <if test="isMaterial !=null">
+            AND is_material =#{isMaterial}
+        </if>
+        <if test="productId !=null">
+            AND product_id =#{productId}
+        </if>
+        <if test="productStatus !=null">
+            AND product_status =#{productStatus}
+        </if>
+        <if test="productSpecName !=null and productSpecName !=''">
+            AND product_spec_name =#{productSpecName}
+        </if>
+        <if test="warehouseId !=null">
+            AND warehouse_id =#{warehouseId}
+        </if>
+    </select>
+
+    <update id="updateWeight">
+        UPDATE zs_stock
+        SET weight=#{weight}
+        , out_weight=#{outWeight}
+        WHERE stock_id=#{stockId}
+    </update>
+    <update id="updateWeightByInsert">
+        UPDATE zs_stock
+        SET weight=#{weight}
+        ,in_weight=#{inWeight}
+        ,rest_status =#{restStatus}
+        ,update_user_id =#{createUserId}
+        ,in_create_date =#{inCreateDate}
+        ,stock_warn=#{stockWarn}
+        WHERE stock_id=#{stockId}
+    </update>
+
+    <select id="getStockById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT * FROM zs_stock
+        WHERE stock_id=#{stockId}
+    </select>
+
+    <update id="updateRestStatus" parameterType="java.lang.Long">
+        UPDATE zs_stock
+        SET rest_status=0
+        WHERE stock_id=#{stockId}
+    </update>
+    <update id="updateStockBySeaCucumber">
+        UPDATE zs_stock
+        <trim prefix="set" suffixOverrides="," suffix=" WHERE stock_id =#{stockId}">
+            <if test="relatedId !=null">
+                related_id =#{relatedId},
+            </if>
+            <if test="isExpend !=null">
+                is_expend =#{isExpend},
+            </if>
+            <if test="weight !=null">
+                weight =#{weight},
+            </if>
+            <if test="inWeight !=null">
+                in_weight =#{inWeight},
+            </if>
+            <if test="outWeight !=null">
+                out_weight =#{outWeight},
+            </if>
+            <if test="productId !=null">
+                product_id =#{productId},
+            </if>
+            <if test="productName !=null and productName!=''">
+                product_name =#{productName},
+            </if>
+            <if test="remark !=null and remark !=''">
+                remark =#{remark},
+            </if>
+            <if test="companyId !=null">
+                company_id =#{companyId},
+            </if>
+            <if test="listIndex !=null">
+                list_index =#{listIndex},
+            </if>
+            <if test="status !=null">
+                status =#{status},
+            </if>
+            <if test="isMaterial !=null">
+                is_material =#{isMaterial},
+            </if>
+            <if test="unitId !=null">
+                unit_id =#{unitId},
+            </if>
+            <if test="unitName !=null and unitName !=''">
+                unit_name =#{unitName},
+            </if>
+            <if test="updateDate !=null">
+                update_date =#{updateDate},
+            </if>
+            <if test="updateUserId !=null">
+                update_user_id =#{updateUserId},
+            </if>
+            <if test="batchNo !=null and batchNo !=''">
+                batch_no =#{batchNo},
+            </if>
+            <if test="productStatus !=null">
+                product_status =#{productStatus},
+            </if>
+            <if test="productSpecName !=null and productSpecName !=''">
+                product_spec_name =#{productSpecName},
+            </if>
+            <if test="warehouseId !=null">
+                warehouse_id =#{warehouseId},
+            </if>
+            <if test="timeWarn !=null">
+                time_warn =#{timeWarn},
+            </if>
+            <if test="stockWarn !=null">
+                stock_warn =#{stockWarn},
+            </if>
+            <if test="restStatus !=null">
+                rest_status =#{restStatus},
+            </if>
+        </trim>
+    </update>
+
+    <select id="getAllStock" resultMap="BaseResultMap">
+        SELECT zs.*,bddd.c_name as materialName,bddd2.c_name as productStatusName FROM zs_stock as zs
+        LEFT JOIN ba_data_dictionary_details as bddd ON zs.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details as bddd2 ON zs.product_status =bddd2.data_dictionary_details_id
+        WHERE zs.status!=6 AND zs.rest_status!=0
+    </select>
+    <select id="getStockByStockIDs" resultMap="BaseResultMap">
+        SELECT zs.*,bddd.c_name AS materialName,bddd2.c_name AS productStatusName,zw.c_name AS warehouseName
+        FROM zs_stock AS zs
+        LEFT JOIN ba_data_dictionary_details AS bddd ON zs.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details AS bddd2 ON zs.product_status =bddd2.data_dictionary_details_id
+        LEFT JOIN zs_warehouse zw ON zw.warehouse_id=zs.warehouse_id
+        WHERE zs.status !=6
+        AND zs.stock_id IN
+        <foreach collection="array" index="index" item="stockIDs" open="(" separator="," close=")">
+            #{stockIDs}
+        </foreach>
+    </select>
+    <select id="getStockByStockIds" resultMap="BaseResultMap">
+        SELECT zs.*,bddd.c_name AS materialName,bddd2.c_name AS productStatusName,zw.c_name AS warehouseName
+        FROM zs_stock AS zs
+        LEFT JOIN ba_data_dictionary_details AS bddd ON zs.is_material=bddd.data_dictionary_details_id
+        LEFT JOIN ba_data_dictionary_details AS bddd2 ON zs.product_status =bddd2.data_dictionary_details_id
+        LEFT JOIN zs_warehouse zw ON zw.warehouse_id=zs.warehouse_id
+        WHERE zs.status !=6
+        AND zw.warehouse_type!=1
+        AND zs.stock_id IN
+        <foreach collection="array" index="index" item="stockIDs" open="(" separator="," close=")">
+            #{stockIDs}
+        </foreach>
+    </select>
+    <select id="getProductSpecForStock" resultMap="BaseResultMap">
+    SELECT zcp.*
+    FROM zs_stock zcp
+    WHERE zcp.status!=6 AND rest_status!=0
+    AND zcp.warehouse_id=#{warehouseId}
+    AND zcp.is_material=#{isMaterial}
+    AND zcp.product_id=#{productId}
+    GROUP BY zcp.product_spec_name
+    </select>
+
+    <select id="countDetail" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM zs_stock zs
+        LEFT JOIN zs_warehouse zw ON zs.warehouse_id=zw.warehouse_id
+        WHERE zs.status!=6 AND zs.rest_status!=0 AND zw.warehouse_type!=1;
+    </select>
+    <select id="getStockListByBatchForEnterStock" resultMap="PZsStock">
+        SELECT
+        zs.*,
+        bddd.c_name as materialName,
+        bddd.data_dictionary_details_id as isMaterial
+        FROM zs_stock zs
+        LEFT JOIN ba_data_dictionary_details bddd ON bddd.data_dictionary_details_id =zs.is_material
+        WHERE zs.batch_no =#{batchNo} and zs.status !=6 and zs.rest_status=1
+        <!--
+        <if test="goodsTypeId !=null">
+            AND zs.is_material =#{goodsTypeId}
+        </if>
+        <if test="productId !=null">
+            AND zs.product_id =#{productId}
+        </if>
+        GROUP BY
+        <if test="goodsTypeId ==null and productId ==null">
+            zs.is_material
+        </if>
+        <if test="goodsTypeId !=null and productId==null">
+            zs.product_id
+        </if>
+        <if test="goodsTypeId !=null and productId!=null">
+            zs.product_spec_name
+        </if>
+        -->
+    </select>
+    <select id="getReportCountListFromStock" resultMap="BaseResultMap">
+    SELECT
+    pesd.is_material,
+    bddd.c_name AS materialName,
+    spt2.product_type_id AS productTypeId,
+    spt2.c_name AS productTypeName,
+    pesd.product_id,
+    pesd.product_name,
+    pesd.product_spec_name,
+    SUM(pesd.weight) AS weightSum,
+    pesd.unit_id,
+    pesd.unit_name
+    FROM zs_stock pesd
+    LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+    LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+    LEFT JOIN ba_data_dictionary_details bddd ON pesd.is_material= bddd.data_dictionary_details_id
+    WHERE pesd.status !=6
+    <if test="materialArray !=null and materialArray.length!=0">
+        AND pesd.is_material IN
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+    </if>
+    <if test="productTypeArray !=null and productTypeArray.length!=0">
+        AND spt2.product_type_id IN
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+    </if>
+    <if test="productIdArray !=null and productIdArray.length!=0">
+        AND spt1.product_type_id IN
+        <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+            #{item3}
+        </foreach>
+    </if>
+    <if test="productSpecArray !=null and productSpecArray.length!=0">
+        AND pesd.product_spec_name IN
+        <foreach item="item4" index="index" collection="productSpecArray" separator="," open="(" close=")">
+            #{item4}
+        </foreach>
+    </if>
+    GROUP BY ${remark}
+    </select>
+    <select id="getProductTypeListFromStock" resultMap="BaseResultMap">
+        SELECT
+        spt2.product_type_id AS productTypeId,
+        spt2.c_name AS productTypeName
+        FROM zs_stock pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND
+        pesd.is_material in
+        <foreach item="array" index="index" collection="array" separator="," open="(" close=")">
+            #{array}
+        </foreach>
+        GROUP BY spt2.product_type_id
+    </select>
+    <select id="getProductIdListFromStock" resultMap="BaseResultMap">
+        SELECT
+        spt1.product_type_id AS productId,
+        spt1.c_name AS productName
+        FROM zs_stock pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND
+        pesd.is_material in
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        AND
+        spt2.product_type_id in
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+        GROUP BY spt1.product_type_id
+    </select>
+
+    <select id="getProductSpecNameFromStock" resultMap="BaseResultMap">
+        SELECT
+        pesd.product_spec_name
+        FROM zs_stock pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND pesd.is_material IN
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        AND spt2.product_type_id IN
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+        AND spt1.product_type_id IN
+        <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+            #{item3}
+        </foreach>
+        GROUP BY pesd.product_spec_name
+    </select>
+
+    <select id="getUnitIdFromStock" resultMap="BaseResultMap">
+        SELECT
+        pesd.unit_id,
+        pesd.unit_name
+        FROM zs_stock pesd
+        LEFT JOIN sys_product_type spt1 ON pesd.product_id =spt1.product_type_id
+        LEFT JOIN sys_product_type spt2 ON spt1.parent_id =spt2.product_type_id
+        WHERE pesd.status !=6
+        AND pesd.is_material IN
+        <foreach item="item1" index="index" collection="materialArray" separator="," open="(" close=")">
+            #{item1}
+        </foreach>
+        AND spt2.product_type_id IN
+        <foreach item="item2" index="index" collection="productTypeArray" separator="," open="(" close=")">
+            #{item2}
+        </foreach>
+        AND spt1.product_type_id IN
+        <foreach item="item3" index="index" collection="productIdArray" separator="," open="(" close=")">
+            #{item3}
+        </foreach>
+        AND pesd.product_spec_name IN
+        <foreach item="item4" index="index" collection="productSpecArray" separator="," open="(" close=")">
+            #{item4}
+        </foreach>
+        GROUP BY pesd.unit_id
+    </select>
+    <select id="getTimeAndStockWaringCount" resultMap="BaseResultMap">
+        SELECT
+        <![CDATA[SUM(CASE WHEN (DATEDIFF(DATE_ADD(zs.in_create_date,INTERVAL zw.warning_day day),NOW())) <= 0 THEN 1 ELSE 0 END) AS overdueCount,
+        SUM(CASE WHEN (zs.weight -zs.stock_warn) <=0 THEN 1 ELSE 0 END) AS stockWarningCount
+        ]]>
+        FROM zs_stock as zs
+        LEFT JOIN zs_warehouse as zw ON zs.warehouse_id =zw.warehouse_id
+        WHERE zs.rest_status =1 and zs.status !=6 and zs.warehouse_id =#{warehouseId}
+    </select>
+
+    <select id="getWarehouseByIds" resultMap="BaseResultMap">
+        SELECT zw.c_name AS warehouseName,zw.warehouse_id AS warehouseId
+        FROM zs_stock zs LEFT JOIN zs_warehouse zw ON zw.warehouse_id=zs.warehouse_id
+        WHERE zs.status=1 AND rest_status=1
+        AND zw.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY zw.c_name
+        ORDER BY zw.warehouse_id
+    </select>
+</mapper>

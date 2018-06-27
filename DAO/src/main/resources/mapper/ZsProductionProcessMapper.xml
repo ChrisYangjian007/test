@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsProductionProcessMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsProductionProcess">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="production_process_id" jdbcType="BIGINT" property="productionProcessId" />
+    <result column="production_process_name" jdbcType="VARCHAR" property="productionProcessName" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <resultMap id="PZsProductionProcess" type="com.dalian.sea.parameter.PZsProductionProcess" extends="BaseResultMap">
+
+  </resultMap>
+
+  <!--通过id获取生产信息-->
+  <select id="getProductionProcessById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_process WHERE production_process_id=#{id}
+  </select>
+
+  <!--获取全部生产过程-->
+  <select id="getAllProductionProcess" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_process WHERE status=1
+  </select>
+
+  <!--获取最大编号-->
+  <select id="getMaxId" resultMap="BaseResultMap">
+    SELECT max(production_process_id) as production_process_id FROM zs_production_process WHERE status=1
+  </select>
+
+  <!--添加-->
+  <insert id="addZsProductionProcess" parameterType="com.dalian.sea.model.ZsProductionProcess">
+    INSERT INTO zs_production_process(create_date,update_date
+    <if test="productionProcessName != null">,production_process_name</if>
+    <if test="createUserId != null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    )VALUES (now(),now()
+    <if test="productionProcessName != null">,#{productionProcessName}</if>
+    <if test="createUserId != null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    )
+  </insert>
+
+  <!--批量添加生产过程-->
+  <insert id="addZsProductionProcessByList" parameterType="java.util.List">
+    INSERT INTO zs_production_process(create_date,update_date,production_process_name,create_user_id,update_user_id)
+    VALUES
+    <foreach collection="productionProcessList" index="index" item="item" separator=",">
+      (now(),now(),#{item.productionProcessName},#{item.createUserId},#{item.updateUserId})
+    </foreach>
+  </insert>
+
+  <!--通过名字获取-->
+  <select id="getProductionProcessByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM zs_production_process WHERE status=1 AND production_process_name=#{productionProcessName}
+  </select>
+
+  <!--获取全部-->
+  <select id="getAllProductionProcessForGrid" resultMap="PZsProductionProcess">
+    SELECT zpp.*,bu.c_name as createUserName,u.c_name as updateUserName
+    FROM zs_production_process zpp
+    LEFT JOIN ba_user bu ON bu.user_id=zpp.create_user_id
+    LEFT JOIN ba_user u ON u.user_id=zpp.update_user_id
+    WHERE zpp.status=1 ORDER BY zpp.update_date DESC
+  </select>
+
+  <!--修改生产过程-->
+  <update id="updateProductionProcess" parameterType="com.dalian.sea.model.ZsProductionProcess">
+    UPDATE zs_production_process SET production_process_name=#{productionProcessName}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE production_process_id=#{productionProcessId}
+  </update>
+
+  <!--删除生产过程-->
+  <update id="deleteProductionProcess" parameterType="com.dalian.sea.model.ZsProductionProcess">
+    UPDATE zs_production_process SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE production_process_id=#{productionProcessId}
+  </update>
+</mapper>

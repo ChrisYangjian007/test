@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.IreportMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.Ireport">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="title_one" jdbcType="VARCHAR" property="titleOne" />
+    <result column="title_two" jdbcType="VARCHAR" property="titleTwo" />
+    <result column="title_three" jdbcType="VARCHAR" property="titleThree" />
+    <result column="title_four" jdbcType="VARCHAR" property="titleFour" />
+    <result column="list_index" jdbcType="VARCHAR" property="listIndex" />
+    <result column="list_one" jdbcType="VARCHAR" property="listOne" />
+    <result column="list_two" jdbcType="VARCHAR" property="listTwo" />
+    <result column="list_three" jdbcType="VARCHAR" property="listThree" />
+    <result column="list_four" jdbcType="VARCHAR" property="listFour" />
+    <result column="list_five" jdbcType="VARCHAR" property="listFive" />
+    <result column="list_six" jdbcType="VARCHAR" property="listSix" />
+    <result column="list_seven" jdbcType="VARCHAR" property="listSeven" />
+    <result column="list_eight" jdbcType="VARCHAR" property="listEight" />
+    <result column="list_nine" jdbcType="VARCHAR" property="listNine" />
+    <result column="list_ten" jdbcType="VARCHAR" property="listTen" />
+    <result column="list_size" jdbcType="VARCHAR" property="listSize" />
+    <result column="footer_one" jdbcType="VARCHAR" property="footerOne" />
+    <result column="footer_two" jdbcType="VARCHAR" property="footerTwo" />
+    <result column="footer_three" jdbcType="VARCHAR" property="footerThree" />
+    <result column="footer_four" jdbcType="VARCHAR" property="footerFour" />
+    <result column="footer_five" jdbcType="VARCHAR" property="footerFive" />
+    <result column="footer_six" jdbcType="VARCHAR" property="footerSix" />
+  </resultMap>
+</mapper>

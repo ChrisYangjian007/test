@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsTestingEquipmentDetailMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PTestingEquipmentDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="testing_equipment_detail_id" jdbcType="BIGINT" property="testingEquipmentDetailId" />
+    <result column="testing_equipment_id" jdbcType="BIGINT" property="testingEquipmentId" />
+    <result column="testing_equipment_detail_cname" jdbcType="VARCHAR" property="testingEquipmentDetailCname" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="images" jdbcType="VARCHAR" property="images" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <resultMap id="PTestingEqDetail" type="com.dalian.sea.parameter.PTestingEquipmentDetail" extends="BaseResultMap">
+    <result column="testCName" jdbcType="VARCHAR" property="testCName"></result>
+  </resultMap>
+  <!--检测设备内容-->
+  <select id="getTestingEquipmentDetail" resultMap="PTestingEqDetail">
+    SELECT bdd.c_name AS testCName,zted.* FROM zs_testing_equipment_detail zted
+	LEFT JOIN zs_testing_equipment zte ON zte.testing_equipment_id = zted.testing_equipment_id
+	LEFT JOIN ba_data_dictionary_details bdd ON bdd.data_dictionary_details_id = zte.data_dictionary_details_id AND bdd.status !=6
+    WHERE zted.status !=6 GROUP BY zted.testing_equipment_detail_id order by zted.update_date ASC
+  </select>
+  <!--新增-->
+  <insert id="addTestingEquipmentDetail" parameterType="com.dalian.sea.parameter.PTestingEquipmentDetail">
+    INSERT INTO zs_testing_equipment_detail(create_date,update_date
+    <if test="testingEquipmentId!=null and testingEquipmentId!=''">,testing_equipment_id</if>
+    <if test="testingEquipmentDetailCname!=null and testingEquipmentDetailCname!=''"> ,testing_equipment_detail_cname</if>
+    <if test="remark!=null and remark!=''">,remark</if>
+    <if test="images!=null and images!=''">,images</if>
+    <if test="createUserId!=null and createUserId!=''">,create_user_id</if>
+    )VALUES (now(),now()
+    <if test="testingEquipmentId!=null and testingEquipmentId!=''">,#{testingEquipmentId}</if>
+    <if test="testingEquipmentDetailCname!=null and testingEquipmentDetailCname!=''">,#{testingEquipmentDetailCname}</if>
+    <if test="remark!=null and remark!=''">,#{remark}</if>
+    <if test="images!=null and images!=''">,#{images}</if>
+    <if test="createUserId!=null and createUserId!=''">,#{createUserId}</if>
+    )
+  </insert>
+  <!--根据id查询数据-->
+  <select id="getTestingEquipmentDetailById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_testing_equipment_detail
+    where testing_equipment_detail_id=#{testingEquipmentDetailId}
+  </select>
+  <!--修改-->
+  <update id="updateTestingEquipmentDetail" parameterType="com.dalian.sea.parameter.PTestingEquipmentDetail">
+    update zs_testing_equipment_detail SET testing_equipment_detail_cname=#{testingEquipmentDetailCname},remark=#{remark},images=#{images}
+    <if test="updateUserId!=null and updateUserId!=''">,update_user_id=#{updateUserId}</if>
+    where testing_equipment_detail_id=#{testingEquipmentDetailId}
+  </update>
+  <!--删除-->
+  <update id="delectTestingEquipmentDetail" parameterType="com.dalian.sea.parameter.PTestingEquipmentDetail">
+     update zs_testing_equipment_detail SET status=6
+     <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+     where testing_equipment_detail_id=#{testingEquipmentDetailId}
+  </update>
+
+  <!--根据testingEquipmentId和name获取-->
+  <select id="getPTestingEqDetailsByTestingEqIdAndName" parameterType="com.dalian.sea.parameter.PTestingEquipmentDetail" resultMap="BaseResultMap">
+    SELECT * FROM zs_testing_equipment_detail WHERE status=1 AND testing_equipment_id=#{testingEquipmentId} AND testing_equipment_detail_cname=#{testingEquipmentDetailCname}
+  </select>
+
+  <!--通过testingEquipmentDetailId获取-->
+  <select id="getPTestingEqDetailsByTestingEquipmentDetailId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_testing_equipment_detail WHERE status=1 AND testing_equipment_detail_id=#{testingEquipmentDetailId}
+  </select>
+
+  <!--根据testingEquipmentId删除-->
+  <update id="deleteTestingEqDetailByTestingEqId" parameterType="com.dalian.sea.parameter.PTestingEquipment">
+    UPDATE zs_testing_equipment_detail SET status=6
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    WHERE testing_equipment_id=#{testingEquipmentId}
+  </update>
+
+  <!--通过testingEquipmentId获取-->
+  <select id="getPtestingEqDetailsByTestingEqId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_testing_equipment_detail WHERE status!=6 AND testing_equipment_id=#{pTestingEqId}
+  </select>
+</mapper>

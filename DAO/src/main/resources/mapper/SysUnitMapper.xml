@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SysUnitMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.SysUnit">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="unit_id" jdbcType="BIGINT" property="unitId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="value" jdbcType="INTEGER" property="value" />
+    <result column="value_list" jdbcType="VARCHAR" property="valueList" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="flag_name" jdbcType="VARCHAR" property="flagName" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--获取所有-->
+  <select id="getAllSysUnit" resultMap="BaseResultMap">
+    select * from sys_unit where status=1
+  </select>
+
+  <!--获取所有-->
+  <select id="getSysUnitByALevel" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select * from sys_unit where status=1 and a_level=#{aLevel}
+  </select>
+
+  <!--获取所有-->
+  <select id="getSysUnitNoZero" resultMap="BaseResultMap">
+    select * from sys_unit where status=1 and a_level!=0
+  </select>
+
+  <!--获取单位通过parentId-->
+  <select id="getSysUnitByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM sys_unit WHERE status = 1 and parent_id=#{id}
+  </select>
+
+  <!--通过parentId和cname获取单位-->
+  <select id="getSysUnitByParentIdAndName" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.SysUnit">
+    SELECT * FROM sys_unit WHERE status != 6  and parent_id=#{parentId} and c_name=#{cName}
+  </select>
+
+  <!--添加单位-->
+  <insert id="addSysUnit" parameterType="com.dalian.sea.model.SysUnit">
+    INSERT INTO sys_unit(create_date,update_date
+    <if test="cName != null">,c_name</if>
+    <if test="value != null">,value</if>
+    <if test="valueList != null">,value_list</if>
+    <if test="remark != null">,remark</if>
+    <if test="companyId != null">,company_id</if>
+    <if test="listIndex != null">,list_index</if>
+    <if test="flag != null">,flag</if>
+    <if test="flagName != null">,flag_name</if>
+    <if test="aLevel != null">,a_level</if>
+    <if test="parentId != null">,parent_id</if>
+    <if test="firstId != null">,first_id</if>
+    <if test="createUserId != null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    <if test="status != null">,status</if>
+    )VALUES (now(),now()
+    <if test="cName != null">,#{cName}</if>
+    <if test="value != null">,#{value}</if>
+    <if test="valueList != null">,#{valueList}</if>
+    <if test="remark != null">,#{remark}</if>
+    <if test="companyId != null">,#{companyId}</if>
+    <if test="listIndex != null">,#{listIndex}</if>
+    <if test="flag != null">,#{flag}</if>
+    <if test="flagName != null">,#{flagName}</if>
+    <if test="aLevel != null">,#{aLevel}</if>
+    <if test="parentId != null">,#{parentId}</if>
+    <if test="firstId != null">,#{firstId}</if>
+    <if test="createUserId != null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    <if test="status != null">,#{status}</if>
+    )
+  </insert>
+
+  <!--修改单位-->
+  <update id="updateSysUnit" parameterType="com.dalian.sea.model.SysUnit">
+    UPDATE sys_unit
+    <trim prefix="set" suffixOverrides="," suffix="where unit_id = #{unitId}">
+      <if test="cName != null">c_name=#{cName},</if>
+      <if test="value != null">value=#{value},</if>
+      <if test="valueList != null">value_list=#{valueList},</if>
+      <if test="remark != null">remark=#{remark},</if>
+      <if test="companyId != null">company_id=#{companyId},</if>
+      <if test="listIndex != null">list_index=#{listIndex},</if>
+      <if test="flag != null">flag=#{flag},</if>
+      <if test="flagName != null">flag_name=#{flagName},</if>
+      <if test="aLevel != null">a_level=#{aLevel},</if>
+      <if test="parentId != null">parent_id=#{parentId},</if>
+      <if test="firstId != null">first_id=#{firstId},</if>
+      <if test="createUserId != null">create_user_id#{createUserId},</if>
+      <if test="update_user_id != null">update_user_id=#{updateUserId},</if>
+      <if test="createDate != null">create_date=#{createDate},</if>
+      <if test="updateDate != null">update_date=#{updateDate},</if>
+      <if test="status != null">status=#{status},</if>
+    </trim>
+  </update>
+
+  <!--修改单位-->
+  <update id="updateSysUnitById" parameterType="com.dalian.sea.model.SysUnit">
+    UPDATE sys_unit SET c_name=#{cName},value=#{value},remark=#{remark}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where unit_id=#{unitId}
+  </update>
+
+  <!--用过id获取单位-->
+  <select id="getSysUnitById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM sys_unit WHERE status != 6 AND unit_id=#{id}
+  </select>
+
+  <!--获取最大顺序数-->
+  <select id="getSysUnitMaxListIndex" resultMap="BaseResultMap">
+    SELECT max(list_index) as list_index FROM sys_unit WHERE status!=6 limit 1
+  </select>
+
+  <!--通过cName获取最大层级-->
+  <select id="getMaxAlevelByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM sys_unit WHERE status != 6 and c_name=#{name} order by a_level desc,update_date desc limit 1
+  </select>
+</mapper>

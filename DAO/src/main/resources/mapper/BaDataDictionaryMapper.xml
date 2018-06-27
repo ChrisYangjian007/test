@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaDataDictionaryMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BaDataDictionary">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="data_dictionary_id" jdbcType="BIGINT" property="dataDictionaryId" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="is_tree" jdbcType="TINYINT" property="isTree" />
+    <result column="category" jdbcType="TINYINT" property="category" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="flage" jdbcType="VARCHAR" property="flage" />
+    <result column="flage_name" jdbcType="VARCHAR" property="flageName" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--获取所有-->
+  <select id="getAllBaDataDictionary" resultMap="BaseResultMap">
+    select * from ba_data_dictionary where status!=6
+  </select>
+
+  <!--根据父级ID获取-->
+  <select id="getBaDataDictionaryByPId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_data_dictionary where status!=6 and parent_id = #{pId} order by list_index asc
+  </select>
+
+  <!--根据父级ID获取-->
+  <select id="getBaDataDictionaryByPIdAndName" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaDataDictionary">
+    select * from ba_data_dictionary where status!=6 and parent_id = #{parentId} and c_name=#{cName} LIMIT 1
+  </select>
+
+  <!--根据ID获取-->
+  <select id="getBaDataDictionaryById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select * from ba_data_dictionary where data_dictionary_id = #{dataDictionaryId}
+  </select>
+
+  <!--添加-->
+  <insert id="addBaDataDictionary" parameterType="com.dalian.sea.model.BaDataDictionary" keyProperty="dataDictionaryId" useGeneratedKeys="true">
+    insert into ba_data_dictionary (company_id,c_name,create_date,update_date,create_user_id
+    <if test="isTree!=null">,is_tree</if>
+    <if test="category!=null">,category</if>
+    <if test="code!=null">,code</if>
+    <if test="remark!=null">,remark</if>
+    <if test="listIndex!=null">,list_index</if>
+    <if test="flage!=null">,flage</if>
+    <if test="flageName!=null">,flage_name</if>
+    <if test="aLevel!=null">,a_level</if>
+    <if test="parentId!=null">,parent_id</if>
+    <if test="firstId!=null">,first_id</if>
+    ) values (#{companyId},#{cName},now(),now(),#{createUserId}
+    <if test="isTree!=null">,#{isTree}</if>
+    <if test="category!=null">,#{category}</if>
+    <if test="code!=null">,#{code}</if>
+    <if test="remark!=null">,#{remark}</if>
+    <if test="listIndex!=null">,#{listIndex}</if>
+    <if test="flage!=null">,#{flage}</if>
+    <if test="flageName!=null">,#{flageName}</if>
+    <if test="aLevel!=null">,#{aLevel}</if>
+    <if test="parentId!=null">,#{parentId}</if>
+    <if test="firstId!=null">,#{firstId}</if>
+    )
+  </insert>
+
+  <!--修改-->
+  <update id="updateBaDataDictionary" parameterType="com.dalian.sea.model.BaDataDictionary">
+    update ba_data_dictionary
+    <trim prefix="set" suffixOverrides="," suffix=" where data_dictionary_id=#{dataDictionaryId}">
+      <if test="cName!=null">c_name=#{cName},</if>
+      <if test="isTree!=null">is_tree=#{isTree},</if>
+      <if test="code!=null">code=#{code},</if>
+      <if test="remark!=null">remark=#{remark},</if>
+      <if test="listIndex!=null">list_index=#{listIndex},</if>
+      <if test="flage!=null">flage=#{flage},</if>
+      <if test="flageName!=null">flage_name=#{flageName},</if>
+      <if test="aLevel!=null">a_level=#{aLevel},</if>
+      <if test="parentId!=null">parent_id=#{parentId},</if>
+      <if test="firstId!=null">first_id=#{firstId},</if>
+      <if test="status!=null">status=#{status},</if>
+    </trim>
+  </update>
+
+  <update id="updateBaDataDictionaryById" parameterType="com.dalian.sea.model.BaDataDictionary">
+    UPDATE ba_data_dictionary SET code=#{code},c_name=#{cName},remark=#{remark}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where data_dictionary_id=#{dataDictionaryId}
+  </update>
+
+  <!--删除-->
+  <update id="deleteBaDataDictionary" parameterType="com.dalian.sea.model.BaDataDictionary">
+    update ba_data_dictionary set status=6
+    <if test="updateUserId!=null">,update_user_id=#{updateUserId}</if>
+    where data_dictionary_id=#{dataDictionaryId}
+  </update>
+
+  <!--获取最大顺序数-->
+  <select id="getBaDataDictionaryMaxListIndex" resultMap="BaseResultMap">
+    SELECT max(list_index) as list_index FROM ba_data_dictionary WHERE status != 6 limit 1
+  </select>
+
+  <!--根据编号获取数据字典-->
+  <select id="getDataDictionaryByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT * FROM ba_data_dictionary WHERE status!=6 and code=#{code}
+  </select>
+
+  <!--根据父级code和c_name获取数据字典-->
+  <select id="getDataDictionaryByPCodeAndName" resultMap="BaseResultMap">
+    SELECT * FROM ba_data_dictionary WHERE status!=6 AND c_name=#{name} and parent_id=(
+    select d.data_dictionary_id from ba_data_dictionary d where d.status!=6 and d.code=#{code}
+    )
+  </select>
+</mapper>

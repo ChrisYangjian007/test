@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BoxBatchTempMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.BoxBatchTemp">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="box_batch_temp_id" jdbcType="INTEGER" property="boxBatchTempId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+    <result column="box_code" jdbcType="VARCHAR" property="boxCode" />
+    <result column="qr_rule_name" jdbcType="VARCHAR" property="qrRuleName" />
+    <result column="qr_clear_code" jdbcType="VARCHAR" property="qrClearCode" />
+    <result column="batch_code" jdbcType="VARCHAR" property="batchCode" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="operation_time" jdbcType="VARCHAR" property="operationTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="random" jdbcType="VARCHAR" property="random" />
+  </resultMap>
+  <insert id="insertBoxBatchTempByBatch" parameterType="java.util.List">
+    insert into zs_box_batch_temp (create_date, qr_code,box_code,qr_rule_name,qr_clear_code,batch_code,operator,operation_time,random)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.createDate,jdbcType=TIMESTAMP}, #{item.qrCode,jdbcType=VARCHAR},#{item.boxCode,jdbcType=VARCHAR},#{item.qrRuleName,jdbcType=VARCHAR},#{item.qrClearCode,jdbcType=VARCHAR},#{item.batchCode,jdbcType=VARCHAR},#{item.operator,jdbcType=VARCHAR},#{item.operationTime,jdbcType=VARCHAR},#{item.random,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectBoxBatchGroupByBox" resultMap="BaseResultMap">
+     SELECT  * FROM zs_box_batch_temp WHERE  random =#{random}  group by box_code
+
+  </select>
+
+  <select id="selectBoxBatchGroupByRuleName" resultMap="BaseResultMap">
+    SELECT  t.qr_rule_name,t.random  FROM zs_box_batch_temp t WHERE  random =#{random}  group by qr_rule_name
+  </select>
+  <select id="selectBoxBatchByRuleNameAndRom" resultMap="BaseResultMap">
+    SELECT  t.qr_clear_code,t.batch_code ,t.qr_rule_name  FROM  zs_box_batch_temp t  WHERE t.qr_rule_name =#{qrRuleName} and t.random =#{random} order by t.qr_clear_code asc
+  </select>
+</mapper>

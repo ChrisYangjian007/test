@@ -1,0 +1,23 @@
+/** 清除内外边距 **/
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+form, fieldset, legend, button, input, textarea, /* form elements 表单元素 */
+th, td /* table elements 表格元素 */ {
+    margin: 0;
+    padding: 0;
+}
+
+/** 设置默认字体 **/
+body,button, input, select, textarea /* for ie */ {
+    font: 14px/1.0 "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+address, cite, dfn, em, var, i { font-style: normal; } /* 将斜体扶正 */
+
+/** 重置列表元素 **/
+ul, ol { list-style: none; }
+
+a:hover{
+    text-decoration: none;
+    cursor:pointer;
+}

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SaOrderDetailMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.POrderDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="order_detail_id" jdbcType="BIGINT" property="orderDetailId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="in_weight" jdbcType="DECIMAL" property="inWeight" />
+    <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName" />
+    <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="order_detail_name" jdbcType="VARCHAR" property="orderDetailName" />
+    <result column="order_detail_dhsq" jdbcType="VARCHAR" property="orderDetailDhsq" />
+    <result column="order_detail_cpbh" jdbcType="VARCHAR" property="orderDetailCpbh" />
+    <result column="order_detail_gg" jdbcType="VARCHAR" property="orderDetailGg" />
+    <result column="order_detail_dw" jdbcType="VARCHAR" property="orderDetailDw" />
+    <result column="order_detail_sl" jdbcType="VARCHAR" property="orderDetailSl" />
+    <result column="order_detail_zk" jdbcType="VARCHAR" property="orderDetailZk" />
+    <result column="order_detail_cbj" jdbcType="VARCHAR" property="orderDetailCbj" />
+    <result column="order_detail_qrcode" jdbcType="LONGVARCHAR" property="orderDetailQrcode" />
+  </resultMap>
+  <resultMap id="PSaOrderDetailPDA" type="com.dalian.sea.parameter.PSaOrderDetailPDA" extends="BaseResultMap">
+  </resultMap>
+  
+  <resultMap id="PSaOrderDetail" type="com.dalian.sea.parameter.PSaOrderDetail" extends="BaseResultMap">
+    <association property="saOrder" javaType="com.dalian.sea.model.SaOrder" columnPrefix="so_">
+      <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+      <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+      <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+      <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+      <result column="order_status" jdbcType="TINYINT" property="orderStatus"/>
+      <result column="status" jdbcType="TINYINT" property="status"/>
+      <result column="order_name" jdbcType="VARCHAR" property="orderName"/>
+      <result column="order_ownerid" jdbcType="VARCHAR" property="orderOwnerid"/>
+      <result column="order_dhrq" jdbcType="TIMESTAMP" property="orderDhrq"/>
+      <result column="order_shr" jdbcType="VARCHAR" property="orderShr"/>
+      <result column="order_shdz" jdbcType="VARCHAR" property="orderShdz"/>
+      <result column="order_lxdh" jdbcType="VARCHAR" property="orderLxdh"/>
+      <result column="order_spzt" jdbcType="VARCHAR" property="orderSpzt"/>
+      <result column="order_ssmd" jdbcType="VARCHAR" property="orderSsmd"/>
+      <result column="order_isjxs" jdbcType="TINYINT" property="orderIsjxs"/>
+      <result column="order_jxs" jdbcType="VARCHAR" property="orderJxs"/>
+      <result column="order_ispack" jdbcType="TINYINT" property="orderIspack"/>
+      <result column="order_pack_count" jdbcType="INTEGER" property="orderPackCount"/>
+    </association>
+  </resultMap>
+  <resultMap id="detailResultMap" type="com.dalian.sea.parameter.OrderDetailQr">
+    <result column="order_name" jdbcType="VARCHAR" property="orderName"/>
+    <result column="order_detail_name" jdbcType="VARCHAR" property="orderDetailName"/>
+    <result column="order_detail_qr" jdbcType="VARCHAR" property="orderDetailQrList"/>
+  </resultMap>
+  <resultMap id="boxResultMap" type="com.dalian.sea.parameter.OrderDetailBoxCode">
+    <result column="box_code" jdbcType="VARCHAR" property="boxCode"/>
+    <result column="order_detail_string" jdbcType="VARCHAR" property="orderDetailString"/>
+    <result column="order_name" jdbcType="VARCHAR" property="orderName"/>
+  </resultMap>
+  <select id="selectListOrderDetailByOrder" resultMap="BaseResultMap">
+    SELECT  * FROM  sa_order_detail
+    <trim prefix="where" suffixOverrides="and">
+      <if test="orderDetailDhsq !=null">
+        order_detail_dhsq =#{orderDetailDhsq} and
+      </if>
+      <if test="startDate !=null and  endDate!=null">
+        create_date   BETWEEN #{startDate} and  #{endDate} and
+      </if>
+    </trim>
+  </select>
+
+  <select id="getSaOrderDetailByDetailCodeArray" resultMap="PSaOrderDetailPDA">
+    select sod.* from sa_order_detail sod
+    where sod.status = 1 and sod.order_detail_name in
+    <foreach collection="detailCodes" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+
+  <select id="getOrderDetailByOrderName" resultMap="BaseResultMap">
+    SELECT * FROM sa_order_detail where status=1
+    <if test="orderDetailName!=null and orderDetailName!=''">and order_detail_name=#{orderDetailName}</if>
+  </select>
+  <insert id="insertOrderDetailSelective" parameterType="com.dalian.sea.model.SaOrderDetail">
+    insert into sa_order_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderDetailId != null" >
+        order_detail_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="companyId != null" >
+        company_id,
+      </if>
+      <if test="listIndex != null" >
+        list_index,
+      </if>
+      <if test="inWeight != null" >
+        in_weight,
+      </if>
+      <if test="unitId != null" >
+        unit_id,
+      </if>
+      <if test="unitName != null" >
+        unit_name,
+      </if>
+      <if test="productSpecName != null" >
+        product_spec_name,
+      </if>
+      <if test="productSpecId != null" >
+        product_spec_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="warehouseId != null" >
+        warehouse_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderDetailName != null" >
+        order_detail_name,
+      </if>
+      <if test="orderDetailDhsq != null" >
+        order_detail_dhsq,
+      </if>
+      <if test="orderDetailCpbh != null" >
+        order_detail_cpbh,
+      </if>
+      <if test="orderDetailGg != null" >
+        order_detail_gg,
+      </if>
+      <if test="orderDetailDw != null" >
+        order_detail_dw,
+      </if>
+      <if test="orderDetailSl != null" >
+        order_detail_sl,
+      </if>
+      <if test="orderDetailZk != null" >
+        order_detail_zk,
+      </if>
+      <if test="orderDetailCbj != null" >
+        order_detail_cbj,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderDetailId != null" >
+        #{orderDetailId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="listIndex != null" >
+        #{listIndex,jdbcType=INTEGER},
+      </if>
+      <if test="inWeight != null" >
+        #{inWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null" >
+        #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="unitName != null" >
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="productSpecName != null" >
+        #{productSpecName,jdbcType=VARCHAR},
+      </if>
+      <if test="productSpecId != null" >
+        #{productSpecId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseId != null" >
+        #{warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderDetailName != null" >
+        #{orderDetailName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailDhsq != null" >
+        #{orderDetailDhsq,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailCpbh != null" >
+        #{orderDetailCpbh,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailGg != null" >
+        #{orderDetailGg,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailDw != null" >
+        #{orderDetailDw,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailSl != null" >
+        #{orderDetailSl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailZk != null" >
+        #{orderDetailZk,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailCbj != null" >
+        #{orderDetailCbj,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByOrderDetailSelective" parameterType="com.dalian.sea.model.SaOrderDetail">
+    update sa_order_detail
+    <set >
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        company_id = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="listIndex != null" >
+        list_index = #{listIndex,jdbcType=INTEGER},
+      </if>
+      <if test="inWeight != null" >
+        in_weight = #{inWeight,jdbcType=DECIMAL},
+      </if>
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=BIGINT},
+      </if>
+      <if test="unitName != null" >
+        unit_name = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="productSpecName != null" >
+        product_spec_name = #{productSpecName,jdbcType=VARCHAR},
+      </if>
+      <if test="productSpecId != null" >
+        product_spec_id = #{productSpecId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouseId != null" >
+        warehouse_id = #{warehouseId,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="orderDetailName != null" >
+        order_detail_name = #{orderDetailName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailDhsq != null" >
+        order_detail_dhsq = #{orderDetailDhsq,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailCpbh != null" >
+        order_detail_cpbh = #{orderDetailCpbh,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailGg != null" >
+        order_detail_gg = #{orderDetailGg,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailDw != null" >
+        order_detail_dw = #{orderDetailDw,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailSl != null" >
+        order_detail_sl = #{orderDetailSl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailZk != null" >
+        order_detail_zk = #{orderDetailZk,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailCbj != null" >
+        order_detail_cbj = #{orderDetailCbj,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailQrcode != null" >
+        order_detail_qrcode = #{orderDetailQrcode},
+      </if>
+    </set>
+    where order_detail_id = #{orderDetailId,jdbcType=BIGINT}
+  </update>
+  <update id="updateOrderDetailByBatch" parameterType="java.util.List">
+    UPDATE sa_order_detail
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix=" order_detail_qrcode = case" suffix="end,">
+        <foreach collection="list" item="i" index="index">
+          <if test="i.orderDetailQrcode!=null">
+            when order_detail_name = #{i.orderDetailName, jdbcType = VARCHAR} then
+            #{i.orderDetailQrcode, jdbcType = VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    WHERE
+    <foreach collection="list" separator="or" item="i" index="index">
+      order_detail_name = #{i.orderDetailName, jdbcType = VARCHAR}
+    </foreach>
+  </update>
+
+  <select id="getOrderDetailByQrCode" resultMap="BaseResultMap">
+    select t.*  from sa_order_detail t
+    where t.status = 1 and t.order_detail_qrcode LIKE '%${orderDetailQrcode}%'
+
+  </select>
+  <select id="selectListOrderDetailCountToday" resultMap="BaseResultMap">
+SELECT order_detail_cpbh,product_name,order_detail_gg,order_detail_dw,SUM(order_detail_sl) AS order_detail_sl  FROM sa_order_detail  where to_days(create_date) = to_days(now()) GROUP BY order_detail_cpbh
+  </select>
+  <select id="selectListOrderDetailCountbyday" resultMap="BaseResultMap">
+    SELECT order_detail_cpbh,product_name,order_detail_gg,order_detail_dw,SUM(order_detail_sl) AS order_detail_sl  FROM sa_order_detail  where 1=1
+    <if test="startDate != null and startDate != ''"> AND  create_date <![CDATA[>=]]> #{startDate}</if>
+    <if test="endDate != null and endDate != ''">AND create_date <![CDATA[<=]]>#{endDate}</if>
+     GROUP BY order_detail_cpbh
+  </select>
+  <select id="getOrderAndOrderDetailByQrCode" resultMap="PSaOrderDetail">
+    select sod.*,so.order_ssmd as so_order_ssmd,so.order_name as so_order_name
+    from sa_order_detail sod
+    LEFT JOIN sa_order so ON so.order_name=sod.order_detail_dhsq
+    where sod.status = 1 and sod.order_detail_qrcode LIKE CONCAT('%','${qrCode}','%' )
+  </select>
+ <select id="selectOrderDetailQrList" resultMap="detailResultMap">
+   SELECT o.order_detail_name as order_detail_name ,o.order_detail_qrcode as order_detail_qr ,o.order_detail_dhsq as order_name  FROM  sa_order_detail o LEFT  JOIN  sa_order b  ON  o.order_detail_dhsq=b.order_name
+   <trim prefix="where" suffixOverrides="and">
+       b.order_ispack=1   and
+     <if test="startDate !=null and endDate==null">
+       b.order_dhrq &gt;= #{startDate} and
+     </if>
+     <if test="startDate ==null and endDate!=null">
+       b.order_dhrq &lt;= #{endDate} and
+     </if>
+     <if test="startDate !=null and  endDate!=null">
+       b.order_dhrq BETWEEN #{startDate} and #{endDate} and
+     </if>
+     <if test="orderName !=null">
+       b.order_name = #{orderName}
+     </if>
+   </trim>
+
+ </select>
+  <select id="selectOrderDetailBoxList" resultMap="boxResultMap">
+    SELECT  o.box_code as box_code,o.order_detail_code as order_detail_string,o.order_code as order_name,o.order_detail_qr as  boxQrString  FROM  zs_box_order  o LEFT JOIN  sa_order b  ON  o.order_code=b.order_name
+    <trim prefix="where" suffixOverrides="and">
+      b.order_ispack=1   and
+      <if test="startDate !=null and endDate==null">
+        b.order_dhrq &gt;= #{startDate}
+      </if>
+      <if test="startDate ==null and endDate!=null">
+        b.order_dhrq &lt;= #{endDate}
+      </if>
+      <if test="startDate !=null and  endDate!=null">
+        b.order_dhrq BETWEEN #{startDate} and #{endDate} and
+      </if>
+      <if test="orderName !=null">
+        b.order_name = #{orderName}
+      </if>
+    </trim>
+  </select>
+  <select id="selectOrderDetailListByOrderList" resultMap="BaseResultMap">
+     select t.*  from sa_order_detail t  WHERE  order_detail_dhsq  IN
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+</mapper>

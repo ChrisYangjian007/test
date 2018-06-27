@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaCompanyMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PBaCompany">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="category" jdbcType="TINYINT" property="category" />
+    <result column="web_url" jdbcType="VARCHAR" property="webUrl" />
+    <result column="company_phone" jdbcType="VARCHAR" property="companyPhone" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="wei_chat" jdbcType="VARCHAR" property="weiChat" />
+    <result column="we_chat_public_number" jdbcType="VARCHAR" property="weChatPublicNumber" />
+    <result column="sea_area_position" jdbcType="VARCHAR" property="seaAreaPosition" />
+    <result column="sea_area_images" jdbcType="CHAR" property="seaAreaImages" />
+    <result column="enterprise_introduction" jdbcType="VARCHAR" property="enterpriseIntroduction" />
+    <result column="enterprise_images" jdbcType="CHAR" property="enterpriseImages" />
+    <result column="enterprise_image_video" jdbcType="VARCHAR" property="enterpriseImageVideo" />
+    <result column="panorama" jdbcType="CHAR" property="panorama" />
+    <result column="detection_center_introduction" jdbcType="VARCHAR" property="detectionCenterIntroduction" />
+    <result column="detection_center_images" jdbcType="CHAR" property="detectionCenterImages" />
+    <result column="add_content" jdbcType="CHAR" property="addContent" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="account_info" jdbcType="VARCHAR" property="accountInfo" />
+    <result column="industry_type" jdbcType="VARCHAR" property="industryType" />
+    <result column="corporate_rep" jdbcType="VARCHAR" property="corporateRep" />
+    <result column="contact" jdbcType="VARCHAR" property="contact" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="fax" jdbcType="VARCHAR" property="fax" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="zipcode" jdbcType="VARCHAR" property="zipcode" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="area_id" jdbcType="BIGINT" property="areaId" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="company_nature" jdbcType="TINYINT" property="companyNature" />
+    <result column="authentication_type" jdbcType="VARCHAR" property="authenticationType" />
+    <result column="register_fund" jdbcType="DECIMAL" property="registerFund" />
+    <result column="business_scope" jdbcType="VARCHAR" property="businessScope" />
+    <result column="tax_no" jdbcType="VARCHAR" property="taxNo" />
+    <result column="tax_reg_date" jdbcType="TIMESTAMP" property="taxRegDate" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <result column="biz_reg_code" jdbcType="VARCHAR" property="bizRegCode" />
+    <result column="corporate_rep_id_no" jdbcType="VARCHAR" property="corporateRepIdNo" />
+    <result column="biz_license_no" jdbcType="VARCHAR" property="bizLicenseNo" />
+    <result column="product_type_id" jdbcType="BIGINT" property="productTypeId" />
+    <result column="inputs_id" jdbcType="BIGINT" property="inputsId" />
+    <result column="area_parent_id" jdbcType="BIGINT" property="areaParentId" />
+    <result column="check_status" jdbcType="INTEGER" property="checkStatus" />
+    <result column="address_id" jdbcType="BIGINT" property="addressId" />
+    <result column="address_name" jdbcType="VARCHAR" property="addressName" />
+    <result column="establish_date" jdbcType="TIMESTAMP" property="establishDate" />
+    <result column="operating_period_date" jdbcType="TIMESTAMP" property="operatingPeriodDate" />
+    <result column="lssue_date" jdbcType="TIMESTAMP" property="lssueDate" />
+    <result column="production_area" jdbcType="DECIMAL" property="productionArea" />
+    <result column="profession_type" jdbcType="VARCHAR" property="professionType" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--根据父级ID获取子集-->
+  <select id="getBaCompanyByPId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select * from ba_company where status!=6 and parent_id=#{pId} order by update_date desc
+  </select>
+  <!--预览页面公司介绍-->
+  <select id="getCompanyIntroduction"  resultMap="BaseResultMap">
+    select * from ba_company limit 1
+  </select>
+
+  <!--根据id获取公司-->
+  <select id="getBaCompanyById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM ba_company WHERE company_id=#{id}
+  </select>
+
+  <!--添加内容-->
+  <update id="addContent" parameterType="com.dalian.sea.parameter.PBaCompany">
+    update ba_company set add_content=#{addContent} where company_id=#{companyId}
+  </update>
+
+  <!--修改-->
+  <update id="updateBaCompany" parameterType="com.dalian.sea.parameter.PBaCompany">
+    update ba_company set c_name=#{cName},short_name=#{shortName},category=#{category},web_url=#{webUrl},
+    company_phone=#{companyPhone},address=#{address},wei_chat=#{weiChat},we_chat_public_number=#{weChatPublicNumber},
+    sea_area_position=#{seaAreaPosition},sea_area_images=#{seaAreaImages},enterprise_introduction=#{enterpriseIntroduction},
+    enterprise_images=#{enterpriseImages},enterprise_image_video=#{enterpriseImageVideo},panorama=#{panorama},
+    detection_center_introduction=#{detectionCenterIntroduction},detection_center_images=#{detectionCenterImages},
+    add_content=#{addContent} where company_id=#{companyId}
+  </update>
+</mapper>

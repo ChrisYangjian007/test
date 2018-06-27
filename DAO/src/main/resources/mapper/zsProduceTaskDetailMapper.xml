@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.zsProduceTaskDetailMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsProduceTaskDetail">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="produce_task_detail_id" jdbcType="BIGINT" property="produceTaskDetailId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+        <result column="weight" jdbcType="DECIMAL" property="weight"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName"/>
+        <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId"/>
+        <result column="product_id" jdbcType="BIGINT" property="productId"/>
+        <result column="product_name" jdbcType="VARCHAR" property="productName"/>
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId"/>
+        <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+        <result column="is_material" jdbcType="BIGINT" property="isMaterial"/>
+        <result column="product_status" jdbcType="BIGINT" property="productStatus"/>
+        <result column="stock_id" jdbcType="BIGINT" property="stockId"/>
+        <result column="produceTaskNo" jdbcType="VARCHAR" property="produceTaskNo"/>
+        <result column="goodsType" jdbcType="VARCHAR" property="goodsType"/>
+        <result column="goodsTypeId" jdbcType="BIGINT" property="goodsTypeId"/>
+        <result column="warehouseName" jdbcType="VARCHAR" property="warehouseName"/>
+        <result column="productStatusName" jdbcType="VARCHAR" property="productStatusName"/>
+        <result column="resWeight" jdbcType="DECIMAL" property="resWeight"/>
+    </resultMap>
+
+    <resultMap id="DatatableMap" extends="BaseResultMap" type="com.dalian.sea.parameter.PZsProduceTaskDetail">
+        <association property="produceTask" javaType="com.dalian.sea.model.ZsProduceTask" columnPrefix="zs_">
+            <id column="produce_task_id" jdbcType="BIGINT" property="produceTaskId"/>
+            <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+            <result column="create_user_id" jdbcType="BIGINT" property="createUserId"/>
+            <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+            <result column="update_user_id" jdbcType="BIGINT" property="updateUserId"/>
+            <result column="list_index" jdbcType="INTEGER" property="listIndex"/>
+            <result column="status" jdbcType="TINYINT" property="status"/>
+            <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName"/>
+            <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo"/>
+            <result column="produce_task_status" jdbcType="TINYINT" property="produceTaskStatus"/>
+            <result column="work_process_id" jdbcType="BIGINT" property="workProcessId"/>
+            <result column="check_user_id" jdbcType="BIGINT" property="checkUserId"/>
+            <result column="check_status" jdbcType="TINYINT" property="checkStatus"/>
+        </association>
+    </resultMap>
+    <select id="getDetailByProduceTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT * FROM zs_produce_task_detail
+    WHERE produce_task_id=#{produceTaskId} AND status=1
+  </select>
+    <select id="getProduceTaskDetailByProduceTaskNo" resultMap="DatatableMap">
+        SELECT
+        zpt.*,
+        zptd.*,
+        bddd.c_name as goodsType,
+        bddd.data_dictionary_details_id as goodsTypeId
+        FROM zs_produce_task_detail zptd
+        LEFT JOIN zs_produce_task zpt ON zpt.produce_task_id =zptd.produce_task_id
+        LEFT JOIN  ba_data_dictionary_details bddd ON bddd.data_dictionary_details_id =zptd.is_material
+        WHERE zpt.produce_task_no =#{produceTaskNo} and zptd.status !=6
+    </select>
+    <select id="getProduceTaskDetailByBatchNo" resultMap="BaseResultMap">
+        SELECT
+        zptd.*,
+        bddd.c_name as goodsType,
+        bddd.data_dictionary_details_id as goodsTypeId
+        FROM zs_produce_task_detail zptd
+        LEFT JOIN ba_data_dictionary_details bddd ON bddd.data_dictionary_details_id =zptd.is_material
+        WHERE zptd.batch_no =#{batchNo} and zptd.status !=6
+        <!--
+        <if test="goodsTypeId !=null">
+            AND zptd.is_material =#{goodsTypeId}
+        </if>
+        <if test="productId !=null">
+            AND zptd.product_id =#{productId}
+        </if>
+        GROUP BY
+        <if test="goodsTypeId ==null and productId ==null">
+            zptd.is_material
+        </if>
+        <if test="goodsTypeId !=null and productId==null">
+            zptd.product_id
+        </if>
+        <if test="goodsTypeId !=null and productId!=null">
+            zptd.product_spec_name
+        </if>
+        -->
+    </select>
+
+    <insert id="newProduceTaskDetail" useGeneratedKeys="true" keyColumn="produce_task_detail_id"
+            keyProperty="zs.produceTaskDetailId">
+        INSERT INTO zs_produce_task_detail(
+        status,
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,create_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,create_user_id
+            </if>
+            <if test="date!=null">
+                ,update_date
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,update_user_id
+            </if>
+            <if test="zs.remark!=null and zs.remark!=''">
+                ,remark
+            </if>
+            <if test="zs.weight!=null and zs.weight!=''">
+                ,weight
+            </if>
+            <if test="zs.unitId!=null and zs.unitId!=''">
+                ,unit_id
+            </if>
+            <if test="zs.unitName!=null and zs.unitName!=''">
+                ,unit_name
+            </if>
+            <if test="zs.productSpecName!=null and zs.productSpecName!=''">
+                ,product_spec_name
+            </if>
+            <if test="zs.productId!=null and zs.productId!=''">
+                ,product_id
+            </if>
+            <if test="zs.productName!=null and zs.productName!=''">
+                ,product_name
+            </if>
+            <if test="zs.warehouseId!=null and zs.warehouseId!=''">
+                ,warehouse_id
+            </if>
+            <if test="zs.produceTaskId!=null and zs.produceTaskId!=''">
+                ,produce_task_id
+            </if>
+            <if test="zs.isMaterial!=null and zs.isMaterial!=''">
+                ,is_material
+            </if>
+            <if test="zs.productStatus!=null and zs.productStatus!=''">
+                ,product_status
+            </if>
+            <if test="zs.batchNo!=null and zs.batchNo!=''">
+                ,batch_no
+            </if>
+            <if test="zs.stockId!=null and zs.stockId!=''">
+                ,stock_id
+            </if>
+        </trim>
+        )VALUES(
+        1,
+        <trim prefixOverrides=",">
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="date!=null">
+                ,#{date}
+            </if>
+            <if test="userId!=null and userId!=''">
+                ,#{userId}
+            </if>
+            <if test="zs.remark!=null and zs.remark!=''">
+                ,#{zs.remark}
+            </if>
+            <if test="zs.weight!=null and zs.weight!=''">
+                ,#{zs.weight}
+            </if>
+            <if test="zs.unitId!=null and zs.unitId!=''">
+                ,#{zs.unitId}
+            </if>
+            <if test="zs.unitName!=null and zs.unitName!=''">
+                ,#{zs.unitName}
+            </if>
+            <if test="zs.productSpecName!=null and zs.productSpecName!=''">
+                ,#{zs.productSpecName}
+            </if>
+            <if test="zs.productId!=null and zs.productId!=''">
+                ,#{zs.productId}
+            </if>
+            <if test="zs.productName!=null and zs.productName!=''">
+                ,#{zs.productName}
+            </if>
+            <if test="zs.warehouseId!=null and zs.warehouseId!=''">
+                ,#{zs.warehouseId}
+            </if>
+            <if test="zs.produceTaskId!=null and zs.produceTaskId!=''">
+                ,#{zs.produceTaskId}
+            </if>
+            <if test="zs.isMaterial!=null and zs.isMaterial!=''">
+                ,#{zs.isMaterial}
+            </if>
+            <if test="zs.productStatus!=null and zs.productStatus!=''">
+                ,#{zs.productStatus}
+            </if>
+            <if test="zs.batchNo!=null and zs.batchNo!=''">
+                ,#{zs.batchNo}
+            </if>
+            <if test="zs.stockId!=null and zs.stockId!=''">
+                ,#{zs.stockId}
+            </if>
+        </trim>
+        )
+    </insert>
+
+    <select id="selectByZsProduceTaskDetail" resultMap="BaseResultMap">
+        SELECT *
+        FROM zs_produce_task_detail
+        WHERE unit_id=#{zs.unitId}
+        AND product_spec_name=#{zs.productSpecName}
+        AND product_id=#{zs.productId}
+        AND warehouse_id=#{zs.warehouseId}
+        AND produce_task_id=#{zs.produceTaskId}
+        AND is_material=#{zs.isMaterial}
+        AND product_status=#{zs.productStatus}
+        AND batch_no=#{zs.batchNo}
+    </select>
+
+    <update id="updateProduceTaskDetail">
+        UPDATE zs_produce_task_detail
+        SET weight=#{zsweight},
+        update_date=#{date},
+        update_user_id=#{userId}
+        WHERE produce_task_detail_id=#{produceTaskDetailId}
+    </update>
+
+    <select id="getProduceTaskDetailByProduceTaskId" resultMap="DatatableMap">
+        SELECT
+        zpt.*,
+        zptd.*,
+        bddd.c_name AS goodsType,
+        bddd.data_dictionary_details_id AS goodsTypeId,
+        zw.c_name AS warehouseName,
+        bddd2.c_name AS productStatusName,
+        zs.weight AS resWeight,
+        zpt.produce_task_no AS produceTaskNo
+        FROM zs_produce_task_detail zptd
+        LEFT JOIN zs_produce_task zpt ON zpt.produce_task_id =zptd.produce_task_id
+        LEFT JOIN ba_data_dictionary_details bddd ON bddd.data_dictionary_details_id =zptd.is_material
+        LEFT JOIN zs_warehouse zw ON zw.warehouse_id=zptd.warehouse_id
+        LEFT JOIN ba_data_dictionary_details bddd2 ON bddd2.data_dictionary_details_id =zptd.product_status
+        LEFT JOIN zs_stock zs ON zs.stock_id=zptd.stock_id
+        WHERE zpt.produce_task_id =#{produceTaskId} and zptd.status =1
+        AND zptd.warehouse_id IN
+        <foreach item="item" index="index" collection="ids"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

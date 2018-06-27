@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsBatchOrderMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsBatchOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+    <result column="order_ssmd" jdbcType="VARCHAR" property="orderSsmd" />
+    <result column="order_jxs" jdbcType="VARCHAR" property="orderJxs" />
+    <result column="batch_id" jdbcType="BIGINT" property="batchId" />
+    <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <insert id="insetBatchOrderList" parameterType="java.util.List">
+    insert into zs_batch_order (order_name, order_ssmd,order_jxs,batch_id,qr_code,create_date)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.orderName,jdbcType=VARCHAR}, #{item.orderSsmd,jdbcType=VARCHAR},#{item.orderJxs,jdbcType=VARCHAR},#{item.batchId,jdbcType=BIGINT},#{item.qrCode,jdbcType=VARCHAR},#{item.createDate,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  <select id="selectBatchOrderListGropBy" resultMap="BaseResultMap">
+    SELECT o.order_name,o.order_jxs,o.order_ssmd,count(o.qr_code) as packNumber  FROM zs_batch_order o  WHERE batch_id =#{batchId} GROUP BY order_name
+  </select>
+</mapper>

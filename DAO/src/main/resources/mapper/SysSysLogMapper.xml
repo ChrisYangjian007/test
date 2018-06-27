@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.SysSysLogMapper">
+    <resultMap id="BaseResultMap" type="com.dalian.sea.model.SysSysLog">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="sys_log_id" jdbcType="BIGINT" property="sysLogId"/>
+        <result column="object_id" jdbcType="BIGINT" property="objectId"/>
+        <result column="log_type" jdbcType="VARCHAR" property="logType"/>
+        <result column="ip_address" jdbcType="VARCHAR" property="ipAddress"/>
+        <result column="ip_address_name" jdbcType="VARCHAR" property="ipAddressName"/>
+        <result column="company_id" jdbcType="BIGINT" property="companyId"/>
+        <result column="resource_id" jdbcType="BIGINT" property="resourceId"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="c_name" jdbcType="VARCHAR" property="cName"/>
+        <result column="created_user_id" jdbcType="BIGINT" property="createdUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+    </resultMap>
+
+    <resultMap id="PSysSysLog" type="com.dalian.sea.parameter.PSysLogSys" extends="BaseResultMap">
+
+    </resultMap>
+
+    <!--查询所有-->
+    <select id="getAllSysSysLog" resultMap="BaseResultMap">
+    select * from sys_sys_log where status!=6
+    </select>
+
+    <!--点击查询获取日志-->
+    <select id="getSysSysLogs" parameterType="com.dalian.sea.model.SysSysLog" resultMap="BaseResultMap">
+        select * from sys_sys_log
+        <where>
+            <if test="createdUserId!=null">
+                created_user_id=#{createdUserId}
+            </if>
+            <if test="resourceId!=null">
+                and resource_id=#{resourceId}
+            </if>
+
+        </where>
+    </select>
+
+    <!--添加-->
+    <insert id="addSysSysLog" parameterType="com.dalian.sea.model.SysSysLog" keyProperty="sysLogId"
+            useGeneratedKeys="true">
+        insert into sys_sys_log(ip_address,ip_address_name,resource_id,remark,c_name,created_user_id,create_date
+        <if test="objectId!=null">,object_id</if>
+        <if test="logType!=null">,log_type</if>
+        <if test="companyId!=null">,company_id</if>
+        )values(#{ipAddress},#{ipAddressName},#{resourceId},#{remark},#{cName},#{createdUserId},now()
+        <if test="objectId!=null">,#{objectId}</if>
+        <if test="logType!=null">,#{logType}</if>
+        <if test="companyId!=null">,#{companyId}</if>
+        )
+    </insert>
+
+    <!--修改-->
+    <update id="updateSysSysLog" parameterType="com.dalian.sea.model.SysSysLog">
+        update sys_sys_log
+        <trim prefix="set" suffixOverrides="," suffix=" where sis_log_id=#{sysLogId}">
+            <if test="objectId!=null">object_id=#{objectId},</if>
+            <if test="logType!=null">log_type=#{logType},</if>
+            <if test="ipAddress!=null">#{ip_address=ipAddress},</if>
+            <if test="ipAddressName!=null">#{ip_address_name=ipAddressName},</if>
+            <if test="companyId!=null">company_id=#{companyId},</if>
+            <if test="resourceId!=null">resource_id=#{resourceId},</if>
+            <if test="remark!=null">remark=#{remark},</if>
+            <if test="cName!=null">c_name=#{cName},</if>
+            <if test="createdUserId!=null">created_user_id=#{createdUserId},</if>
+            <if test="createDate!=null">create_date=#{createDate},</if>
+            <if test="status!=null">status=#{status},</if>
+        </trim>
+    </update>
+
+    <!--通过ID删除-->
+    <update id="deleteSysSysLog" parameterType="java.lang.Long">
+    update sys_sys_log set status=6
+    where sys_log_id=#{sysLogId}
+    </update>
+
+    <!--分页-->
+    <select id="getSysSysLogByJqGrid" resultMap="PSysSysLog">
+        SELECT s.*,b.account AS userName,r.c_name AS resourceName FROM sys_sys_log s
+        LEFT JOIN ba_user b ON s.created_user_id = b.user_id
+        LEFT JOIN ba_resource r ON s.resource_id = r.resource_id
+        WHERE s.status != 6
+        <if test="pSysLogSys.createdUserId != null">
+            AND s.created_user_id=#{pSysLogSys.createdUserId}
+        </if>
+        <if test="userId == null">
+            AND s.created_user_id not in (select user_id from ba_user where company_id = 0)
+        </if>
+        <if test="pSysLogSys.resourceId!=null ">
+            AND s.resource_id=#{pSysLogSys.resourceId}
+        </if>
+        <if test="pSysLogSys.beginDate != null">
+            <![CDATA[ AND s.create_date>=#{pSysLogSys.beginDate} ]]>
+        </if>
+        <if test="pSysLogSys.endDate != null">
+            <![CDATA[ AND s.create_date<=#{pSysLogSys.endDate} ]]>
+        </if>
+        order by s.create_date desc
+    </select>
+
+</mapper>

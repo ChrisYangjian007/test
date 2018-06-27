@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsExpressMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.ZsExpress">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="express_id" jdbcType="BIGINT" property="expressId" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="box_code" jdbcType="VARCHAR" property="boxCode" />
+    <result column="express_code" jdbcType="VARCHAR" property="expressCode" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+
+  <!--根据情况获取-->
+  <select id="getZsExpressByZsExpress" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.ZsExpress">
+    select * from zs_express where status=1
+    <if test="expressCode!=null and expressCode!=''">and express_code like concat(concat('%',#{expressCode}),'%')</if>
+    order by update_date desc
+  </select>
+
+  <!--根据箱码获取-->
+  <select id="getZsExpressByBoxCode" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.ZsExpress">
+    select * from zs_express where status=1 and box_code =#{boxCode} LIMIT 1
+  </select>
+
+  <!--根据快递单号获取-->
+  <select id="getZsExpressByExpressCode" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.ZsExpress">
+    select * from zs_express where status=1 and express_code =#{expressCode} LIMIT 1
+  </select>
+
+  <!--添加快递单-->
+  <insert id="addZsExpress" parameterType="com.dalian.sea.model.ZsExpress" keyProperty="expressId" useGeneratedKeys="true">
+    insert into zs_express (order_code,box_code,express_code,create_date,update_date,create_user_id)
+    values (#{orderCode},#{boxCode},#{expressCode},now(),now(),#{createUserId})
+  </insert>
+
+  <!--修改快递单-->
+  <update id="updateZsExpress" parameterType="com.dalian.sea.model.ZsExpress">
+    update zs_express set order_code=#{orderCode},box_code=#{boxCode},express_code=#{expressCode},
+    update_user_id=#{updateUserId} where express_id=#{expressId}
+  </update>
+
+  <!--删除快递单-->
+  <update id="deleteZsExpressBy" parameterType="com.dalian.sea.model.ZsExpress">
+    update zs_express set status=6,update_user_id=#{updateUserId} where status=1
+    <if test="orderCode!=null and orderCode!=''">
+      and order_code=#{orderCode}
+    </if>
+    <if test="boxCode!=null and boxCode!=''">
+      and box_code=#{boxCode}
+    </if>
+    <if test="expressCode!=null and expressCode!=''">
+      and express_code=#{expressCode}
+    </if>
+  </update>
+
+  <!--删除快递单-->
+  <update id="deleteZsExpress" parameterType="com.dalian.sea.model.ZsExpress">
+    update zs_express set status=6,update_user_id=#{updateUserId} where express_id=#{expressId}
+  </update>
+
+</mapper>

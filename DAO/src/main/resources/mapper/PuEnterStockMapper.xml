@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.PuEnterStockMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.model.PuEnterStock">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="enter_stock_id" jdbcType="BIGINT" property="enterStockId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="enter_date" jdbcType="TIMESTAMP" property="enterDate" />
+    <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+    <result column="enter_no" jdbcType="VARCHAR" property="enterNo" />
+    <result column="enter_person" jdbcType="VARCHAR" property="enterPerson" />
+    <result column="brokerage" jdbcType="VARCHAR" property="brokerage" />
+    <result column="produce_task_name" jdbcType="VARCHAR" property="produceTaskName" />
+    <result column="produce_task_no" jdbcType="VARCHAR" property="produceTaskNo" />
+    <result column="produce_task_id" jdbcType="BIGINT" property="produceTaskId" />
+    <result column="time_warn" jdbcType="INTEGER" property="timeWarn" />
+    <result column="stock_warn" jdbcType="INTEGER" property="stockWarn" />
+    <result column="related_id" jdbcType="BIGINT" property="relatedId" />
+    <result column="related_type" jdbcType="TINYINT" property="relatedType" />
+  </resultMap>
+
+  <resultMap id="PPuEnterStock" type="com.dalian.sea.parameter.PPuEnterStock" extends="BaseResultMap">
+    <association property="puEnterStockDetail" javaType="com.dalian.sea.model.PuEnterStockDetail">
+      <result column="company_id" jdbcType="BIGINT" property="companyId" />
+      <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+      <result column="in_weight" jdbcType="DECIMAL" property="inWeight" />
+      <result column="unit_id" jdbcType="BIGINT" property="unitId" />
+      <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+      <result column="product_spec_name" jdbcType="VARCHAR" property="productSpecName" />
+      <result column="product_spec_id" jdbcType="BIGINT" property="productSpecId" />
+      <result column="product_id" jdbcType="BIGINT" property="productId" />
+      <result column="product_name" jdbcType="VARCHAR" property="productName" />
+      <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+      <result column="enter_stock_id" jdbcType="BIGINT" property="enterStockId" />
+      <result column="is_material" jdbcType="TINYINT" property="isMaterial" />
+      <result column="batch_no" jdbcType="VARCHAR" property="batchNo" />
+      <result column="product_status" jdbcType="TINYINT" property="productStatus" />
+      <result column="rest_status" jdbcType="TINYINT" property="restStatus" />
+      <result column="related_id" jdbcType="BIGINT" property="relatedId" />
+      <result column="related_type" jdbcType="TINYINT" property="relatedType" />
+      <result column="remark" jdbcType="VARCHAR" property="remark" />
+      <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+      <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+      <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+      <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+      <result column="status" jdbcType="TINYINT" property="status" />
+    </association>
+    <association property="zsWarehouse" javaType="com.dalian.sea.model.ZsWarehouse">
+      <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    </association>
+  </resultMap>
+
+  <!--通过生产任务获取入库信息-->
+  <select id="getEnterStockByProduceTask" parameterType="java.lang.Long" resultMap="PPuEnterStock">
+    SELECT pes.*,pesd.*,zw.c_name FROM pu_enter_stock pes
+    LEFT JOIN pu_enter_stock_detail pesd ON pesd.enter_stock_id=pes.enter_stock_id
+    LEFT JOIN zs_warehouse zw ON zw.warehouse_id=pes.warehouse_id
+    WHERE pes.status=1 and pes.produce_task_id=#{id}
+  </select>
+
+  <insert id="insertEnterStock" parameterType="com.dalian.sea.model.PuEnterStock" keyProperty="enterStockId" useGeneratedKeys="true">
+    INSERT INTO pu_enter_stock(
+    <trim prefixOverrides=",">
+      <if test="createDate !=null">
+        ,create_date
+      </if>
+      <if test="createUserId !=null">
+        ,create_user_id
+      </if>
+      <if test="status !=null">
+        ,status
+      </if>
+      <if test="remark !=null and remark !=''">
+        ,remark
+      </if>
+      <if test="companyId !=null">
+        ,company_id
+      </if>
+      <if test="listIndex !=null">
+        ,list_index
+      </if>
+      <if test="enterDate !=null">
+        ,enter_date
+      </if>
+      <if test="warehouseId !=null">
+        ,warehouse_id
+      </if>
+      <if test="enterNo !=null and enterNo !=''">
+        ,enter_no
+      </if>
+      <if test="enterPerson !=null and enterPerson !=''">
+        ,enter_person
+      </if>
+      <if test="brokerage !=null and brokerage !=''">
+        ,brokerage
+      </if>
+      <if test="produceTaskName !=null and produceTaskName !=''">
+        ,produce_task_name
+      </if>
+      <if test="produceTaskNo !=null and produceTaskNo !=''">
+        ,produce_task_no
+      </if>
+      <if test="produceTaskId !=null">
+        ,produce_task_id
+      </if>
+      <if test="timeWarn !=null">
+        ,time_warn
+      </if>
+      <if test="stockWarn !=null">
+        ,stock_warn
+      </if>
+      <if test="relatedId !=null">
+        ,related_id
+      </if>
+      <if test="relatedType !=null">
+        ,related_type
+      </if>
+    </trim>
+    )VALUES (
+    <trim prefixOverrides=",">
+      <if test="createDate !=null">
+        ,#{createDate}
+      </if>
+      <if test="createUserId !=null">
+        ,#{createUserId}
+      </if>
+      <if test="status !=null">
+        ,#{status}
+      </if>
+      <if test="remark !=null and remark !=''">
+        ,#{remark}
+      </if>
+      <if test="companyId !=null">
+        ,#{companyId}
+      </if>
+      <if test="listIndex !=null">
+        ,#{listIndex}
+      </if>
+      <if test="enterDate !=null">
+        ,#{enterDate}
+      </if>
+      <if test="warehouseId !=null">
+        ,#{warehouseId}
+      </if>
+      <if test="enterNo !=null and enterNo !=''">
+        ,#{enterNo}
+      </if>
+      <if test="enterPerson !=null and enterPerson !=''">
+        ,#{enterPerson}
+      </if>
+      <if test="brokerage !=null and brokerage !=''">
+        ,#{brokerage}
+      </if>
+      <if test="produceTaskName !=null and produceTaskName !=''">
+        ,#{produceTaskName}
+      </if>
+      <if test="produceTaskNo !=null and produceTaskNo !=''">
+        ,#{produceTaskNo}
+      </if>
+      <if test="produceTaskId !=null">
+        ,#{produceTaskId}
+      </if>
+      <if test="timeWarn !=null">
+        ,#{timeWarn}
+      </if>
+      <if test="stockWarn !=null">
+        ,#{stockWarn}
+      </if>
+      <if test="relatedId !=null">
+        ,#{relatedId}
+      </if>
+      <if test="relatedType !=null">
+        ,#{relatedType}
+      </if>
+    </trim>
+    )
+  </insert>
+</mapper>

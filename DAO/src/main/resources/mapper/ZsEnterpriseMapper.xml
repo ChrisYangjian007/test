@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.ZsEnterpriseMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PZsEnterprise">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="enterprise_id" jdbcType="BIGINT" property="enterpriseId" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="category" jdbcType="TINYINT" property="category" />
+    <result column="enterprise_type" jdbcType="TINYINT" property="enterpriseType" />
+    <result column="business_license_image" jdbcType="VARCHAR" property="businessLicenseImage" />
+    <result column="business_license_date" jdbcType="TIMESTAMP" property="businessLicenseDate" />
+    <result column="production_license_image" jdbcType="VARCHAR" property="productionLicenseImage" />
+    <result column="production_license_date" jdbcType="TIMESTAMP" property="productionLicenseDate" />
+    <result column="other_license_image" jdbcType="VARCHAR" property="otherLicenseImage" />
+    <result column="other_license_date" jdbcType="TIMESTAMP" property="otherLicenseDate" />
+    <result column="corporate_rep" jdbcType="VARCHAR" property="corporateRep" />
+    <result column="contact" jdbcType="VARCHAR" property="contact" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="fax" jdbcType="VARCHAR" property="fax" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="zipcode" jdbcType="VARCHAR" property="zipcode" />
+    <result column="web_url" jdbcType="VARCHAR" property="webUrl" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="area_id" jdbcType="BIGINT" property="areaId" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="company_nature" jdbcType="TINYINT" property="companyNature" />
+    <result column="business_scope" jdbcType="VARCHAR" property="businessScope" />
+    <result column="tax_no" jdbcType="VARCHAR" property="taxNo" />
+    <result column="tax_reg_date" jdbcType="TIMESTAMP" property="taxRegDate" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <result column="biz_reg_code" jdbcType="VARCHAR" property="bizRegCode" />
+    <result column="corporate_rep_id_no" jdbcType="VARCHAR" property="corporateRepIdNo" />
+    <result column="biz_license_no" jdbcType="VARCHAR" property="bizLicenseNo" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+  </resultMap>
+  <resultMap id="PZsEnterprise" type="com.dalian.sea.parameter.PZsEnterprise" extends="BaseResultMap">
+
+  </resultMap>
+  <!--加载到表格-->
+  <select id="getEnterpriseForGrid" parameterType="com.dalian.sea.model.ZsEnterprise" resultMap="PZsEnterprise" >
+   <!--SELECT * FROM zs_enterprise WHERE status = 1-->
+        SELECT zs.*,bu.c_name as createUserName
+        FROM  zs_enterprise zs
+		LEFT JOIN ba_user bu ON zs.create_user_id=bu.user_id
+		WHERE zs.status !=6 order by update_date  desc
+  </select>
+  <!--通过名字获取供应商-->
+  <select id="getZsEnterpriseByName" parameterType="String" resultMap="PZsEnterprise" >
+        SELECT zs.*,bu.c_name as createUserName
+        FROM  zs_enterprise zs
+		LEFT JOIN ba_user bu ON zs.create_user_id=bu.user_id
+		WHERE zs.status !=6 AND zs.c_name = #{cName}
+  </select>
+  <!--添加-->
+  <insert id="addZsEnterprise" parameterType="com.dalian.sea.model.ZsEnterprise">
+    INSERT INTO zs_enterprise(create_date,update_date
+    <if test="cName != null">,c_name</if>
+    <if test="shortName != null and shortName !=''">,short_name</if>
+    <if test="category !=null and category !=''">,category</if>
+    <if test="enterpriseType != null">,enterprise_type</if>
+    <if test="businessLicenseImage != null">,business_license_image</if>
+    <if test="businessLicenseDate != null">,business_license_date</if>
+    <if test="productionLicenseImage != null">,production_license_image</if>
+    <if test="productionLicenseDate != null">,production_license_date</if>
+    <if test="otherLicenseImage != null">,other_license_image</if>
+    <if test="otherLicenseDate != null">,other_license_date</if>
+    <if test="corporateRep !=null and corporateRep !=''">,corporate_rep</if>
+    <if test="contact != ''">,contact</if>
+    <if test="phone !=null and phone !=''">,phone</if>
+    <if test="fax != null">,fax</if>
+    <if test="address !=null and address !=''">,address</if>
+    <if test="email !=null and email !=''">,email</if>
+    <if test="zipcode != null">,zipcode</if>
+    <if test="webUrl != null">,web_url</if>
+    <if test="remark != null">,remark</if>
+    <if test="listIndex != null">,list_index</if>
+    <if test="status != null">,status</if>
+    <if test="longitude != null">,longitude</if>
+    <if test="latitude != null">,latitude</if>
+    <if test="areaId != null">,area_id</if>
+    <if test="areaName != null">,area_name</if>
+    <if test="companyNature != null">,company_nature</if>
+    <if test="businessScope != null">,business_scope</if>
+    <if test="taxNo != null">,tax_no</if>
+    <if test="taxRegDate != null">,tax_reg_date</if>
+    <if test="orgCode != null">,org_code</if>
+    <if test="bizRegCode != null">,biz_reg_code</if>
+    <if test="corporateRepIdNo != null">,corporate_rep_id_no</if>
+    <if test="bizLicenseNo != null">,biz_license_no</if>
+    <if test="companyId != null">,company_id</if>
+    <if test="createUserId != ''">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    )
+    VALUES(now(),now()
+    <if test="cName !=''">,#{cName}</if>
+    <if test="shortName != null and shortName !=''">,#{shortName}</if>
+    <if test="category !=null and category !=''">,#{category}</if>
+    <if test="enterpriseType != null">,#{enterpriseType}</if>
+    <if test="businessLicenseImage != null">,#{businessLicenseImage}</if>
+    <if test="businessLicenseDate != null">,#{businessLicenseDate}</if>
+    <if test="productionLicenseImage != null">,#{productionLicenseImage}</if>
+    <if test="productionLicenseDate != null">,#{productionLicenseDate}</if>
+    <if test="otherLicenseImage != null">,#{otherLicenseImage}</if>
+    <if test="otherLicenseDate != null">,#{otherLicenseDate}</if>
+    <if test="corporateRep !=null and corporateRep !=''">,#{corporateRep}</if>
+    <if test="contact != ''">,#{contact}</if>
+    <if test="phone !=null and phone !=''">,#{phone}</if>
+    <if test="fax != null">,#{fax}</if>
+    <if test="address !=null and address !=''">,#{address}</if>
+    <if test="email !=null and email !=''">,#{email}</if>
+    <if test="zipcode != null">,#{zipcode}</if>
+    <if test="webUrl != null">,#{webUrl}</if>
+    <if test="remark != null">,#{remark}</if>
+    <if test="listIndex != null">,#{listIndex}</if>
+    <if test="status != null">,#{status}</if>
+    <if test="longitude != null">,#{longitude}</if>
+    <if test="latitude != null">,#{latitude}</if>
+    <if test="areaId != null">,#{areaId}</if>
+    <if test="areaName != null">,#{areaName}</if>
+    <if test="companyNature != null">,#{companyNature}</if>
+    <if test="businessScope != null">,#{businessScope}</if>
+    <if test="taxNo != null">,#{taxNo}</if>
+    <if test="taxRegDate != null">,#{taxRegDate}</if>
+    <if test="orgCode != null">,#{orgCode}</if>
+    <if test="bizRegCode != null">,#{bizRegCode}</if>
+    <if test="corporateRepIdNo != null">,#{corporateRepIdNo}</if>
+    <if test="bizLicenseNo != null">,#{bizLicenseNo}</if>
+    <if test="companyId != null">,#{companyId}</if>
+    <if test="createUserId != ''">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    )
+  </insert>
+  <!--修改-->
+  <update id="updateZsEnterprise" parameterType="com.dalian.sea.model.ZsEnterprise" >
+    UPDATE zs_enterprise
+    set c_name=#{cName},short_name=#{shortName},category=#{category},enterprise_type=#{enterpriseType},
+    business_license_image=#{businessLicenseImage},business_license_date=#{businessLicenseDate},
+    production_license_image=#{productionLicenseImage},production_license_date=#{productionLicenseDate},
+    other_license_image=#{otherLicenseImage},other_license_date=#{otherLicenseDate},
+    corporate_rep=#{corporateRep},contact=#{contact},phone=#{phone},address=#{address},email=#{email}
+    <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+    where enterprise_id = #{enterpriseId}
+  </update>
+  <!--获取最大顺序数-->
+  <select id="getzsEnterpriseListIndex" resultMap="BaseResultMap">
+    SELECT max(enterprise_id)  FROM zs_enterprise WHERE status != 6 limit 1
+  </select>
+  <!--通过id获取供应商信息-->
+<select id="getzsEnterpriseById" parameterType="Long" resultMap="BaseResultMap">
+  select *
+  FROM zs_enterprise
+  WHERE enterprise_id = #{enterpriseId}
+</select>
+  <!--删除-->
+  <update id="deleteZsEnterpriseById" parameterType="Long">
+    UPDATE zs_enterprise
+    SET status = 6
+    WHERE enterprise_id=#{enterpriseId}
+  </update>
+
+  <select id="getEnterprise" resultMap="PZsEnterprise" >
+    SELECT zs.*
+    FROM  zs_enterprise zs
+    WHERE zs.status !=6
+  </select>
+
+  <select id="getEnterpriseForApi" resultMap="PZsEnterprise" parameterType="String">
+    SELECT zs.*
+    FROM  zs_enterprise zs
+    WHERE zs.status !=6
+    <if test="null!=name and name!=''">
+      AND zs.c_name LIKE CONCAT('%',#{name},'%')
+    </if>
+  </select>
+
+  <!--通过id获取PZsEnterprise-->
+  <select id="getPEnterPriseById" parameterType="java.lang.Long" resultMap="PZsEnterprise">
+    SELECT * FROM zs_enterprise WHERE enterprise_id=#{enterpriseId}
+  </select>
+</mapper>

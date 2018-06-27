@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dalian.sea.mapper.BaDataDictionaryDetailsMapper">
+  <resultMap id="BaseResultMap" type="com.dalian.sea.parameter.PBaDataDictionaryDetails">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="data_dictionary_details_id" jdbcType="BIGINT" property="dataDictionaryDetailsId" />
+    <result column="data_dictionary_id" jdbcType="BIGINT" property="dataDictionaryId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="c_name" jdbcType="VARCHAR" property="cName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="list_index" jdbcType="INTEGER" property="listIndex" />
+    <result column="flage" jdbcType="VARCHAR" property="flage" />
+    <result column="flage_name" jdbcType="VARCHAR" property="flageName" />
+    <result column="a_level" jdbcType="INTEGER" property="aLevel" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="first_id" jdbcType="BIGINT" property="firstId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  
+  <!--根据数据字典编码获取-->
+  <select id="getBaDataDictionaryDetailsByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select bddd.*
+    from ba_data_dictionary_details bddd
+    LEFT JOIN ba_data_dictionary bdd ON bdd.code=#{code}
+    where bddd.status !=6 and bddd.data_dictionary_id = bdd.data_dictionary_id
+  </select>
+
+  <!--根据数据字典ID获取-->
+  <select id="getBaDataDictionaryDetailsByDataDictionaryId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select bddd.*,bu.c_name as createUserName,buu.c_name as updateUserName from ba_data_dictionary_details as bddd
+    LEFT JOIN ba_user as bu ON bddd.create_user_id=bu.user_id
+    LEFT JOIN ba_user as buu ON bddd.update_user_id=buu.user_id
+    where bddd.status !=6 and bddd.data_dictionary_id = #{dataDictionaryId} order by bddd.update_date desc
+  </select>
+
+  <!--获取数据字典详情最大顺序数-->
+  <select id="getBaDataDictionaryDetailsMaxListIndex" resultMap="BaseResultMap">
+      SELECT MAX(list_index) as list_index FROM ba_data_dictionary_details WHERE status != 6 limit 1
+  </select>
+
+  <!--根据名字和数据字典id获取详情-->
+  <select id="getBaDataDictionaryDetailsByNameAndDataDictionaryId" resultMap="BaseResultMap" parameterType="com.dalian.sea.model.BaDataDictionaryDetails">
+    SELECT * FROM ba_data_dictionary_details WHERE status != 6 AND data_dictionary_id=#{dataDictionaryId} AND c_name=#{cName}
+  </select>
+  
+  <insert id="addBaDataDictionaryDetails" parameterType="com.dalian.sea.model.BaDataDictionaryDetails">
+    INSERT INTO ba_data_dictionary_details(create_date,update_date
+    <if test="dataDictionaryId != null">,data_dictionary_id</if>
+    <if test="code != null">,code</if>
+    <if test="cName != null">,c_name</if>
+    <if test="remark != null">,remark</if>
+    <if test="listIndex != null">,list_index</if>
+    <if test="flage != null">,flage</if>
+    <if test="flageName != null">,flage_name</if>
+    <if test="aLevel != null">,a_level</if>
+    <if test="parentId != null">,parent_id</if>
+    <if test="firstId != null">,first_id</if>
+    <if test="createUserId != null">,create_user_id</if>
+    <if test="updateUserId != null">,update_user_id</if>
+    )VALUES (now(),now()
+    <if test="dataDictionaryId != null">,#{dataDictionaryId}</if>
+    <if test="code != null">,#{code}</if>
+    <if test="cName != null">,#{cName}</if>
+    <if test="remark != null">,#{remark}</if>
+    <if test="listIndex != null">,#{listIndex}</if>
+    <if test="flage != null">,#{flage}</if>
+    <if test="flageName != null">,#{flageName}</if>
+    <if test="aLevel != null">,#{aLevel}</if>
+    <if test="parentId != null">,#{parentId}</if>
+    <if test="firstId != null">,#{firstId}</if>
+    <if test="createUserId != null">,#{createUserId}</if>
+    <if test="updateUserId != null">,#{updateUserId}</if>
+    )
+  </insert>
+
+  <!--修改数据字典详情-->
+  <update id="updateBaDataDictionaryDetails" parameterType="com.dalian.sea.model.BaDataDictionaryDetails">
+    UPDATE ba_data_dictionary_details
+    <trim prefix="set" suffixOverrides="," suffix="where data_dictionary_details_id=#{dataDictionaryDetailsId}">
+      <if test="dataDictionaryId != null">,data_dictionary_id=#{dataDictionaryId}</if>
+      <if test="code != null">,code=#{code}</if>
+      <if test="cName != null">,c_name={cName}</if>
+      <if test="remark != null">,remark=#{remark}</if>
+      <if test="listIndex != null">,list_index={listIndex}</if>
+      <if test="flage != null">,flage=#{flage}</if>
+      <if test="flageName != null">,flage_name=#flageName</if>
+      <if test="aLevel != null">,a_level=#{aLevel}</if>
+      <if test="parentId != null">,parent_id=#{parentId}</if>
+      <if test="firstId ! null">,first_id={firstId}</if>
+      <if test="createUserId != null">,create_user_id=#{createUserId}</if>
+      <if test="createDate != null">,create_date=#{createDate}</if>
+      <if test="updateUserId != null">,update_user_id=#{updateUserId}</if>
+      <if test="updateDate != null">,update_date=#{updateDate}</if>
+    </trim>
+  </update>
+
+
+  <!--通过id获取数据字典详情-->
+  <select id="getBaDataDictionaryDetailsById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT * FROM ba_data_dictionary_details WHERE status != 6 and data_dictionary_details_id=#{id}
+  </select>
+
+  <!--修改数据字典详情-->
+  <update id="updateBaDataDictionaryDetailsById" parameterType="com.dalian.sea.model.BaDataDictionaryDetails">
+    UPDATE ba_data_dictionary_details SET code=#{code},c_name=#{cName},remark=#{remark}
+    <if test="updateUserId != null">
+      ,update_user_id=#{updateUserId}
+    </if>
+    where data_dictionary_details_id=#{dataDictionaryDetailsId}
+  </update>
+
+  <!--删除-->
+  <update id="deleteBaDataDictionaryDetailsById" parameterType="com.dalian.sea.model.BaDataDictionaryDetails">
+    UPDATE ba_data_dictionary_details SET status=6
+    <if test="updateUserId != null">
+      ,update_user_id=#{updateUserId}
+    </if>
+    where data_dictionary_details_id=#{dataDictionaryDetailsId}
+  </update>
+
+  <!--通过dataDictionaryId删除-->
+  <update id="deleteBaDataDictionaryDetailsByDictionaryId" parameterType="java.lang.Long">
+    UPDATE ba_data_dictionary_details SET status=6 WHERE data_dictionary_id=#{id}
+  </update>
+
+  <!--根据字典名称和详情名称获取详情-->
+  <select id="getBaDataDictionaryDetailsByDataNameAndDataDetailsName" resultMap="BaseResultMap">
+     select ifnull(bddd.data_dictionary_details_id,0) as data_dictionary_details_id
+    from ba_data_dictionary_details bddd
+    left join ba_data_dictionary bdd on bdd.data_dictionary_id=bddd.data_dictionary_id
+    where bddd.status=1 and bdd.status=1 and bdd.c_name = #{dataName} and bddd.c_name=#{detailsName}
+    LIMIT 1
+  </select>
+
+  <select id="getDataDictionaryDetailsByDictionaryCodeAndName" resultMap="BaseResultMap">
+    SELECT * FROM ba_data_dictionary_details WHERE status!=6 AND c_name=#{name} AND data_dictionary_id=(
+    select d.data_dictionary_id from ba_data_dictionary d where d.status!=6 and d.code=#{code}
+    )
+  </select>
+</mapper>
